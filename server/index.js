@@ -5,6 +5,8 @@ const http = require('http');
 const cors = require('cors');
 const { Server } = require('socket.io');
 
+
+
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
     cors: {
@@ -13,27 +15,14 @@ const io = require('socket.io')(server, {
     }
 });
 
-io.on("connection", socket => {
+io.on("connection", (socket) => {
     console.log(`User connected: ${socket.id}`);
-
+    
     socket.on("disconnect", () => {
         console.log(`User disconnected: ${socket.id}`);
     });
 })
 
-app.use(cors());
-app.set(express.urlencoded({ extended: false }));
-app.set(express.json());
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json());
-
-
-
-// Routes
-const accounts = require('./controllers/accounts');
-
-
-app.use('/api/account', accounts);
 
 
 server.listen(3002, () => {
