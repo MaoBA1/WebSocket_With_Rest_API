@@ -37,12 +37,27 @@ function Login(props) {
                 alignItems:"center",
                 justifyContent:"center"
             }}>
-                <label style={{
-                    color:"#FFFFFF",
-                    fontSize:"30px"
+                <div style={{
+                    display:"flex",
+                    flexDirection:"column", 
+                    alignItems:"center"
                 }}>
-                    Posts & Chats
-                </label>
+                    <label style={{
+                        color:"#FFFFFF",
+                        fontSize:"30px",
+                        fontFamily:"Bold",
+                    }}>
+                        Posts & Chats
+                    </label>
+                    <label style={{
+                        color:"#FFFFFF",
+                        fontSize:"25px",
+                        fontFamily:"Regular",
+                        fontStyle:"italic"
+                    }}>
+                        Come talk with us
+                    </label>
+                </div>
             </div>
         </div>
     );
