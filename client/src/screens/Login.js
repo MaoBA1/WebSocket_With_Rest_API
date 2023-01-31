@@ -6,8 +6,8 @@ const Header = (windowSize) => {
     return(
         <div style={{
             backgroundColor:Colors.blackBlue,
-            width: windowSize.width,
-            height: windowSize.height / 10,
+            // width: windowSize.width,
+            // height: windowSize.height / 10,
             display:"flex",
             flexDirection:"row",
             alignItems:"center",
@@ -66,9 +66,29 @@ function Login(props) {
             flexDirection:"column",
             width: windowSize.width,
             height: windowSize.height,
-            backgroundColor: Colors.creamyWhite
+            backgroundColor: Colors.creamyWhite,
         }}>
            <Header windowSize={windowSize}/>
+           <div style={{
+                width: windowSize.width / 8,
+                alignSelf:"center",
+                display:"flex",
+                flexDirection:"row",
+                justifyContent:"space-between",
+                position:"absolute",
+                top:windowSize.height / 4
+           }}>
+                <BsFileEarmarkPost
+                    color={Colors.blueMedium}
+                    size={"100px"}
+                />
+
+                <BsFillChatFill
+                    color={Colors.blueBold}
+                    size={"100px"}
+                />
+           </div>
+           
            <div style={{
                 flex:"1",
                 display:"flex",
@@ -82,9 +102,9 @@ function Login(props) {
                     display:"flex",
                     flexDirection:"column",
                     alignItems:"center",
-                    height:windowSize.height / 4,
+                    height:windowSize.height / 5,
                     justifyContent:"space-between"
-                }}>
+                }} onSubmit={() => {console.log("Submitted");}}>
                     <div style={{
                         display:"flex",
                         flexDirection:"column",
@@ -97,70 +117,36 @@ function Login(props) {
                             fontSize:"25px",
                             fontStyle:"italic"
                         }}>
-                            User Name
+                            Nick Name
                         </label>
                         <input
                             type={"text"} 
                             style={{
-                                width: windowSize.width / 3,
+                                width: windowSize.width / 2.5,
+                                height: windowSize.height / 15,
                                 borderRadius:"20px",
                                 border:`2px solid ${Colors.blueMedium}`,
                                 fontFamily:"Regular",
-                                padding:"5px",
+                                paddingLeft:"15px",
                                 color:Colors.blueLight,
                                 fontStyle:"italic"
                             }}
-                            placeholder="Type Your User Name..."
+                            placeholder="Please choose a nickname for yourself..."
                         />
                     </div>
-                    <div style={{
-                        display:"flex",
-                        flexDirection:"column",
-                        alignItems:"center"
-                    }}>
-                    <label style={{
-                        fontFamily:"Regular",
-                        fontWeight:"bold",
-                        color: Colors.blueMedium,
-                        fontSize:"25px",
-                        fontStyle:"italic"
-                    }}>
-                        Password
-                    </label>
-                    <input
-                        type={"text"} 
-                        style={{
-                            width: windowSize.width / 3,
-                            borderRadius:"20px",
-                            border:`2px solid ${Colors.blueMedium}`,
-                            fontFamily:"Regular",
-                            padding:"5px",
-                            color:Colors.blueLight,
-                            fontStyle:"italic"
-                        }}
-                        placeholder="Type Your Password..."
-                    />
-                    </div>
                 </form>
-                <div style={{
-                    marginTop:"100px",
-                    width:windowSize.width / 1.5,
-                    padding:"10px",
-                    display:"flex",
-                    flexDirection:"row",
-                    justifyContent:"space-between",
-                    alignItems:"center"
+                <button style={{
+                    width: windowSize.width / 5,
+                    height: windowSize.height / 18,
+                    borderRadius:"20px",
+                    backgroundColor: Colors.blueBold,
+                    border:`3px solid ${Colors.blueMedium}`,
+                    fontFamily:"Bold",
+                    color:"#ffffff",
+                    fontSize:"20px"
                 }}>
-                    <BsFileEarmarkPost
-                        color={Colors.blueMedium}
-                        size={"150px"}
-                    />
-
-                    <BsFillChatFill
-                        color={Colors.blueBold}
-                        size={"150px"}
-                    />
-                </div>
+                    Login
+                </button>
            </div>
         </div>
     );
