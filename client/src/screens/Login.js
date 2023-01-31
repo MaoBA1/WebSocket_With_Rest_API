@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Colors from '../utilities/Colors';
+import { BsFileEarmarkPost, BsFillChatFill } from 'react-icons/bs';
 
 const Header = (windowSize) => {
     return(
@@ -80,24 +81,86 @@ function Login(props) {
                 <form style={{
                     display:"flex",
                     flexDirection:"column",
-                    alignItems:"center"
+                    alignItems:"center",
+                    height:windowSize.height / 4,
+                    justifyContent:"space-between"
                 }}>
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"column",
+                        alignItems:"center"
+                    }}>
+                        <label style={{
+                            fontFamily:"Regular",
+                            fontWeight:"bold",
+                            color: Colors.blueMedium,
+                            fontSize:"25px",
+                            fontStyle:"italic"
+                        }}>
+                            User Name
+                        </label>
+                        <input
+                            type={"text"} 
+                            style={{
+                                width: windowSize.width / 3,
+                                borderRadius:"20px",
+                                border:`2px solid ${Colors.blueMedium}`,
+                                fontFamily:"Regular",
+                                padding:"5px",
+                                color:Colors.blueLight,
+                                fontStyle:"italic"
+                            }}
+                            placeholder="Type Your User Name..."
+                        />
+                    </div>
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"column",
+                        alignItems:"center"
+                    }}>
                     <label style={{
                         fontFamily:"Regular",
                         fontWeight:"bold",
-                        color: Colors.blueLight,
+                        color: Colors.blueMedium,
                         fontSize:"25px",
                         fontStyle:"italic"
                     }}>
-                        User Name
+                        Password
                     </label>
                     <input
                         type={"text"} 
                         style={{
-                            width: windowSize.width / 5
+                            width: windowSize.width / 3,
+                            borderRadius:"20px",
+                            border:`2px solid ${Colors.blueMedium}`,
+                            fontFamily:"Regular",
+                            padding:"5px",
+                            color:Colors.blueLight,
+                            fontStyle:"italic"
                         }}
+                        placeholder="Type Your Password..."
                     />
+                    </div>
                 </form>
+                <div style={{
+                    marginTop:"100px",
+                    width:windowSize.width / 1.5,
+                    padding:"10px",
+                    display:"flex",
+                    flexDirection:"row",
+                    justifyContent:"space-between",
+                    alignItems:"center"
+                }}>
+                    <BsFileEarmarkPost
+                        color={Colors.blueMedium}
+                        size={"150px"}
+                    />
+
+                    <BsFillChatFill
+                        color={Colors.blueBold}
+                        size={"150px"}
+                    />
+                </div>
            </div>
         </div>
     );
