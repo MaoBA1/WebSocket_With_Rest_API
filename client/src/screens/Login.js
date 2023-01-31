@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Colors from '../utilities/Colors';
 import { BsFileEarmarkPost, BsFillChatFill } from 'react-icons/bs';
+import { useNavigate, createSearchParams } from 'react-router-dom';
+import { io } from 'socket.io-client';
+
+const socket = io.connect("http://localhost:3002");
+
 
 const Header = (windowSize) => {
     return(
@@ -41,7 +46,8 @@ const Header = (windowSize) => {
 
 
 function Login(props) {
-
+    const navigate = useNavigate();
+    const [ nickName, setNickName ] = useState("");
     const [ windowSize, setWindowSize ] = useState({
         width: window.innerWidth,
         height: window.innerHeight
@@ -59,6 +65,17 @@ function Login(props) {
         
     },[]);
 
+    const Login = () => {
+        if(nickName !== "") {
+            navigate({
+                pathname:"/Home",
+                search: createSearchParams({
+                    socket: socket
+                })
+            })
+        }
+    }
+
     return ( 
         <div style={{
             flex:"1",
@@ -70,7 +87,7 @@ function Login(props) {
         }}>
            <Header windowSize={windowSize}/>
            <div style={{
-                width: windowSize.width / 8,
+                width: windowSize.width / 6,
                 alignSelf:"center",
                 display:"flex",
                 flexDirection:"row",
@@ -104,7 +121,7 @@ function Login(props) {
                     alignItems:"center",
                     height:windowSize.height / 5,
                     justifyContent:"space-between"
-                }} onSubmit={() => {console.log("Submitted");}}>
+                }} onSubmit={Login}>
                     <div style={{
                         display:"flex",
                         flexDirection:"column",
@@ -121,6 +138,8 @@ function Login(props) {
                         </label>
                         <input
                             type={"text"} 
+                            value={nickName}
+                            onChange={(event) => setNickName(event.target.value)}
                             style={{
                                 width: windowSize.width / 2.5,
                                 height: windowSize.height / 15,
@@ -144,7 +163,7 @@ function Login(props) {
                     fontFamily:"Bold",
                     color:"#ffffff",
                     fontSize:"20px"
-                }}>
+                }} onClick={Login}>
                     Login
                 </button>
            </div>
