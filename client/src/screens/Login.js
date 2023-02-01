@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Colors from '../utilities/Colors';
 import { BsFileEarmarkPost, BsFillChatFill } from 'react-icons/bs';
-import { useNavigate, createSearchParams } from 'react-router-dom';
-import { io } from 'socket.io-client';
+import { useNavigate, } from 'react-router-dom';
 
-const socket = io.connect("http://localhost:3002");
 
 
 const Header = (windowSize) => {
@@ -67,12 +65,11 @@ function Login(props) {
 
     const Login = () => {
         if(nickName !== "") {
-            navigate({
-                pathname:"/Home",
-                search: createSearchParams({
-                    socket: socket
-                })
-            })
+            navigate('/Home/',{
+                state:{ 
+                    userNickName: nickName
+                }
+            });
         }
     }
 
