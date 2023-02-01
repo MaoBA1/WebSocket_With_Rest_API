@@ -12,7 +12,7 @@ function Dashboard() {
         socket.on("recive_posts", (data) => {
             console.log(data); 
         });
-    },[socket])
+    },[])
     
     return ( 
         <div>

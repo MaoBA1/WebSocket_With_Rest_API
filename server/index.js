@@ -18,9 +18,12 @@ const io = require('socket.io')(server, {
 
 io.on("connection", (socket) => {
     console.log(`User connected: ${socket.id}`);
-
-    socket.emit("recive_posts", {test:"test"})
     
+    socket.on("send_post", (data) => {
+        console.log(data);
+        socket.emit("recive_post", {post:data})
+    })
+     socket.emit("recive_message",{message:"test"})
     socket.on("disconnect", () => {
         console.log(`User disconnected: ${socket.id}`);
     });
