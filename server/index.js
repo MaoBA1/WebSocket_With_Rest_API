@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 
 // controllers
 const postEvents = require('./controllers/Posts');
+const accountEvents = require('./controllers/Account');
 
 const mongoUrl = `mongodb+srv://maor:wm2qpAw2cZ0nwpkJ@postsandchats.orle5k9.mongodb.net/PostAndChats_db?retryWrites=true&w=majority`;
 
@@ -22,7 +23,7 @@ io.on("connection", (socket) => {
     console.log(`User connected: ${socket.id}`);
     
     postEvents(socket);
-
+    accountEvents(socket);
 
 
     socket.on("disconnect", () => {
