@@ -4,7 +4,10 @@ const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    author:String,
+    postAuthor:{
+        authorId:{type:mongoose.Schema.Types.ObjectId, ref:"Account"},
+        authorName:String
+    },
     postContent: String,
     postMedia:{
         mdeia:{type: Boolean, default: false},
