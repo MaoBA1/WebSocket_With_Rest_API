@@ -5,9 +5,10 @@ import { ref, deleteObject, getDownloadURL, uploadBytesResumable } from 'firebas
 import { storage } from '../firebase';
 import { socket } from '../socket.io';
 
+
 // components
 import BeforLoginHeader from '../components/BeforLoginHeader';
-
+import CostumModal from '../components/CostumModal';
 
 function Register() {
     const defaultImage = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png";
@@ -37,7 +38,9 @@ function Register() {
             });
         }
         window.addEventListener('resize', handelResize);
-        
+        socket.on("create_account", (data) => {
+            console.log(data);
+        })
     },[]);
 
     const handleFileChange = event => {
@@ -78,11 +81,33 @@ function Register() {
             console.log(error.message);
         })
     }
+
+    const signUp = () => {
+        const checkEmail = email.includes('@') && email.includes('.com') && email.indexOf('@') < email.indexOf('.com');
+        const checkPassword = password.length >= 6;
+        const checkName = fname.length >= 2 || lname.length >= 2;
+        if(checkEmail && checkPassword && checkName) {
+            socket.emit("create_account", {
+                email: email,
+                password: password,
+                fname: fname,
+                lname: lname,
+                profileImage: pickedImage ? pickedImage.downloadUrl : defaultImage 
+            });
+        }
+        
+    }
     return ( 
         <div className='main-div-container' style={{
             backgroundColor: Colors.creamyWhite,
             height: windowSize.height
         }}>
+            {false && <CostumModal
+                show={true}
+                width={"300px"}
+                height={"200px"}
+                backgroundColor={Colors.blackBlue}
+            />}
             <BeforLoginHeader
                 title={"Posts & Chats"}
                 subtitle={"Register"}
@@ -95,6 +120,7 @@ function Register() {
                                 Email
                             </label>
                             <input 
+                                required
                                 value={email}
                                 onChange={event => setEmail(event.target.value)}
                                 style={{ 
@@ -112,6 +138,7 @@ function Register() {
                                     First Name
                                 </label>
                                 <input
+                                    required
                                     value={fname}
                                     onChange={event => setFname(event.target.value)}
                                     style={{ 
@@ -128,6 +155,7 @@ function Register() {
                                     Last Name
                                 </label>
                                 <input
+                                    required
                                     value={lname}
                                     onChange={event => setLname(event.target.value)}
                                     style={{ 
@@ -145,11 +173,12 @@ function Register() {
                                 Password
                             </label>
                             <input
+                                required
                                 value={password}
                                 onChange={event => setPassword(event.target.value)}
                                 style={{ 
                                     fontFamily:"Regular",
-                                    width:"80%",
+                                    width:"60%",
                                     border: `2px solid ${Colors.blueLight}`
                                 }}
                                 type={"password"}
@@ -180,6 +209,7 @@ function Register() {
                                 </div>
                             }
                             <img
+                                alt='profile_image'
                                 src={!pickedImage ? defaultImage : pickedImage.downloadUrl}
                                 style={{
                                     width:"120px",
@@ -223,7 +253,7 @@ function Register() {
                 </div>
 
                 <div className='second-half'>
-                       <button style={{
+                       <button onClick={signUp} style={{
                             backgroundColor:Colors.blueBold,
                             border:`3px solid ${Colors.blueLight}`,
                             fontFamily:"Bold"
