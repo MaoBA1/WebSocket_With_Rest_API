@@ -51,6 +51,21 @@ function CostumModal({
                             {message.message}
                         </label>
                     </div>
+
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"row",
+                        alignItems:"center",
+                        justifyContent:"center"
+                    }}>
+                        {
+                            buttons.map(button => 
+                                {<button>
+                                    {button.text}
+                                </button>}
+                            )
+                        }
+                    </div>
                 </div>
             </div>
         </div>

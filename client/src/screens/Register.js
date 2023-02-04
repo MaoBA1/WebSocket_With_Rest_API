@@ -21,6 +21,7 @@ function Register() {
     const [ processPrecent, setProcessPresent ] = useState(0);
     const [ showModal, setShowModal ] = useState(false);
     const [ modalMessage, setModalMessage ] = useState("");
+    const [ modalButtons, setModalButtons ] = useState([]);
     const [ windowSize, setWindowSize ] = useState({
         width: window.innerWidth,
         height: window.innerHeight
@@ -43,7 +44,8 @@ function Register() {
         socket.on("create_account", (response) => {
             if(!response.status) {
                 setShowModal(true);
-                setModalMessage(response.message);
+                setModalMessage({message: response.message, fontColor:Colors.red});
+                setModalButtons({text: "OK", onClick: () => setShowModal(false)})
             }
         })
     },[]);
@@ -107,12 +109,13 @@ function Register() {
             backgroundColor: Colors.creamyWhite,
             height: windowSize.height
         }}>
-            {true && <CostumModal
+            {showModal && <CostumModal
                 show={true}
                 width={"300px"}
                 height={"200px"}
                 backgroundColor={Colors.blackBlue}
                 message={{message: "This User is already exist", fontColor: Colors.red}}
+                buttons={modalButtons}
             />}
             <BeforLoginHeader
                 title={"Posts & Chats"}
@@ -220,7 +223,7 @@ function Register() {
                                 style={{
                                     width:"120px",
                                     height:"120px",
-                                    borderRadius:"50px",
+                                    borderRadius:"50%",
                                     border: `5px solid ${Colors.blueLight}`
                                 }}
                             />
