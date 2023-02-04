@@ -1,0 +1,84 @@
+.main-div-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.main-div{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.first-half {
+    flex: 0.8;
+    display: flex;
+    flex-direction: column;
+}
+
+.second-half{
+    flex: 0.2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+form{
+    flex: 0.4;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+.input-container-column {
+    display: flex;
+    flex-direction: column;
+    height: max-content;
+    justify-content: space-around;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.input-container-row {
+    display: flex;
+    flex-direction: row;
+    height: max-content;
+    align-self: flex-start;
+    width: 100%;
+}
+
+.inner-input-container-row{
+    flex: 0.5;
+    display: flex;
+    flex-direction: column;
+}
+
+input{
+    border-radius: 20px;
+    width: 90%;
+    height: 30px;
+    font-size: medium;
+}
+
+.image-part-container {
+    flex: 0.6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 20px;
+    background-color: #0d1b2a;
+}
+
+.file-input {
+    width: max-content;
+    height: max-content;
+    color: #FFFFFF;
+    border: 2px solid #FFFFFF
+}
+
+button{
+    color: #FFFFFF;
+}

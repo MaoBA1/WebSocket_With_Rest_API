@@ -1,51 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import Colors from '../utilities/Colors';
 import { BsFileEarmarkPost, BsFillChatFill } from 'react-icons/bs';
-import { useNavigate, } from 'react-router-dom';
+// import { useNavigate, } from 'react-router-dom';
+import '../utilities/login.css'
 
 
-
-const Header = (windowSize) => {
-    return(
-        <div style={{
-            backgroundColor:Colors.blackBlue,
-            // width: windowSize.width,
-            // height: windowSize.height / 10,
-            display:"flex",
-            flexDirection:"row",
-            alignItems:"center",
-            justifyContent:"center"
-        }}>
-            <div style={{
-                display:"flex",
-                flexDirection:"column", 
-                alignItems:"center"
-            }}>
-                <label style={{
-                    color:"#FFFFFF",
-                    fontSize:"30px",
-                    fontFamily:"Bold",
-                }}>
-                    Posts & Chats
-                </label>
-                <label style={{
-                    color:"#FFFFFF",
-                    fontSize:"25px",
-                    fontFamily:"Regular",
-                    fontStyle:"italic"
-                }}>
-                    Come talk with us
-                </label>
-            </div>
-        </div>
-    )
-}
-
+// components
+import BeforLoginHeader from '../components/BeforLoginHeader';
 
 
 function Login(props) {
-    const navigate = useNavigate();
-    const [ nickName, setNickName ] = useState("");
+    // const navigate = useNavigate();
+    const [ email, setEmail ] = useState("");
+    const [ password, setPassword ] = useState("");
     const [ windowSize, setWindowSize ] = useState({
         width: window.innerWidth,
         height: window.innerHeight
@@ -63,109 +30,95 @@ function Login(props) {
         
     },[]);
 
-    const Login = () => {
-        if(nickName !== "") {
-            navigate('/Home/',{
-                state:{ 
-                    userNickName: nickName
-                }
-            });
-        }
-    }
+    
 
+   
     return ( 
-        <div style={{
-            flex:"1",
-            display:"flex",
-            flexDirection:"column",
-            width: windowSize.width,
-            height: windowSize.height,
+        <div className='main-div' style={{
             backgroundColor: Colors.creamyWhite,
+            height: windowSize.height
         }}>
-           <Header windowSize={windowSize}/>
-           <div style={{
-                width: windowSize.width / 6,
-                alignSelf:"center",
-                display:"flex",
-                flexDirection:"row",
-                justifyContent:"space-between",
-                position:"absolute",
-                top:windowSize.height / 4
-           }}>
-                <BsFileEarmarkPost
-                    color={Colors.blueMedium}
-                    size={"100px"}
-                />
+            <BeforLoginHeader
+                title={"Posts & Chats"}
+                subtitle={"Come talk with us"}
+            />
+            
+            <div className='form-container'>
+                <div className='icon-container'>
+                    <BsFileEarmarkPost
+                        color={Colors.blueMedium}
+                        size={"80px"}
+                    />
 
-                <BsFillChatFill
-                    color={Colors.blueBold}
-                    size={"100px"}
-                />
-           </div>
-           
-           <div style={{
-                flex:"1",
-                display:"flex",
-                flexDirection:"column",
-                width:windowSize.width,
-                height: windowSize.height - (windowSize.height / 10),
-                alignItems:"center",
-                justifyContent:"center"
-           }}>
-                <form style={{
-                    display:"flex",
-                    flexDirection:"column",
-                    alignItems:"center",
-                    height:windowSize.height / 5,
-                    justifyContent:"space-between"
-                }} onSubmit={Login}>
-                    <div style={{
-                        display:"flex",
-                        flexDirection:"column",
-                        alignItems:"center"
-                    }}>
-                        <label style={{
+                    <BsFillChatFill
+                        color={Colors.blueBold}
+                        size={"80px"}
+                    />  
+                </div>
+                <form>
+                    <label 
+                        className='input-labels'
+                        style={{ 
+                            fontFamily:"Bold",
+                            color:Colors.blueMedium 
+                        }}
+                    >
+                        Email
+                    </label>
+                    <input
+                        style={{
                             fontFamily:"Regular",
-                            fontWeight:"bold",
-                            color: Colors.blueMedium,
-                            fontSize:"25px",
-                            fontStyle:"italic"
-                        }}>
-                            Nick Name
-                        </label>
-                        <input
-                            type={"text"} 
-                            value={nickName}
-                            onChange={(event) => setNickName(event.target.value)}
-                            style={{
-                                width: windowSize.width / 2.5,
-                                height: windowSize.height / 15,
-                                borderRadius:"20px",
-                                border:`2px solid ${Colors.blueMedium}`,
-                                fontFamily:"Regular",
-                                paddingLeft:"15px",
-                                color:Colors.blueLight,
-                                fontStyle:"italic"
-                            }}
-                            placeholder="Please choose a nickname for yourself..."
-                        />
-                    </div>
+                            color: Colors.blueMedium
+                        }}
+                        placeholder="Type Your Email Address..."
+                        value={email}
+                        onChange={event => setEmail(event.target.value)}
+                    />
+
+                    <label 
+                        className='input-labels'
+                        style={{ 
+                            fontFamily:"Bold",
+                            color:Colors.blueMedium 
+                        }}
+                    >
+                        Password
+                    </label>
+                    <input
+                        style={{
+                            fontFamily:"Regular",
+                            color: Colors.blueMedium
+                        }}
+                        placeholder="Type Your Password..."
+                        value={password}
+                        onChange={event => setPassword(event.target.value)}
+                    />
                 </form>
-                <button style={{
-                    width: windowSize.width / 5,
-                    height: windowSize.height / 18,
-                    borderRadius:"20px",
-                    backgroundColor: Colors.blueBold,
-                    border:`3px solid ${Colors.blueMedium}`,
-                    fontFamily:"Bold",
-                    color:"#ffffff",
-                    fontSize:"20px"
-                }} onClick={Login}>
-                    Login
-                </button>
-           </div>
+                <div className='button-container'>
+                    <button style={{
+                        fontFamily:"Bold",
+                        backgroundColor: Colors.blackBlue,
+                        border:`2px solid ${Colors.blueMedium}`
+                    }}>
+                        Login
+                    </button>
+                    <a 
+                        href='/Register'
+                        style={{
+                            fontFamily:"Regular",
+                            color: Colors.blueMedium
+                        }}
+                    >
+                        Sign-Up
+                    </a>
+                </div>
+            </div>
         </div>
     );
 }
 
 export default Login;
+
+
+
+
