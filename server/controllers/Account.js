@@ -24,7 +24,10 @@ const accountEvents = (socket) => {
         Account.findOne({ email: lowercaseEmail })
         .then(account => {
             if(account) {
-                socket.emit("create_account", {message: "user has already exist"});
+                socket.emit("create_account", {
+                    status: false,
+                    message: "user has already exist"
+                });
                 return;
             } 
             const newAccount = new Account({

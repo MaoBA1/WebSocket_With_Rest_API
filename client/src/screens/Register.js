@@ -43,9 +43,10 @@ function Register() {
         window.addEventListener('resize', handelResize);
         socket.on("create_account", (response) => {
             if(!response.status) {
+                console.log(response);
                 setShowModal(true);
                 setModalMessage({message: response.message, fontColor:Colors.red});
-                setModalButtons({text: "OK", onClick: () => setShowModal(false)})
+                setModalButtons([{text: "OK", onClick: () => setShowModal(false)}])
             }
         })
     },[]);
@@ -110,11 +111,10 @@ function Register() {
             height: windowSize.height
         }}>
             {showModal && <CostumModal
-                show={true}
                 width={"300px"}
                 height={"200px"}
                 backgroundColor={Colors.blackBlue}
-                message={{message: "This User is already exist", fontColor: Colors.red}}
+                message={modalMessage}
                 buttons={modalButtons}
             />}
             <BeforLoginHeader

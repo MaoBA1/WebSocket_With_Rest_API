@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Colors from '../utilities/Colors';
 
 function CostumModal({ 
     backgroundColor,
@@ -59,10 +59,14 @@ function CostumModal({
                         justifyContent:"center"
                     }}>
                         {
-                            buttons.map(button => 
-                                {<button>
-                                    {button.text}
-                                </button>}
+                            buttons.map((item) => 
+                                <button style={{
+                                    backgroundColor: Colors.blueLight,
+                                    width:"100px",
+                                    height:"30px"
+                                }}>
+                                    {item.text}
+                                </button>
                             )
                         }
                     </div>
