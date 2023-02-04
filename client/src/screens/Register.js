@@ -19,6 +19,8 @@ function Register() {
     const [ lname, setLname ] = useState("");
     const [ isInProcess, setIsInProcess ] = useState(false);
     const [ processPrecent, setProcessPresent ] = useState(0);
+    const [ showModal, setShowModal ] = useState(false);
+    const [ modalMessage, setModalMessage ] = useState("");
     const [ windowSize, setWindowSize ] = useState({
         width: window.innerWidth,
         height: window.innerHeight
@@ -38,8 +40,11 @@ function Register() {
             });
         }
         window.addEventListener('resize', handelResize);
-        socket.on("create_account", (data) => {
-            console.log(data);
+        socket.on("create_account", (response) => {
+            if(!response.status) {
+                setShowModal(true);
+                setModalMessage(response.message);
+            }
         })
     },[]);
 
@@ -102,11 +107,12 @@ function Register() {
             backgroundColor: Colors.creamyWhite,
             height: windowSize.height
         }}>
-            {false && <CostumModal
+            {true && <CostumModal
                 show={true}
                 width={"300px"}
                 height={"200px"}
                 backgroundColor={Colors.blackBlue}
+                message={{message: "This User is already exist", fontColor: Colors.red}}
             />}
             <BeforLoginHeader
                 title={"Posts & Chats"}

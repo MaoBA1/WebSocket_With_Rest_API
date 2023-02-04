@@ -4,7 +4,9 @@ import React from 'react';
 function CostumModal({ 
     backgroundColor,
     width,
-    height
+    height,
+    message,
+    buttons
 }) {
     return ( 
         <div style={{
@@ -16,7 +18,7 @@ function CostumModal({
                 width:"100%",
                 height:"100%",
                 backgroundColor:"gray",
-                opacity:"0.4",
+                opacity:"0.5",
                 position:"absolute",
                 zIndex:"0"
             }}/>
@@ -35,8 +37,20 @@ function CostumModal({
                     backgroundColor: backgroundColor,
                     width,
                     height,
+                    display:"flex",
+                    flexDirection:"column",
+                    alignItems:"center",
+                    justifyContent:"center",
+                    borderRadius:"20px"
                 }}>
-
+                    <div>
+                        <label style={{
+                            fontFamily:"Bold",
+                            color: message.fontColor
+                        }}>
+                            {message.message}
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
