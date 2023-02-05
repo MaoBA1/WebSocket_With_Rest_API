@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Colors from '../utilities/Colors';
 import { BsFileEarmarkPost, BsFillChatFill } from 'react-icons/bs';
-import { GrMultimedia } from 'react-icons/gr';
+import { MdOutlineVideoLibrary } from 'react-icons/md';
 // import { useNavigate, } from 'react-router-dom';
 import '../utilities/login.css'
 
@@ -35,7 +35,7 @@ function Login(props) {
             Share your posts with us
         </label>
         ,
-        <GrMultimedia
+        <MdOutlineVideoLibrary
             className='animation'
             color={Colors.blueLight}
             size={"120px"}
@@ -96,7 +96,7 @@ function Login(props) {
                     {animations[animationIndex % animations.length]}
                 </div>
                 <form style={{
-                    width:"50%",
+                    width:"60%",
                     borderRadius:"20px",
                     boxShadow:"#000000 0px 5px 15px"
                 }}>

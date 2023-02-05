@@ -139,6 +139,7 @@ function Register() {
             <BeforLoginHeader
                 title={"Posts & Chats"}
                 subtitle={"Register"}
+                backFunction={() => navigate('/')}
             />
             <div className='main-div'>
                 <div className='first-half'>

@@ -73,7 +73,7 @@ input{
 }
 
 .file-input {
-    width: max-content;
+    width: 90%;
     height: max-content;
     color: #FFFFFF;
     border: 2px solid #FFFFFF
