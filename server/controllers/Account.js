@@ -4,7 +4,8 @@ const Account = require('../models/Account');
 const { auth } = require('../firebase');
 const { 
     createUserWithEmailAndPassword,
-    sendEmailVerification
+    sendEmailVerification,
+    signInWithEmailAndPassword,
 } = require('firebase/auth');
 
 const accountEvents = (socket) => {
@@ -24,11 +25,10 @@ const accountEvents = (socket) => {
         Account.findOne({ email: lowercaseEmail })
         .then(account => {
             if(account) {
-                socket.emit("create_account", {
+                return socket.emit("create_account", {
                     status: false,
                     message: "user has already exist"
                 });
-                return;
             } 
             const newAccount = new Account({
                 _id: mongoose.Types.ObjectId(),
@@ -41,6 +41,7 @@ const accountEvents = (socket) => {
             .then(async(new_account) => {
                 await createUserWithEmailAndPassword(auth, email, password)
                 .then(() => {
+                    sendEmailVerification(auth?.currentUser);
                     socket.emit("create_account", {
                         status: true,
                         account: new_account
@@ -56,6 +57,42 @@ const accountEvents = (socket) => {
             
         })
         
+    })
+
+    socket.on("login", async(data) => {
+        const { email, password } = data;
+        await Account.findOne({email: email})
+        .then(account => {
+            if(account) {
+                signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    if(!auth?.currentUser?.emailVerified) {
+                        return socket.emit("login", {
+                            status:false,
+                            message: `Your account is not verified`
+                        })
+                    } 
+                    return socket.emit("login", {
+                        status:true,
+                        account: account
+                    })
+                })
+                .catch(error => {
+                    return socket.emit("login", {
+                        status:false,
+                        message: "Wrong Password"
+                    })
+                })
+            } else {
+                return socket.emit("login", {
+                    status:false,
+                    message: `There is no account like ${email}`
+                })
+            }
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
     })
 }
 
