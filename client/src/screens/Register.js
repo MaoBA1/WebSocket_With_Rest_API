@@ -153,9 +153,10 @@ function Register() {
                                 onChange={event => setEmail(event.target.value)}
                                 style={{ 
                                     fontFamily:"Regular",
-                                    border: `2px solid ${Colors.blueLight}`
+                                    border: `2px solid ${Colors.blueLight}`,
+                                    backgroundColor:Colors.grey
                                 }}
-                                placeholder="Type Your Email Address..."
+                                placeholder="Email Address..."
                             />
                         </div>
                         
@@ -172,9 +173,10 @@ function Register() {
                                     style={{ 
                                         fontFamily:"Regular",
                                         width:"90%",
-                                        border: `2px solid ${Colors.blueLight}`
+                                        border: `2px solid ${Colors.blueLight}`,
+                                        backgroundColor:Colors.grey
                                     }}
-                                    placeholder="Type Your First Name..."
+                                    placeholder="First Name..."
                                 />
                             </div>
 
@@ -189,9 +191,10 @@ function Register() {
                                     style={{ 
                                         fontFamily:"Regular",
                                         width:"90%",
-                                        border: `2px solid ${Colors.blueLight}`
+                                        border: `2px solid ${Colors.blueLight}`,
+                                        backgroundColor:Colors.grey
                                     }}
-                                    placeholder="Type Your Last Name..."
+                                    placeholder="Last Name..."
                                 />
                             </div>
                         </div>
@@ -207,10 +210,11 @@ function Register() {
                                 style={{ 
                                     fontFamily:"Regular",
                                     width:"60%",
-                                    border: `2px solid ${Colors.blueLight}`
+                                    border: `2px solid ${Colors.blueLight}`,
+                                    backgroundColor:Colors.grey
                                 }}
                                 type={"password"}
-                                placeholder="Type Your Password..."
+                                placeholder="Password..."
                             />
                         </div>
                     </form>

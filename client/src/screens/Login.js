@@ -96,7 +96,7 @@ function Login(props) {
                     {animations[animationIndex % animations.length]}
                 </div>
                 <form style={{
-                    width:"70%",
+                    width:"50%",
                     borderRadius:"20px",
                     boxShadow:"#000000 0px 5px 15px"
                 }}>
@@ -112,7 +112,8 @@ function Login(props) {
                     <input
                         style={{
                             fontFamily:"Regular",
-                            color: Colors.blueMedium
+                            color: Colors.blueMedium,
+                            backgroundColor:Colors.grey
                         }}
                         placeholder="Email Address..."
                         value={email}
@@ -131,7 +132,8 @@ function Login(props) {
                     <input
                         style={{
                             fontFamily:"Regular",
-                            color: Colors.blueMedium
+                            color: Colors.blueMedium,
+                            backgroundColor:Colors.grey
                         }}
                         placeholder="Password..."
                         value={password}
