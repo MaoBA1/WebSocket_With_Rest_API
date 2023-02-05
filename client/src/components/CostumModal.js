@@ -40,31 +40,43 @@ function CostumModal({
                     display:"flex",
                     flexDirection:"column",
                     alignItems:"center",
-                    justifyContent:"center",
-                    borderRadius:"20px"
+                    justifyContent:"space-around",
+                    borderRadius:"20px",
+                    padding:"10px",
+                    boxShadow:"#000000 0px 5px 15px"
                 }}>
                     <div>
                         <label style={{
                             fontFamily:"Bold",
-                            color: message.fontColor
+                            color: message.fontColor,
+                            textAlign:"center"
                         }}>
                             {message.message}
                         </label>
                     </div>
 
                     <div style={{
+                        width:"100%",
                         display:"flex",
                         flexDirection:"row",
                         alignItems:"center",
-                        justifyContent:"center"
+                        justifyContent:"space-around",
                     }}>
                         {
-                            buttons.map((item) => 
-                                <button style={{
-                                    backgroundColor: Colors.blueLight,
-                                    width:"100px",
-                                    height:"30px"
-                                }}>
+                            buttons.map((item, index) => 
+                                <button key={index} style={{
+                                    backgroundColor: "#FFFFFF",
+                                    width:"80px",
+                                    height:"30px",
+                                    color: Colors.blueLight,
+                                    display:"flex",
+                                    flexDirection:"column",
+                                    alignItems:"center",
+                                    justifyContent:"center",
+                                    fontFamily:"Bold",
+                                    fontSize:"15px",
+                                    border:`2px solid ${Colors.blueLight}`
+                                }} onClick={item.onClick}>
                                     {item.text}
                                 </button>
                             )

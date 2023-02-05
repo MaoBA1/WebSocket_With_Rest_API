@@ -4,6 +4,7 @@ import '../utilities/register.css';
 import { ref, deleteObject, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../firebase';
 import { socket } from '../socket.io';
+import { useNavigate, } from 'react-router-dom';
 
 
 // components
@@ -11,6 +12,7 @@ import BeforLoginHeader from '../components/BeforLoginHeader';
 import CostumModal from '../components/CostumModal';
 
 function Register() {
+    const navigate = useNavigate();
     const defaultImage = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png";
     const [ pickedImage, setPickedImage ] = useState(null);
     const [ email, setEmail ] = useState("");
@@ -47,9 +49,26 @@ function Register() {
                 setShowModal(true);
                 setModalMessage({message: response.message, fontColor:Colors.red});
                 setModalButtons([{text: "OK", onClick: () => setShowModal(false)}])
+            } else {
+                console.log(response);
+                let fname = response?.account?.fname;
+                let email = response?.account?.email;
+                setShowModal(true);
+                setModalMessage({
+                    message: `Hi ${fname}, Your account\n
+                    has been created successfully!\n
+                    Account verification link sent to\n
+                    ${email}`, 
+                    fontColor:Colors.blueLight
+                });
+                setModalButtons([{text: "OK", onClick: () => {
+                        navigate('/')
+                        setShowModal(false);
+                    }
+                }])
             }
         })
-    },[]);
+    },[email, fname, navigate]);
 
     const handleFileChange = event => {
         const fileObj = event.target.files && event.target.files[0];

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Colors from '../utilities/Colors';
 import { BsFileEarmarkPost, BsFillChatFill } from 'react-icons/bs';
+import { GrMultimedia } from 'react-icons/gr';
 // import { useNavigate, } from 'react-router-dom';
 import '../utilities/login.css'
 
@@ -17,7 +18,51 @@ function Login(props) {
         width: window.innerWidth,
         height: window.innerHeight
     });
-    
+    const [ animationIndex, setAnimationIndex ] = useState(0);
+    const animations = [
+        <BsFileEarmarkPost
+            className='animation'
+            color={Colors.blueMedium}
+            size={"120px"}
+        />
+        ,
+        <label style={{
+            fontFamily:"Bold",
+            fontSize:"35px",
+            color:Colors.blueBold,
+            textAlign:"center"
+        }} className='animation'>
+            Share your posts with us
+        </label>
+        ,
+        <GrMultimedia
+            className='animation'
+            color={Colors.blueLight}
+            size={"120px"}
+        />,
+        <label style={{
+            fontFamily:"Bold",
+            fontSize:"35px",
+            color:Colors.blueBold,
+            textAlign:"center"
+        }} className='animation'>
+            Share videos and photos
+        </label>
+        ,
+        <BsFillChatFill
+            className='animation'
+            color={Colors.blueBold}
+            size={"120px"}
+        />,
+        <label style={{
+            fontFamily:"Bold",
+            fontSize:"30px",
+            color:Colors.blueBold,
+            textAlign:"center"
+        }} className='animation'>
+            Talk with new people on live group chats
+        </label>
+    ]
 
     useEffect(() => {
         const handelResize = () => {
@@ -27,9 +72,12 @@ function Login(props) {
             });
         }
         window.addEventListener('resize', handelResize);
-        
-    },[]);
+        setTimeout(() => {
+            setAnimationIndex(animationIndex + 1);
+        }, 5000)
+    },[animationIndex, animations.length]);
 
+    
     
 
    
@@ -45,17 +93,13 @@ function Login(props) {
             
             <div className='form-container'>
                 <div className='icon-container'>
-                    <BsFileEarmarkPost
-                        color={Colors.blueMedium}
-                        size={"80px"}
-                    />
-
-                    <BsFillChatFill
-                        color={Colors.blueBold}
-                        size={"80px"}
-                    />  
+                    {animations[animationIndex % animations.length]}
                 </div>
-                <form>
+                <form style={{
+                    width:"70%",
+                    borderRadius:"20px",
+                    boxShadow:"#000000 0px 5px 15px"
+                }}>
                     <label 
                         className='input-labels'
                         style={{ 
@@ -70,7 +114,7 @@ function Login(props) {
                             fontFamily:"Regular",
                             color: Colors.blueMedium
                         }}
-                        placeholder="Type Your Email Address..."
+                        placeholder="Email Address..."
                         value={email}
                         onChange={event => setEmail(event.target.value)}
                     />
@@ -89,7 +133,7 @@ function Login(props) {
                             fontFamily:"Regular",
                             color: Colors.blueMedium
                         }}
-                        placeholder="Type Your Password..."
+                        placeholder="Password..."
                         value={password}
                         onChange={event => setPassword(event.target.value)}
                     />

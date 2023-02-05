@@ -17,14 +17,14 @@
 form{
     display: flex;
     flex-direction: column;
-    width: 80%;
-    flex: 0.4;
+    flex: 0.5;
     align-items: center;
     justify-content: space-around;
+    background-color: #ffffff;
 }
 
 input{
-    width: 90%;
+    width: 70%;
     border-radius: 20px;
     padding: 10px;
     font-style: italic;
@@ -62,7 +62,7 @@ button{
 }
 
 .button-container{
-    flex: 0.25;
+    flex: 0.20;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -75,3 +75,17 @@ a{
     font-weight: bold;
     font-size: 18px;
 }
+
+.animation {
+    animation-name: animation-div;
+    animation-duration: 5s;
+    opacity: 0;
+    animation-iteration-count: infinite;
+}
+
+@keyframes animation-div {
+    0%{opacity: 0}
+    50%{opacity: 1;}
+    100%{opacity: 0;}
+}
+
