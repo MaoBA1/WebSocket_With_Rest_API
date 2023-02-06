@@ -140,7 +140,8 @@ function Login(props) {
                         value={password}
                         onChange={event => setPassword(event.target.value)}
                     />
-                    <button  
+                    <label
+                        onClick={() => setShowForgetPassword(true)}  
                         className='forget-password' 
                         style={{
                             color:Colors.blueLight,
@@ -158,7 +159,7 @@ function Login(props) {
                         }}
                     >
                         Forget Password ? 
-                    </button>
+                    </label>
                 </form>
                 <div className='button-container'>
                     <button style={{

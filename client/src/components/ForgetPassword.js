@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Colors from '../utilities/Colors';
 import { socket } from '../socket.io';
+import { RiCloseFill } from 'react-icons/ri';
 
 
 
@@ -63,6 +64,18 @@ function ForgetPassword({ setVisible }) {
                     boxShadow:"#000000 0px 5px 15px",
                     zIndex:"2",
                 }}>
+                    <div style={{
+                        width:"100%",
+                        display:"flex",
+                        flexDirection:"column",
+                        alignItems:"flex-end"
+                    }}>
+                        <RiCloseFill
+                            color={Colors.blueMedium}
+                            size="30px"
+                            onClick={setVisible}
+                        />
+                    </div>
                     <label style={{
                         fontFamily:"Bold",
                         color: Colors.blueLight,
