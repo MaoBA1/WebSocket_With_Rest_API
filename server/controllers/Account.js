@@ -6,6 +6,7 @@ const {
     createUserWithEmailAndPassword,
     sendEmailVerification,
     signInWithEmailAndPassword,
+    sendPasswordResetEmail
 } = require('firebase/auth');
 
 const accountEvents = (socket) => {
@@ -59,9 +60,9 @@ const accountEvents = (socket) => {
         
     })
 
-    socket.on("login", async(data) => {
+    socket.on("login", (data) => {
         const { email, password } = data;
-        await Account.findOne({email: email})
+        Account.findOne({email: email})
         .then(account => {
             if(account) {
                 signInWithEmailAndPassword(auth, email, password)
@@ -85,6 +86,30 @@ const accountEvents = (socket) => {
                 })
             } else {
                 return socket.emit("login", {
+                    status:false,
+                    message: `There is no account like ${email}`
+                })
+            }
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
+    })
+
+    socket.on("forget_password", (data) => {
+        const { email } = data;
+        Account.findOne({ email: email })
+        .then(account => {
+            if(account) {
+                sendPasswordResetEmail(auth, email)
+                .then(() => {
+                    return socket.emit("forget_password", {
+                        status:true,
+                        message: `Mail to reset your password was sent to ${email}`
+                    })
+                })
+            } else {
+                return socket.emit("forget_password", {
                     status:false,
                     message: `There is no account like ${email}`
                 })

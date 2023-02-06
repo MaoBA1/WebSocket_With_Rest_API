@@ -89,3 +89,6 @@ a{
     100%{opacity: 0;}
 }
 
+.forget-password:hover {
+    cursor: pointer;
+}

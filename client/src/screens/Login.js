@@ -8,12 +8,13 @@ import '../utilities/login.css'
 
 // components
 import BeforLoginHeader from '../components/BeforLoginHeader';
-
+import ForgetPassword from '../components/ForgetPassword';
 
 function Login(props) {
     // const navigate = useNavigate();
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
+    const [ showForgetPassword, setShowForgetPassword ] = useState(false);
     const [ windowSize, setWindowSize ] = useState({
         width: window.innerWidth,
         height: window.innerHeight
@@ -90,7 +91,7 @@ function Login(props) {
                 title={"Posts & Chats"}
                 subtitle={"Come talk with us"}
             />
-            
+            {showForgetPassword && <ForgetPassword setVisible={() => setShowForgetPassword(false)}/>}
             <div className='form-container'>
                 <div className='icon-container'>
                     {animations[animationIndex % animations.length]}
@@ -139,6 +140,25 @@ function Login(props) {
                         value={password}
                         onChange={event => setPassword(event.target.value)}
                     />
+                    <button  
+                        className='forget-password' 
+                        style={{
+                            color:Colors.blueLight,
+                            border:"none",
+                            background:"none",
+                            fontSize:"15px",
+                            width:"max-content",
+                            fontFamily:"Bold",
+                            fontStyle:"italic",
+                            borderBottom:`1px solid ${Colors.blueLight}`,
+                            borderRadius:"0px",
+                            display:"flex",
+                            flexDirection:"column",
+                            justifyContent:"flex-end"
+                        }}
+                    >
+                        Forget Password ? 
+                    </button>
                 </form>
                 <div className='button-container'>
                     <button style={{
