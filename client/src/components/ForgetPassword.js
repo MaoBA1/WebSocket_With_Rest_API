@@ -9,6 +9,7 @@ function ForgetPassword({ setVisible }) {
     const [ email, setEmail ] = useState("");
     const [ errorMessage, setErrorMessage ] = useState("");
     const [ success, setSuccess ] = useState(false);
+    const [ successMessage, setSuccessMessage ] = useState("");
 
     const sendEmailPasswordLink = () => {
         setErrorMessage("");
@@ -26,14 +27,13 @@ function ForgetPassword({ setVisible }) {
                 return
             }
             console.log(response);
-            setSuccess(true);
             setTimeout(() => {
                 setSuccess(false);
-                setVisible();
-            })
-
+                setSuccessMessage("");
+                setVisible(false);
+            }, 3000)
         });
-    },[]);
+    },[setVisible]);
     return (
         <div style={{
             width:"100%",
@@ -79,7 +79,7 @@ function ForgetPassword({ setVisible }) {
                                 fontSize:"18px",
                                 textAlign:"center"
                             }}>
-                                We sent email to reset your password
+                               {successMessage}
                             </label>
                         )
                         :
@@ -94,7 +94,7 @@ function ForgetPassword({ setVisible }) {
                                     <RiCloseFill
                                         color={Colors.blueMedium}
                                         size="30px"
-                                        onClick={setVisible}
+                                        onClick={() => setVisible(false)}
                                     />
                                 </div>
                                 <label style={{
@@ -113,7 +113,7 @@ function ForgetPassword({ setVisible }) {
                                 }}>
                                     {errorMessage}
                                 </label>}
-                                <form onSubmit={sendEmailPasswordLink}>
+                                <form>
                                     <input 
                                         required
                                         value={email}

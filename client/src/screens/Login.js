@@ -91,7 +91,7 @@ function Login(props) {
                 title={"Posts & Chats"}
                 subtitle={"Come talk with us"}
             />
-            {showForgetPassword && <ForgetPassword setVisible={() => setShowForgetPassword(false)}/>}
+            {showForgetPassword && <ForgetPassword setVisible={() => setShowForgetPassword()}/>}
             <div className='form-container'>
                 <div className='icon-container'>
                     {animations[animationIndex % animations.length]}
