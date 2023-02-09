@@ -27,6 +27,8 @@ function ForgetPassword({ setVisible }) {
                 return
             }
             console.log(response);
+            setSuccess(true);
+            setSuccessMessage(response.message)
             setTimeout(() => {
                 setSuccess(false);
                 setSuccessMessage("");
@@ -34,6 +36,8 @@ function ForgetPassword({ setVisible }) {
             }, 3000)
         });
     },[setVisible]);
+
+
     return (
         <div style={{
             width:"100%",

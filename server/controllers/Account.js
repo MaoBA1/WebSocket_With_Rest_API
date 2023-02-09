@@ -66,7 +66,7 @@ const accountEvents = (socket) => {
         .then(account => {
             if(account) {
                 signInWithEmailAndPassword(auth, email, password)
-                .then(() => {
+                .then(async () => {
                     if(!auth?.currentUser?.emailVerified) {
                         return socket.emit("login", {
                             status:false,
@@ -75,7 +75,7 @@ const accountEvents = (socket) => {
                     } 
                     return socket.emit("login", {
                         status:true,
-                        account: account
+                        token: account
                     })
                 })
                 .catch(error => {
