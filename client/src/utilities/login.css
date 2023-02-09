@@ -92,3 +92,18 @@ a{
 .forget-password:hover {
     cursor: pointer;
 }
+
+.error-message {
+    position: absolute;
+    top: 350px;
+    z-index: 1;
+    padding: 12px;
+    border-radius: 20px;
+    animation-name: error-div;
+    animation-duration: 3s;
+}
+
+@keyframes error-div {
+    from{opacity: 1;}
+    to{opacity:0 ;}
+}

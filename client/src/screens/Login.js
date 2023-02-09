@@ -96,6 +96,20 @@ function Login(props) {
                 <div className='icon-container'>
                     {animations[animationIndex % animations.length]}
                 </div>
+                <div 
+                    className='error-message'
+                    style={{
+                        backgroundColor: Colors.blueBold
+                    }}
+                >
+                    <label style={{
+                        fontFamily:"Bold",
+                        fontSize:"18px",
+                        color:Colors.red
+                    }}>
+                        This is an error Message
+                    </label>
+                </div>
                 <form style={{
                     width:"60%",
                     borderRadius:"20px",
