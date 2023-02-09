@@ -3,6 +3,7 @@ import Colors from '../utilities/Colors';
 import { BsFileEarmarkPost, BsFillChatFill } from 'react-icons/bs';
 import { MdOutlineVideoLibrary } from 'react-icons/md';
 // import { useNavigate, } from 'react-router-dom';
+import { socket } from '../socket.io'
 import '../utilities/login.css'
 
 
@@ -19,6 +20,7 @@ function Login(props) {
         width: window.innerWidth,
         height: window.innerHeight
     });
+    const [ errorMessage, setErrorMessage ] = useState("");
     const [ animationIndex, setAnimationIndex ] = useState(0);
     const animations = [
         <BsFileEarmarkPost
@@ -75,11 +77,37 @@ function Login(props) {
         window.addEventListener('resize', handelResize);
         setTimeout(() => {
             setAnimationIndex(animationIndex + 1);
-        }, 5000)
+        }, 5000);
+
+        socket.on("login", (response) => {
+            if(!response.status) {
+                console.log(response);
+                setErrorMessage(response.message);
+                setTimeout(() => {
+                    setErrorMessage("");
+                    // setEmail("");
+                    // setPassword("");
+                }, 3000);
+            } else {
+
+            }
+        })
+        
     },[animationIndex, animations.length]);
 
     
-    
+    const login = () => {
+        if(email === "" || password === "") {
+            setErrorMessage("Email and Password required");
+            setTimeout(() => {
+                setErrorMessage("");
+                // setEmail("");
+                // setPassword("");
+            }, 3000)
+        } else {
+            socket.emit("login", { email: email, password: password });
+        }
+    }
 
    
     return ( 
@@ -96,20 +124,24 @@ function Login(props) {
                 <div className='icon-container'>
                     {animations[animationIndex % animations.length]}
                 </div>
-                <div 
-                    className='error-message'
-                    style={{
-                        backgroundColor: Colors.blueBold
-                    }}
-                >
-                    <label style={{
-                        fontFamily:"Bold",
-                        fontSize:"18px",
-                        color:Colors.red
-                    }}>
-                        This is an error Message
-                    </label>
-                </div>
+                {
+                    errorMessage !== "" &&
+                    <div 
+                        className='error-message'
+                        style={{
+                            backgroundColor: Colors.blueBold
+                        }}
+                    >
+                        <label style={{
+                            fontFamily:"Bold",
+                            fontSize:"18px",
+                            color:Colors.red,
+                            textAlign:"center"
+                        }}>
+                            {errorMessage}
+                        </label>
+                    </div>
+                }
                 <form style={{
                     width:"60%",
                     borderRadius:"20px",
@@ -145,6 +177,7 @@ function Login(props) {
                         Password
                     </label>
                     <input
+                        type="password"
                         style={{
                             fontFamily:"Regular",
                             color: Colors.blueMedium,
@@ -180,7 +213,7 @@ function Login(props) {
                         fontFamily:"Bold",
                         backgroundColor: Colors.blackBlue,
                         border:`2px solid ${Colors.blueMedium}`
-                    }}>
+                    }} onClick={login}>
                         Login
                     </button>
                     <a 
