@@ -52,6 +52,7 @@ const AfterLoginHeader = ({ title, profileImage, menuCollapsed, setMenuCollapsed
 
                 <div className='profile-image-container'>
                     <img
+                        alt='profileImage'
                         src={profileImage}
                         style={{
                             width:"40px",

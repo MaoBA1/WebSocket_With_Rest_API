@@ -4,7 +4,9 @@ import { BsFileEarmarkPost, BsFillChatFill } from 'react-icons/bs';
 import { MdOutlineVideoLibrary } from 'react-icons/md';
 import { useNavigate, } from 'react-router-dom';
 import { socket } from '../socket.io'
-import '../utilities/login.css'
+import '../utilities/login.css';
+import { SetCurrentUserAction } from '../store/actions/index';
+import { useDispatch } from 'react-redux';
 
 
 // components
@@ -12,6 +14,7 @@ import BeforLoginHeader from '../components/BeforLoginHeader';
 import ForgetPassword from '../components/ForgetPassword';
 
 function Login(props) {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
@@ -79,7 +82,7 @@ function Login(props) {
             setAnimationIndex(animationIndex + 1);
         }, 5000);
 
-        const handelLogin = (response) => {
+        const handelLogin = async(response) => {
             if(!response.status) {
                 console.log(response);
                 setErrorMessage(response.message);
@@ -89,21 +92,25 @@ function Login(props) {
                     setPassword("");
                 }, 3000);
             } else {
-                navigate('/Home', {
-                    state: {
-                        account: response.account
-                    }
-                })
+                let action = SetCurrentUserAction(response.account);
+                try{
+                    await dispatch(action);
+                    navigate('/Home');
+                } catch(error) {
+                    console.log(error.message);
+                }
             }
         }
 
-        const isAuthUser = (response) => {
+        const isAuthUser = async(response) => {
             if(response.account) {
-                navigate('/Home', {
-                    state: {
-                        account: response.account
-                    }
-                })
+                let action = SetCurrentUserAction(response.account);
+                try{
+                    await dispatch(action);
+                    navigate('/Home');
+                } catch(error) {
+                    console.log(error.message);
+                }
             }
         }
         socket.on("login", handelLogin);
@@ -114,7 +121,7 @@ function Login(props) {
             socket.off("auth_user", isAuthUser);
         }
         
-    },[animationIndex, animations.length, navigate]);
+    },[animationIndex, animations.length, navigate, dispatch]);
 
     
     const login = () => {

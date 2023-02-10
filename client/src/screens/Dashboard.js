@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { socket } from '../socket.io';
+import { useNavigate } from 'react-router-dom';
+// import { socket } from '../socket.io';
 import '../utilities/dashboard.css';
 import Colors from '../utilities/Colors';
+import { useSelector } from 'react-redux';
 
 
 // components
@@ -17,15 +18,16 @@ function Dashboard( props ) {
         height: window.innerHeight
     });
     const navigate = useNavigate();
-    const location = useLocation();
+    const userSelector = useSelector(state => state.Reducer.User);
+    
     const {
-        _id,
-        email,
-        fname,
-        lname,
-        posts,
+        // _id,
+        // email,
+        // fname,
+        // lname,
+        // posts,
         profileImage
-    } = location.state.account;
+    } = userSelector;
     
     useEffect(() => {
         const handelResize = () => {
@@ -38,7 +40,7 @@ function Dashboard( props ) {
     },[])
     
     const moveToCurrentUserProfile = () => {
-        navigate(`Currentuserprofile/${fname}`);
+        navigate("/Currentuserprofile");
     }
 
     return ( 
