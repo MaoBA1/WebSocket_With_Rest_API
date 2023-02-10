@@ -10,6 +10,17 @@ const {
 } = require('firebase/auth');
 
 const accountEvents = (socket) => {
+
+    auth.onAuthStateChanged((authUser) => {
+        if(authUser) {
+            Account.findOne({ email: authUser.email })
+            .then(account => {
+                return socket.emit("auth_user", { account: account });        
+            })
+        } else {
+            return socket.emit("auth_user", { account: null });        
+        }
+    })
     
     socket.on("create_account", (data) => {
         const {
@@ -75,7 +86,7 @@ const accountEvents = (socket) => {
                     } 
                     return socket.emit("login", {
                         status:true,
-                        token: account
+                        account: account
                     })
                 })
                 .catch(error => {
@@ -119,6 +130,8 @@ const accountEvents = (socket) => {
             console.log(error.message);
         })
     })
+
+    
 }
 
 

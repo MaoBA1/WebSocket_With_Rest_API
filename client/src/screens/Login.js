@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Colors from '../utilities/Colors';
 import { BsFileEarmarkPost, BsFillChatFill } from 'react-icons/bs';
 import { MdOutlineVideoLibrary } from 'react-icons/md';
-// import { useNavigate, } from 'react-router-dom';
+import { useNavigate, } from 'react-router-dom';
 import { socket } from '../socket.io'
 import '../utilities/login.css'
 
@@ -12,7 +12,7 @@ import BeforLoginHeader from '../components/BeforLoginHeader';
 import ForgetPassword from '../components/ForgetPassword';
 
 function Login(props) {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
     const [ showForgetPassword, setShowForgetPassword ] = useState(false);
@@ -79,21 +79,42 @@ function Login(props) {
             setAnimationIndex(animationIndex + 1);
         }, 5000);
 
-        socket.on("login", (response) => {
+        const handelLogin = (response) => {
             if(!response.status) {
                 console.log(response);
                 setErrorMessage(response.message);
                 setTimeout(() => {
                     setErrorMessage("");
-                    // setEmail("");
-                    // setPassword("");
+                    setEmail("");
+                    setPassword("");
                 }, 3000);
             } else {
-
+                navigate('/Home', {
+                    state: {
+                        account: response.account
+                    }
+                })
             }
-        })
+        }
+
+        const isAuthUser = (response) => {
+            if(response.account) {
+                navigate('/Home', {
+                    state: {
+                        account: response.account
+                    }
+                })
+            }
+        }
+        socket.on("login", handelLogin);
+        socket.on("auth_user", isAuthUser);
+
+        return () => {
+            socket.off("login", handelLogin);
+            socket.off("auth_user", isAuthUser);
+        }
         
-    },[animationIndex, animations.length]);
+    },[animationIndex, animations.length, navigate]);
 
     
     const login = () => {
@@ -101,8 +122,8 @@ function Login(props) {
             setErrorMessage("Email and Password required");
             setTimeout(() => {
                 setErrorMessage("");
-                // setEmail("");
-                // setPassword("");
+                setEmail("");
+                setPassword("");
             }, 3000)
         } else {
             socket.emit("login", { email: email, password: password });
