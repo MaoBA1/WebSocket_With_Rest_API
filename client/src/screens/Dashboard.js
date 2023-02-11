@@ -6,7 +6,7 @@ import Colors from '../utilities/Colors';
 import { useSelector, useDispatch } from 'react-redux';
 import { isBrowser } from 'react-device-detect';
 import { isAuthUser } from '../store/actions/index';
-
+import { Scrollbars } from 'react-custom-scrollbars-2';
 
 // components
 import AfterLoginHeader from '../components/AfterLoginHeader';
@@ -34,6 +34,8 @@ function Dashboard( props ) {
     // } = userSelector;
 
     const profileImage = userSelector?.profileImage;
+    const fname = userSelector?.fname;
+    const lname = userSelector?.lname;
     
     
     useEffect(() => {
@@ -76,6 +78,15 @@ function Dashboard( props ) {
                     menuCollapsed={menuCollapsed}
                     moveToCurrentUserProfile={moveToCurrentUserProfile}
                 />
+                <Scrollbars>
+                    <label style={{
+                        fontFamily:"Bold",
+                        color: "gray",
+                        fontStyle:'italic'
+                    }}>
+                        Welcome {fname}
+                    </label>
+                </Scrollbars>
             </div>
         </div>
     );
