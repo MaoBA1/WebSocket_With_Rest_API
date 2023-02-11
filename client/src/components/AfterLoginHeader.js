@@ -13,40 +13,28 @@ const AfterLoginHeader = ({ title, profileImage, menuCollapsed, setMenuCollapsed
                 flexDirection:"column"
             }}
         >
+            <div className='header-footer'>
+                <div>
+                    <label style={{
+                        color:"#FFFFFF",
+                        fontFamily:"Bold",
+                        fontSize:"18px"
+                    }}>
+                        Posts & Chats
+                    </label>
+                </div>
+            </div>
+
             <div className='header-title'>
                 <div style={{
-                    flex:0.5,
-                    paddingLeft: "15px"
+                    border:"0.5px solid grey",
+                    boxShadow:"#000000 0px 5px 15px",
+                    borderRadius:"5px"
                 }}>
                     <BiMenu
                         color='#FFFFFF'
                         size={"30px"}
                         onClick={() => setMenuCollapsed(!menuCollapsed)}
-                    />
-                </div>
-
-                <div>
-                    <label style={{
-                        color:"#FFFFFF",
-                        fontFamily:"Bold",
-                        fontSize:"25px"
-                    }}>
-                        {title}
-                    </label>
-                </div>
-            </div>
-
-            <div className='header-footer'>
-                <div className='search-line-container'>
-                    <input
-                        type={"text"}
-                        className="search-line"
-                        style={{
-                            backgroundColor: Colors.grey,
-                            fontFamily:"Regular",
-                            fontStyle:"italic"
-                        }}
-                        placeholder="Search..."
                     />
                 </div>
 
@@ -61,7 +49,8 @@ const AfterLoginHeader = ({ title, profileImage, menuCollapsed, setMenuCollapsed
                                     width:"40px",
                                     height:"40px",
                                     borderRadius:"50%",
-                                    border:`2px solid #FFFFFF`
+                                    border:`2px solid #FFFFFF`,
+                                    boxShadow:"#000000 0px 5px 15px"
                                 }}
                                 onClick={moveToCurrentUserProfile}
                             />
@@ -74,7 +63,6 @@ const AfterLoginHeader = ({ title, profileImage, menuCollapsed, setMenuCollapsed
                     
                 </div>
             </div>
-            
         </div>
     )
 }
