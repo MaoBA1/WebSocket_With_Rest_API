@@ -6,3 +6,17 @@ export const SetCurrentUserAction = (user) => {
         dispatch({ type: SET_CURRENT_USER, user: user });
     }
 }
+
+
+
+
+export const isAuthUser = async(response, dispatch) => {
+    if(response.account) {
+        let action = SetCurrentUserAction(response.account);
+        try{
+            await dispatch(action);
+        } catch(error) {
+            console.log(error.message);
+        }
+    }
+}

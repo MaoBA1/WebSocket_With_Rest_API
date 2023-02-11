@@ -51,17 +51,27 @@ const AfterLoginHeader = ({ title, profileImage, menuCollapsed, setMenuCollapsed
                 </div>
 
                 <div className='profile-image-container'>
-                    <img
-                        alt='profileImage'
-                        src={profileImage}
-                        style={{
-                            width:"40px",
-                            height:"40px",
-                            borderRadius:"50%",
-                            border:`2px solid ${Colors.grey}`
-                        }}
-                        onClick={moveToCurrentUserProfile}
-                    />
+                    {
+                        profileImage ?
+                        (
+                            <img
+                                alt='profileImage'
+                                src={profileImage}
+                                style={{
+                                    width:"40px",
+                                    height:"40px",
+                                    borderRadius:"50%",
+                                    border:`2px solid #FFFFFF`
+                                }}
+                                onClick={moveToCurrentUserProfile}
+                            />
+                        )
+                        :
+                        (
+                            <div className='image-place-holder'/>
+                        )
+                    }
+                    
                 </div>
             </div>
             

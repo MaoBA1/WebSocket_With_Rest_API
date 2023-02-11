@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { socket } from '../socket.io';
+import { socket } from '../socket.io';
 import '../utilities/dashboard.css';
 import Colors from '../utilities/Colors';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { isBrowser } from 'react-device-detect';
+import { isAuthUser } from '../store/actions/index';
 
 
 // components
@@ -11,7 +13,9 @@ import AfterLoginHeader from '../components/AfterLoginHeader';
 import SideBar from '../components/SideBar';
 
 
+
 function Dashboard( props ) {
+    const dispatch = useDispatch();
     const [  menuCollapsed, setMenuCollapsed ] = useState(true);
     const [ windowSize, setWindowSize ] = useState({
         width: window.innerWidth,
@@ -20,14 +24,17 @@ function Dashboard( props ) {
     const navigate = useNavigate();
     const userSelector = useSelector(state => state.Reducer.User);
     
-    const {
-        // _id,
-        // email,
-        // fname,
-        // lname,
-        // posts,
-        profileImage
-    } = userSelector;
+    // const {
+    //     _id,
+    //     email,
+    //     fname,
+    //     lname,
+    //     posts,
+    //     profileImage
+    // } = userSelector;
+
+    const profileImage = userSelector?.profileImage;
+    
     
     useEffect(() => {
         const handelResize = () => {
@@ -37,7 +44,13 @@ function Dashboard( props ) {
             });
         }
         window.addEventListener('resize', handelResize);
-    },[])
+
+        socket.on("auth_user", (response) => isAuthUser(response, dispatch));
+
+        return () => {
+            socket.off("auth_user", isAuthUser);
+        }
+    },[dispatch])
     
     const moveToCurrentUserProfile = () => {
         navigate("/Currentuserprofile");
@@ -46,7 +59,7 @@ function Dashboard( props ) {
     return ( 
         <div className='screen-container'>
             <SideBar
-                flex={menuCollapsed ? 0 : 0.35}
+                width={menuCollapsed ? "0%" : isBrowser ? "15%" : "40%" }
                 height={windowSize.height}
                 menuCollapsed={menuCollapsed}
                 moveToCurrentUserProfile={moveToCurrentUserProfile}
@@ -54,7 +67,7 @@ function Dashboard( props ) {
             <div className='main' style={{
                 backgroundColor: Colors.creamyWhite,
                 height: windowSize.height,
-                flex: menuCollapsed ? 1 : 0.65,
+                width: menuCollapsed ? "100%" : isBrowser ? "85%" : "60%",
             }}>
                 <AfterLoginHeader
                     title={"Feed"}

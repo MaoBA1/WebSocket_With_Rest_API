@@ -6,7 +6,7 @@
 .main {
     display: flex;
     flex-direction: column;
-    transition: flex .10s 
+    transition: width .10s 
 }
 
 .header{
@@ -57,7 +57,7 @@
 }
 
 .side-bar-nav{
-    transition: flex .10s;
+    transition: width .10s;
     box-shadow: #000000 0px 5px 15px;
     z-index: 1;
     background-image: url(//www.gstatic.com/mobilesdk/190424_mobilesdk/nav_nachos@2x.png);
@@ -76,14 +76,15 @@
     background-color: #1b263b;
 }
 
-.menu-options-label {
-    color: #FFFFFF;
-    font-size: 16px;
-}
 
-.menu-options-label:hover {
-    color: #1b263b;
-}
 .menu-options:hover {
     background-color: #E4E6E7;
+}
+
+.image-place-holder{
+    width: 40px;
+    height: 40px;
+    background-color: rgb(173, 173, 173);
+    border-radius: 50%;
+    border: 2px solid #FFFFFF;
 }

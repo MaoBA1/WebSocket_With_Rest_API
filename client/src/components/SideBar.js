@@ -1,15 +1,17 @@
 import React from 'react';
 import Colors from '../utilities/Colors';
 import '../utilities/dashboard.css';
+import { useNavigate } from 'react-router-dom';
 
-function SideBar({ flex, height, menuCollapsed }) {
+function SideBar({ width, height, menuCollapsed, moveToCurrentUserProfile }) {
+    const navigate = useNavigate();
     const nav = [
-        {item: "Profile", func: () => {}},
-        {item: "Sign-Out", func: () => {}}
+        {item: "Profile", func: moveToCurrentUserProfile},
+        {item: "Sign-Out", func: () => navigate("/")}
     ]
     return ( 
         <div className='side-bar-nav' style={{
-            flex: flex,
+            width: width,
             height: height,
             backgroundColor: Colors.blackBlue
         }}>
@@ -18,6 +20,7 @@ function SideBar({ flex, height, menuCollapsed }) {
                     {
                         nav.map((item, index) => 
                             <button 
+                                onClick={item.func}
                                 className='menu-options'
                                 key={index}
                                 style={{
