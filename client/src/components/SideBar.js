@@ -24,9 +24,10 @@ function SideBar({ flex, height, menuCollapsed }) {
                                     
                                 }}
                             >
-                                <label className='menu-options-label' style={{
+                                <label style={{
                                     fontFamily:"Bold",
-                                    
+                                    fontSize:"16px",
+                                    color:Colors.blueLight
                                 }}>
                                     {item.item}
                                 </label>
