@@ -74,6 +74,7 @@
     border-radius: 10px;
     margin: 10px;
     background-color: #1b263b;
+    text-align: center;
 }
 
 
@@ -88,3 +89,4 @@
     border-radius: 50%;
     border: 2px solid #FFFFFF;
 }
+

@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Colors from '../utilities/Colors';
 import '../utilities/profileSetting.css';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { isBrowser } from 'react-device-detect';
+import ChangeProfilePictureModal from '../components/ChangeProfilePictureModal';
 
 
 function ProfileSetting({ account }) {
-
+    const [ 
+        changeProfilePictureModalVisible,
+        setChangeProfileModalVisible
+    ] = useState(false);
     // const {
     //     _id,
     //     email,
@@ -25,6 +29,13 @@ function ProfileSetting({ account }) {
         <div
             className='profile-setting-container'
         >
+            {
+                changeProfilePictureModalVisible &&
+                <ChangeProfilePictureModal
+                    profileImage={profileImage}
+                    setIsVisible={setChangeProfileModalVisible}
+                />
+            }
             <div>
                 <div style={{
                     backgroundColor: "grey",
@@ -41,6 +52,7 @@ function ProfileSetting({ account }) {
                 }}>
                     <BsFillPencilFill
                         color='#FFFFFF'
+                        onClick={() => setChangeProfileModalVisible(true)}
                     />
                 </div>
                 <img

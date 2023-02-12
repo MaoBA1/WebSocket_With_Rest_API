@@ -62,7 +62,7 @@ function Dashboard( props ) {
     return ( 
         <div className='screen-container'>
             <SideBar
-                flex={menuCollapsed ? 0 : isBrowser ? 0.25 : 0.4 }
+                flex={menuCollapsed ? 0 : isBrowser ? 0.25 : 0.3 }
                 height={windowSize.height}
                 menuCollapsed={menuCollapsed}
                 currentTab={currentTab}
@@ -78,7 +78,7 @@ function Dashboard( props ) {
                 style={{
                     backgroundColor: Colors.creamyWhite,
                     height: windowSize.height,
-                    flex: menuCollapsed ? 1 : isBrowser ? 0.75 : 0.6,
+                    flex: menuCollapsed ? 1 : isBrowser ? 0.75 : 0.7,
                 }}
             >
                 <AfterLoginHeader

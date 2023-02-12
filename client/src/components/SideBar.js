@@ -2,12 +2,14 @@ import React from 'react';
 import Colors from '../utilities/Colors';
 import '../utilities/dashboard.css';
 import { useNavigate } from 'react-router-dom';
+import { isBrowser } from 'react-device-detect';
 
 function SideBar({ flex, height, menuCollapsed, switchTab, currentTab, setMenuCollapsed }) {
     const navigate = useNavigate();
     const nav = [
         {item: "Feed", func: () => switchTab("Feed")},
         {item: "Profile-Setting", func: () => switchTab("Profile-Setting")},
+        {item: "My-Posts", func: () => switchTab("My-Posts")},
         {item: "Friends", func: () => switchTab("Friends")},
         {item: "Chats", func: () => switchTab("Chats")},
         {item: "Sign-Out", func: () => switchTab("Feed")}
@@ -29,9 +31,6 @@ function SideBar({ flex, height, menuCollapsed, switchTab, currentTab, setMenuCo
                                 }}
                                 className='menu-options'
                                 key={index}
-                                style={{
-                                    
-                                }}
                             >
                                 <label style={{
                                     fontFamily:"italic",
