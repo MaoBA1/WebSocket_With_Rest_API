@@ -46,7 +46,7 @@ const AfterLoginHeader = ({
                 </div>
 
                 <div style={{
-                    width:"80%",
+                    width:"90%",
                     alignItems:"center",
                     display:"flex",
                     flexDirection:"column"

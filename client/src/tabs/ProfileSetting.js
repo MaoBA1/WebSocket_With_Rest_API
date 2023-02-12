@@ -2,14 +2,24 @@ import React from 'react';
 import Colors from '../utilities/Colors';
 import '../utilities/profileSetting.css';
 import { BsFillPencilFill } from 'react-icons/bs';
+import { isBrowser } from 'react-device-detect';
+
+
 function ProfileSetting({ account }) {
 
-    const {
-        email,
-        fname,
-        lname,
-        profileImage
-    } = account;
+    // const {
+    //     _id,
+    //     email,
+    //     fname,
+    //     lname,
+    //     posts,
+    //     profileImage
+    // } = account;
+
+    const profileImage = account?.profileImage;
+    const fname = account?.fname;
+    const lname = account?.lname;
+    const email = account?.email;
 
     return ( 
         <div
@@ -44,7 +54,9 @@ function ProfileSetting({ account }) {
                 />
             </div>
 
-            <form className='form'>
+            <form className='form' style={{
+                width: isBrowser ? "90%" : "max-content"
+            }}>
                     <div className='form-div'>
                         <label className='form-label' style={{ fontFamily:"italic" }}>
                             Email: 

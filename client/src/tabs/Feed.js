@@ -4,15 +4,21 @@ import { Scrollbars } from 'react-custom-scrollbars-2';
 import Colors from '../utilities/Colors';
 import { AiOutlinePlus } from 'react-icons/ai';
 
-function Feed({ account }) {
-    const {
-        _id,
-        email,
-        fname,
-        lname,
-        posts,
-        profileImage
-    } = account;
+function Feed({ account, menuCollapsed }) {
+    // const {
+    //     _id,
+    //     email,
+    //     fname,
+    //     lname,
+    //     posts,
+    //     profileImage
+    // } = account;
+
+
+    const profileImage = account?.profileImage;
+    const fname = account?.fname;
+    const lname = account?.lname;
+    const email = account?.email;
 
     return ( 
         <Scrollbars className='feed-container'>
@@ -45,7 +51,7 @@ function Feed({ account }) {
                         color='#FFFFFF'
                         style={{ margin:"2px" }}
                     />
-                    Add new post
+                    {menuCollapsed && "Add new Post"}
                 </button>
             </div>
 

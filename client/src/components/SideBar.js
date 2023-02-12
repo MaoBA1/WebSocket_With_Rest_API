@@ -3,7 +3,7 @@ import Colors from '../utilities/Colors';
 import '../utilities/dashboard.css';
 import { useNavigate } from 'react-router-dom';
 
-function SideBar({ width, height, menuCollapsed, switchTab, currentTab }) {
+function SideBar({ flex, height, menuCollapsed, switchTab, currentTab, setMenuCollapsed }) {
     const navigate = useNavigate();
     const nav = [
         {item: "Feed", func: () => switchTab("Feed")},
@@ -14,7 +14,7 @@ function SideBar({ width, height, menuCollapsed, switchTab, currentTab }) {
     ]
     return ( 
         <div className='side-bar-nav' style={{
-            width: width,
+            flex: flex,
             height: height,
             backgroundColor: Colors.blackBlue
         }}>
@@ -23,7 +23,10 @@ function SideBar({ width, height, menuCollapsed, switchTab, currentTab }) {
                     {
                         nav.map((item, index) => 
                             <button 
-                                onClick={item.func}
+                                onClick={() => {
+                                    item.func();
+                                    setMenuCollapsed(true);
+                                }}
                                 className='menu-options'
                                 key={index}
                                 style={{

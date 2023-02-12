@@ -62,17 +62,25 @@ function Dashboard( props ) {
     return ( 
         <div className='screen-container'>
             <SideBar
-                width={menuCollapsed ? "0%" : isBrowser ? "15%" : "40%" }
+                flex={menuCollapsed ? 0 : isBrowser ? 0.25 : 0.4 }
                 height={windowSize.height}
                 menuCollapsed={menuCollapsed}
                 currentTab={currentTab}
                 switchTab={setCurrentTab}
+                setMenuCollapsed={setMenuCollapsed}
             />
-            <div className='main' style={{
-                backgroundColor: Colors.creamyWhite,
-                height: windowSize.height,
-                width: menuCollapsed ? "100%" : isBrowser ? "85%" : "60%",
-            }}>
+            <div className='main' 
+                onClick={() => {
+                    if(!menuCollapsed) {
+                        setMenuCollapsed(true);
+                    }
+                }} 
+                style={{
+                    backgroundColor: Colors.creamyWhite,
+                    height: windowSize.height,
+                    flex: menuCollapsed ? 1 : isBrowser ? 0.75 : 0.6,
+                }}
+            >
                 <AfterLoginHeader
                     title={"Feed"}
                     profileImage={profileImage}
@@ -85,6 +93,7 @@ function Dashboard( props ) {
                     &&
                     <Feed
                         account={userSelector}
+                        menuCollapsed={menuCollapsed}
                     />
                 }
 
