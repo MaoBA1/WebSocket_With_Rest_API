@@ -37,15 +37,15 @@ const BeforLoginHeader = ({ title, subtitle, backFunction }) => {
             }}>
                 <label style={{
                     color:"#FFFFFF",
-                    fontFamily:"Bold",
-                    fontSize:"35px",
+                    fontFamily:"italic",
+                    fontSize:"40px",
                 }}>
                     {title}
                 </label>
 
                 <label style={{
                     color:"#FFFFFF",
-                    fontFamily:"Bold",
+                    fontFamily:"italic",
                     fontSize:"25px",
                     fontStyle:"italic"
                 }}>

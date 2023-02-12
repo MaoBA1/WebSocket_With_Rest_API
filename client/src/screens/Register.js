@@ -30,7 +30,7 @@ function Register() {
     });
 
     const labelStyle = {
-        fontFamily:"Bold",
+        fontFamily:"italic",
         fontSize:"20px",
         fontStyle:"italic",
         color:Colors.blueMedium
@@ -153,7 +153,7 @@ function Register() {
                                 value={email}
                                 onChange={event => setEmail(event.target.value)}
                                 style={{ 
-                                    fontFamily:"Regular",
+                                    fontFamily:"italic",
                                     border: `2px solid ${Colors.blueLight}`,
                                     backgroundColor:Colors.grey
                                 }}
@@ -172,7 +172,7 @@ function Register() {
                                     value={fname}
                                     onChange={event => setFname(event.target.value)}
                                     style={{ 
-                                        fontFamily:"Regular",
+                                        fontFamily:"italic",
                                         width:"90%",
                                         border: `2px solid ${Colors.blueLight}`,
                                         backgroundColor:Colors.grey
@@ -190,7 +190,7 @@ function Register() {
                                     value={lname}
                                     onChange={event => setLname(event.target.value)}
                                     style={{ 
-                                        fontFamily:"Regular",
+                                        fontFamily:"italic",
                                         width:"90%",
                                         border: `2px solid ${Colors.blueLight}`,
                                         backgroundColor:Colors.grey
@@ -209,7 +209,7 @@ function Register() {
                                 value={password}
                                 onChange={event => setPassword(event.target.value)}
                                 style={{ 
-                                    fontFamily:"Regular",
+                                    fontFamily:"italic",
                                     width:"60%",
                                     border: `2px solid ${Colors.blueLight}`,
                                     backgroundColor:Colors.grey
@@ -271,7 +271,7 @@ function Register() {
                                     backgroundColor: Colors.red,
                                     color: "#FFFFFF",
                                     border:"1px solid #FFFFFF",
-                                    fontFamily:"Bold",
+                                    fontFamily:"italic",
                                     fontSize:"15px",
                                     height:"30px",
                                     display:"flex",
@@ -289,7 +289,7 @@ function Register() {
                        <button onClick={signUp} style={{
                             backgroundColor:Colors.blueBold,
                             border:`3px solid ${Colors.blueLight}`,
-                            fontFamily:"Bold"
+                            fontFamily:"italic"
                        }}>
                             Sign-Up
                        </button>         

@@ -11,6 +11,7 @@ import { Scrollbars } from 'react-custom-scrollbars-2';
 // components
 import AfterLoginHeader from '../components/AfterLoginHeader';
 import SideBar from '../components/SideBar';
+import Feed from '../tabs/Feed';
 
 
 
@@ -23,6 +24,7 @@ function Dashboard( props ) {
     });
     const navigate = useNavigate();
     const userSelector = useSelector(state => state.Reducer.User);
+    const [ currentTab, setCurrentTab ] = useState("Feed");
     
     // const {
     //     _id,
@@ -54,9 +56,7 @@ function Dashboard( props ) {
         }
     },[dispatch])
     
-    const moveToCurrentUserProfile = () => {
-        navigate("/Currentuserprofile");
-    }
+    
 
     return ( 
         <div className='screen-container'>
@@ -64,7 +64,6 @@ function Dashboard( props ) {
                 width={menuCollapsed ? "0%" : isBrowser ? "15%" : "40%" }
                 height={windowSize.height}
                 menuCollapsed={menuCollapsed}
-                moveToCurrentUserProfile={moveToCurrentUserProfile}
             />
             <div className='main' style={{
                 backgroundColor: Colors.creamyWhite,
@@ -76,16 +75,17 @@ function Dashboard( props ) {
                     profileImage={profileImage}
                     setMenuCollapsed={setMenuCollapsed}
                     menuCollapsed={menuCollapsed}
-                    moveToCurrentUserProfile={moveToCurrentUserProfile}
+                    currentTab={currentTab}
                 />
                 <Scrollbars>
                     <label style={{
-                        fontFamily:"Bold",
+                        fontFamily:"italic",
                         color: "gray",
                         fontStyle:'italic'
                     }}>
                         Welcome {fname}
                     </label>
+                    { currentTab === "Feed" && <Feed/>}
                 </Scrollbars>
             </div>
         </div>

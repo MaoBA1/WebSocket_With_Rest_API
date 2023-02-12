@@ -4,7 +4,14 @@ import { BiMenu } from 'react-icons/bi';
 
 
 
-const AfterLoginHeader = ({ title, profileImage, menuCollapsed, setMenuCollapsed, moveToCurrentUserProfile }) => {
+const AfterLoginHeader = ({ 
+    title,
+    profileImage,
+    menuCollapsed,
+    setMenuCollapsed,
+    moveToCurrentUserProfile,
+    currentTab
+}) => {
     return(
         <div className='header'
             style={{
@@ -17,8 +24,8 @@ const AfterLoginHeader = ({ title, profileImage, menuCollapsed, setMenuCollapsed
                 <div>
                     <label style={{
                         color:"#FFFFFF",
-                        fontFamily:"Bold",
-                        fontSize:"18px"
+                        fontFamily:"italic",
+                        fontSize:"20px",
                     }}>
                         Posts & Chats
                     </label>
@@ -36,6 +43,16 @@ const AfterLoginHeader = ({ title, profileImage, menuCollapsed, setMenuCollapsed
                         size={"30px"}
                         onClick={() => setMenuCollapsed(!menuCollapsed)}
                     />
+                </div>
+
+                <div>
+                    <label style={{
+                        color:"#FFFFFF",
+                        fontFamily:"italic",
+                        fontSize:"18px",
+                    }}>
+                        {currentTab}
+                    </label>
                 </div>
 
                 <div className='profile-image-container'>

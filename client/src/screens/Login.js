@@ -33,8 +33,8 @@ function Login(props) {
         />
         ,
         <label style={{
-            fontFamily:"Bold",
-            fontSize:"35px",
+            fontFamily:"italic",
+            fontSize:"40px",
             color:Colors.blueBold,
             textAlign:"center"
         }} className='animation'>
@@ -47,8 +47,8 @@ function Login(props) {
             size={"120px"}
         />,
         <label style={{
-            fontFamily:"Bold",
-            fontSize:"35px",
+            fontFamily:"italic",
+            fontSize:"40px",
             color:Colors.blueBold,
             textAlign:"center"
         }} className='animation'>
@@ -61,8 +61,8 @@ function Login(props) {
             size={"120px"}
         />,
         <label style={{
-            fontFamily:"Bold",
-            fontSize:"30px",
+            fontFamily:"italic",
+            fontSize:"40px",
             color:Colors.blueBold,
             textAlign:"center"
         }} className='animation'>
@@ -178,7 +178,7 @@ function Login(props) {
                     <label 
                         className='input-labels'
                         style={{ 
-                            fontFamily:"Bold",
+                            fontFamily:"italic",
                             color:Colors.blueMedium 
                         }}
                     >
@@ -186,7 +186,7 @@ function Login(props) {
                     </label>
                     <input
                         style={{
-                            fontFamily:"Regular",
+                            fontFamily:"italic",
                             color: Colors.blueMedium,
                             backgroundColor:Colors.grey
                         }}
@@ -198,7 +198,7 @@ function Login(props) {
                     <label 
                         className='input-labels'
                         style={{ 
-                            fontFamily:"Bold",
+                            fontFamily:"italic",
                             color:Colors.blueMedium 
                         }}
                     >
@@ -207,7 +207,7 @@ function Login(props) {
                     <input
                         type="password"
                         style={{
-                            fontFamily:"Regular",
+                            fontFamily:"italic",
                             color: Colors.blueMedium,
                             backgroundColor:Colors.grey
                         }}
@@ -224,7 +224,7 @@ function Login(props) {
                             background:"none",
                             fontSize:"15px",
                             width:"max-content",
-                            fontFamily:"Bold",
+                            fontFamily:"italic",
                             fontStyle:"italic",
                             borderBottom:`1px solid ${Colors.blueLight}`,
                             borderRadius:"0px",
@@ -238,7 +238,7 @@ function Login(props) {
                 </form>
                 <div className='button-container'>
                     <button style={{
-                        fontFamily:"Bold",
+                        fontFamily:"italic",
                         backgroundColor: Colors.blackBlue,
                         border:`2px solid ${Colors.blueMedium}`
                     }} onClick={login}>
@@ -247,7 +247,7 @@ function Login(props) {
                     <a 
                         href='/Register'
                         style={{
-                            fontFamily:"Regular",
+                            fontFamily:"italic",
                             color: Colors.blueMedium
                         }}
                     >

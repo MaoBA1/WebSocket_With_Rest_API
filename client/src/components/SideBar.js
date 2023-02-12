@@ -3,10 +3,13 @@ import Colors from '../utilities/Colors';
 import '../utilities/dashboard.css';
 import { useNavigate } from 'react-router-dom';
 
-function SideBar({ width, height, menuCollapsed, moveToCurrentUserProfile }) {
+function SideBar({ width, height, menuCollapsed }) {
     const navigate = useNavigate();
     const nav = [
-        {item: "Profile", func: moveToCurrentUserProfile},
+        {item: "Feed", func: () => navigate("/")},
+        {item: "Profile-Setting", func: () => navigate("/")},
+        {item: "Friends", func: () => navigate("/")},
+        {item: "Chats", func: () => navigate("/")},
         {item: "Sign-Out", func: () => navigate("/")}
     ]
     return ( 
@@ -28,7 +31,7 @@ function SideBar({ width, height, menuCollapsed, moveToCurrentUserProfile }) {
                                 }}
                             >
                                 <label style={{
-                                    fontFamily:"Bold",
+                                    fontFamily:"italic",
                                     fontSize:"16px",
                                     color:Colors.blueLight
                                 }}>

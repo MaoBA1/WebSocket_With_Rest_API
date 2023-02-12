@@ -9,7 +9,7 @@ import './utilities/fonts.css';
 import Login from './screens/Login';
 import Dashboard from './screens/Dashboard';
 import Register from './screens/Register';
-import CurrentUserProfileScreen from './screens/CurrentUserProfilePage';
+
 
 import Reducer from './store/reducers/index';
 
@@ -26,7 +26,6 @@ function App() {
           <Route path="/" element={<Login/>}/>
           <Route path="/Register" element={<Register/>}/>
           <Route path="/Home" element={<Dashboard/>}/>
-          <Route path="/Currentuserprofile" element={<CurrentUserProfileScreen/>}/>
         </Routes>
       </Router>
     </Provider>
