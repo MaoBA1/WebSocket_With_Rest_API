@@ -45,11 +45,16 @@ const AfterLoginHeader = ({
                     />
                 </div>
 
-                <div>
+                <div style={{
+                    width:"80%",
+                    alignItems:"center",
+                    display:"flex",
+                    flexDirection:"column"
+                }}>
                     <label style={{
                         color:"#FFFFFF",
                         fontFamily:"italic",
-                        fontSize:"18px",
+                        fontSize:"16px",
                     }}>
                         {currentTab}
                     </label>

@@ -6,13 +6,15 @@ import Colors from '../utilities/Colors';
 import { useSelector, useDispatch } from 'react-redux';
 import { isBrowser } from 'react-device-detect';
 import { isAuthUser } from '../store/actions/index';
-import { Scrollbars } from 'react-custom-scrollbars-2';
+// import { Scrollbars } from 'react-custom-scrollbars-2';
 
 // components
 import AfterLoginHeader from '../components/AfterLoginHeader';
 import SideBar from '../components/SideBar';
 import Feed from '../tabs/Feed';
-
+import ProfileSetting from '../tabs/ProfileSetting';
+import Friends from '../tabs/Friends';
+import Chats from '../tabs/Chats';
 
 
 function Dashboard( props ) {
@@ -78,7 +80,6 @@ function Dashboard( props ) {
                     menuCollapsed={menuCollapsed}
                     currentTab={currentTab}
                 />
-                
                 { 
                     currentTab === "Feed" 
                     &&
@@ -86,7 +87,30 @@ function Dashboard( props ) {
                         account={userSelector}
                     />
                 }
-                
+
+                { 
+                    currentTab === "Profile-Setting" 
+                    &&
+                    <ProfileSetting
+                        account={userSelector}
+                    />
+                }
+
+                { 
+                    currentTab === "Friends" 
+                    &&
+                    <Friends
+                        account={userSelector}
+                    />
+                }
+
+                { 
+                    currentTab === "Chats" 
+                    &&
+                    <Chats
+                        account={userSelector}
+                    />
+                }
             </div>
         </div>
     );
