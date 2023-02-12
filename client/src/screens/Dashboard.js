@@ -36,8 +36,7 @@ function Dashboard( props ) {
     // } = userSelector;
 
     const profileImage = userSelector?.profileImage;
-    const fname = userSelector?.fname;
-    const lname = userSelector?.lname;
+    
     
     
     useEffect(() => {
@@ -64,6 +63,8 @@ function Dashboard( props ) {
                 width={menuCollapsed ? "0%" : isBrowser ? "15%" : "40%" }
                 height={windowSize.height}
                 menuCollapsed={menuCollapsed}
+                currentTab={currentTab}
+                switchTab={setCurrentTab}
             />
             <div className='main' style={{
                 backgroundColor: Colors.creamyWhite,
@@ -77,16 +78,15 @@ function Dashboard( props ) {
                     menuCollapsed={menuCollapsed}
                     currentTab={currentTab}
                 />
-                <Scrollbars>
-                    <label style={{
-                        fontFamily:"italic",
-                        color: "gray",
-                        fontStyle:'italic'
-                    }}>
-                        Welcome {fname}
-                    </label>
-                    { currentTab === "Feed" && <Feed/>}
-                </Scrollbars>
+                
+                { 
+                    currentTab === "Feed" 
+                    &&
+                    <Feed
+                        account={userSelector}
+                    />
+                }
+                
             </div>
         </div>
     );

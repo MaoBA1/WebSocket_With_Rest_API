@@ -1,0 +1,21 @@
+.feed-container {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.search-line-container{
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+}
+
+.upper-line-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 5px;
+    padding-right: 5px;
+}

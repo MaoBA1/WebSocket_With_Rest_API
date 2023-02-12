@@ -3,14 +3,14 @@ import Colors from '../utilities/Colors';
 import '../utilities/dashboard.css';
 import { useNavigate } from 'react-router-dom';
 
-function SideBar({ width, height, menuCollapsed }) {
+function SideBar({ width, height, menuCollapsed, switchTab, currentTab }) {
     const navigate = useNavigate();
     const nav = [
-        {item: "Feed", func: () => navigate("/")},
-        {item: "Profile-Setting", func: () => navigate("/")},
-        {item: "Friends", func: () => navigate("/")},
-        {item: "Chats", func: () => navigate("/")},
-        {item: "Sign-Out", func: () => navigate("/")}
+        {item: "Feed", func: () => switchTab("Feed")},
+        {item: "Profile-Setting", func: () => switchTab("Profile-Setting")},
+        {item: "Friends", func: () => switchTab("Friends")},
+        {item: "Chats", func: () => switchTab("Chats")},
+        {item: "Sign-Out", func: () => switchTab("Feed")}
     ]
     return ( 
         <div className='side-bar-nav' style={{
