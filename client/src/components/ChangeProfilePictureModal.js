@@ -4,8 +4,9 @@ import Colors from '../utilities/Colors';
 import { ref, deleteObject, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../firebase';
 import { AiOutlineClose } from 'react-icons/ai';
+import { socket } from '../socket.io';
 
-function ChangeProfilePictureModal({ profileImage, setIsVisible }) {
+function ChangeProfilePictureModal({ profileImage, setIsVisible, account }) {
     const [ isInProcess, setIsInProcess ] = useState(false);
     const [ processPrecent, setProcessPresent ] = useState(0);
     const [ pickedImage, setPickedImage ] = useState(null);
@@ -33,12 +34,14 @@ function ChangeProfilePictureModal({ profileImage, setIsVisible }) {
                 return getDownloadURL(uploadTask.snapshot.ref)
                 .then(downloadUrl => {
                     setPickedImage({downloadUrl, name: fileObj.name});
+                    return socket.emit("change_profile_image", {account: account, newImageUrl: downloadUrl});
                 })
             }
         )
         console.log('fileObj is', fileObj);
     };
-    const deleteImageFromStorage = () => {
+    const cancelFileChange = () => {
+        socket.emit("cancel_change_profile_image", { account: account })
         const imageRef = ref(storage, "profileImages/" + pickedImage.name);
         deleteObject(imageRef)
         .then(() => {
@@ -96,7 +99,7 @@ function ChangeProfilePictureModal({ profileImage, setIsVisible }) {
                     }}
                 />
                 {
-                    !isInProcess &&
+                    !isInProcess && !pickedImage &&
                     
                         <div style={{
                             width:"100%",
@@ -113,12 +116,13 @@ function ChangeProfilePictureModal({ profileImage, setIsVisible }) {
                                     color:"#FFFFFF",
                                     fontFamily:"italic"
                                 }}
+                                onChange={handleFileChange}
                             />
                         </div>
                 }
                 {
                     pickedImage &&
-                    <button style={{
+                    <button onClick={cancelFileChange} style={{
                         borderRadius:"20px",
                         backgroundColor: Colors.red,
                         border:"2px solid #FFFFFF",

@@ -131,6 +131,44 @@ const accountEvents = (socket) => {
         })
     })
 
+    socket.on("change_profile_image", (data) => {
+        const accountId = data.account._id;
+        const newImageUrl = data.newImageUrl;
+
+        Account.findById(accountId)
+        .then(account => {
+            account.lastProfileImage = account.profileImage;
+            account.profileImage = newImageUrl;
+            return account.save()
+            .then(account_updated => {
+                return socket.emit("auth_user", { account: account_updated });        
+            })
+            .catch(error => {
+                console.log(error.message);
+            })
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
+    })
+
+    socket.on("cancel_change_profile_image", (data) => {
+        const accountId = data.account._id;
+        Account.findById(accountId)
+        .then(account => {
+            account.profileImage = account.lastProfileImage;
+            return account.save()
+            .then(account_updated => {
+                return socket.emit("auth_user", { account: account_updated });        
+            })
+            .catch(error => {
+                console.log(error.message);
+            })
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
+    })
     
 }
 

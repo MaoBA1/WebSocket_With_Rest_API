@@ -34,6 +34,7 @@ function ProfileSetting({ account }) {
                 <ChangeProfilePictureModal
                     profileImage={profileImage}
                     setIsVisible={setChangeProfileModalVisible}
+                    account={account}
                 />
             }
             <div>

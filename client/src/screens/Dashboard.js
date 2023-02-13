@@ -15,6 +15,7 @@ import Feed from '../tabs/Feed';
 import ProfileSetting from '../tabs/ProfileSetting';
 import Friends from '../tabs/Friends';
 import Chats from '../tabs/Chats';
+import UploadPostModal from '../components/UploadPostModal';
 
 
 function Dashboard( props ) {
@@ -69,6 +70,7 @@ function Dashboard( props ) {
                 switchTab={setCurrentTab}
                 setMenuCollapsed={setMenuCollapsed}
             />
+            <UploadPostModal/>
             <div className='main' 
                 onClick={() => {
                     if(!menuCollapsed) {
