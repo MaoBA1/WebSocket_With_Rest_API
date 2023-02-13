@@ -28,6 +28,7 @@ function Dashboard( props ) {
     const navigate = useNavigate();
     const userSelector = useSelector(state => state.Reducer.User);
     const [ currentTab, setCurrentTab ] = useState("Feed");
+    const [ UploadPostModalVisible, setUploadPostModalVisible ] = useState(false);
     
     // const {
     //     _id,
@@ -70,7 +71,7 @@ function Dashboard( props ) {
                 switchTab={setCurrentTab}
                 setMenuCollapsed={setMenuCollapsed}
             />
-            <UploadPostModal/>
+            {UploadPostModalVisible && <UploadPostModal setIsVisible={setUploadPostModalVisible}/>}
             <div className='main' 
                 onClick={() => {
                     if(!menuCollapsed) {
@@ -96,6 +97,7 @@ function Dashboard( props ) {
                     <Feed
                         account={userSelector}
                         menuCollapsed={menuCollapsed}
+                        setUploadPostModalVisible={setUploadPostModalVisible}
                     />
                 }
 

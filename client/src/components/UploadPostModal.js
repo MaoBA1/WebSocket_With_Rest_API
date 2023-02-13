@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import Colors from '../utilities/Colors';
 
-function UploadPostModal({ account }) {
+function UploadPostModal({ account, setIsVisible }) {
     const [ componentIndex, setComponentIndex ] = useState(0);
 
     const components = [
@@ -67,9 +68,21 @@ function UploadPostModal({ account }) {
                 <div className='indicator-container'>
                         {
                             components.map((item,index) =>
-                                <div className='indicator'/>
+                                <div key={index} className={index === componentIndex % components.length ? "active indicator" : "indicator"}/>
                             )
                         }
+                </div>
+                <div>
+                    <button style={{
+                        borderRadius:"20px",
+                        backgroundColor: Colors.red,
+                        border:"2px solid #FFFFFF",
+                        color:"#FFFFFF",
+                        fontFamily:"italic",
+                        fontSize:"15px"
+                    }} onClick={() => setIsVisible(false)}>
+                        Cancel
+                    </button>
                 </div>
             </div>
         </div>
