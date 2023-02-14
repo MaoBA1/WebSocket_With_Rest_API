@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { socket } from '../socket.io';
 import '../utilities/dashboard.css';
 import Colors from '../utilities/Colors';
 import { useSelector, useDispatch } from 'react-redux';
-import { isBrowser } from 'react-device-detect';
+// import { isBrowser } from 'react-device-detect';
 import { isAuthUser } from '../store/actions/index';
 // import { Scrollbars } from 'react-custom-scrollbars-2';
 
@@ -26,7 +26,7 @@ function Dashboard( props ) {
         width: window.innerWidth,
         height: window.innerHeight
     });
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const userSelector = useSelector(state => state.Reducer.User);
     const [ currentTab, setCurrentTab ] = useState("Feed");
     const [ UploadPostModalVisible, setUploadPostModalVisible ] = useState(false);
@@ -73,7 +73,7 @@ function Dashboard( props ) {
                 />
             }
             <SideBar
-                flex={menuCollapsed ? 0 : isBrowser ? 0.25 : 0.3 }
+                flex={menuCollapsed ? 0 : 0.2 }
                 height={windowSize.height}
                 menuCollapsed={menuCollapsed}
                 currentTab={currentTab}
@@ -97,7 +97,7 @@ function Dashboard( props ) {
                 style={{
                     backgroundColor: Colors.creamyWhite,
                     height: windowSize.height,
-                    flex: menuCollapsed ? 1 : isBrowser ? 0.75 : 0.7,
+                    flex: menuCollapsed ? 1 : 0.8,
                 }}
             >
                 <AfterLoginHeader

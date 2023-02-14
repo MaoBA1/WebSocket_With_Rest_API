@@ -72,8 +72,8 @@ const PostMediaPart = ({ componentIndex, mediaArray, setMediaArray, setMediaToDi
             <div className='upload-post-media-container'>
                 {
                     mediaArray.map((item, index) => 
-                        <div onClick={() => setMediaToDisplay(item)} key={index} className='media-array-item'>
-                            <div
+                        <div key={index} className='media-array-item-container'>
+                            <div 
                                 className="x-icon"
                                 onClick={() => deleteImageFromStorage(item)}
                             >
@@ -82,21 +82,26 @@ const PostMediaPart = ({ componentIndex, mediaArray, setMediaArray, setMediaToDi
                                     size={"12px"}
                                 />
                             </div>
-                            {
-                                mediaType === "image" &&
-                                <img
-                                    src={item.downloadUrl}
-                                    className="media-array-media"
-                                />
-                            }
+                            <div 
+                                className='media-array-item'
+                                onClick={() => setMediaToDisplay(item)}
+                            >
+                                {
+                                    mediaType === "image" &&
+                                    <img
+                                        src={item.downloadUrl}
+                                        className="media-array-media"
+                                    />
+                                }
 
-                            {
-                                mediaType === "video" &&
-                                <video
-                                    src={item.downloadUrl}
-                                    className="media-array-media"
-                                />
-                            }
+                                {
+                                    mediaType === "video" &&
+                                    <video
+                                        src={item.downloadUrl}
+                                        className="media-array-media"
+                                    />
+                                }
+                            </div>
                         </div>
                     )
                 }
