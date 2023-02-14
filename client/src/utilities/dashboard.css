@@ -195,6 +195,7 @@
     transition-duration: 1s;
   }
 
+  
   .upload-post-media-container{
     width: 90%;
     padding: 15px;
@@ -235,17 +236,34 @@
 
 .x-icon {
     position:absolute;
-    top:-8px;
-    right:-7px;
+    top:-15px;
+    right:-14px;
     background-color: grey;
     border-radius:50%;
-    width:20px;
-    height:20px;
+    width:25px;
+    height:25px;
     display:flex;
     flex-direction:row;
     align-items:center;
     justify-content: center;
+    z-index: 1000;
 }
 .x-icon:hover {
     background-color: #e63946;
+}
+
+.display-modal-cover{
+    position:absolute;
+    padding:0;
+    margin:0;
+    top:0;
+    left:0;
+    z-index:1000;
+    width: 100%;
+    height: 100%;
+    background:#000000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }

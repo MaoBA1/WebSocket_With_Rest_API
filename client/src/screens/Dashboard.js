@@ -16,6 +16,7 @@ import ProfileSetting from '../tabs/ProfileSetting';
 import Friends from '../tabs/Friends';
 import Chats from '../tabs/Chats';
 import UploadPostModal from '../components/UploadPostModal';
+import DisplayMediaModal from '../components/DisplayMediaModal';
 
 
 function Dashboard( props ) {
@@ -29,7 +30,7 @@ function Dashboard( props ) {
     const userSelector = useSelector(state => state.Reducer.User);
     const [ currentTab, setCurrentTab ] = useState("Feed");
     const [ UploadPostModalVisible, setUploadPostModalVisible ] = useState(false);
-    
+    const [ mediaToDisplay, setMediaToDisplay ] = useState(null);
     // const {
     //     _id,
     //     email,
@@ -63,6 +64,14 @@ function Dashboard( props ) {
 
     return ( 
         <div className='screen-container'>
+            {
+                mediaToDisplay 
+                && 
+                <DisplayMediaModal 
+                    media={mediaToDisplay} 
+                    setMedia={setMediaToDisplay}
+                />
+            }
             <SideBar
                 flex={menuCollapsed ? 0 : isBrowser ? 0.25 : 0.3 }
                 height={windowSize.height}
@@ -71,7 +80,14 @@ function Dashboard( props ) {
                 switchTab={setCurrentTab}
                 setMenuCollapsed={setMenuCollapsed}
             />
-            {UploadPostModalVisible && <UploadPostModal setIsVisible={setUploadPostModalVisible}/>}
+            {
+                UploadPostModalVisible 
+                &&
+                <UploadPostModal
+                    setIsVisible={setUploadPostModalVisible}
+                    setMediaToDisplay={setMediaToDisplay}
+                />
+            }
             <div className='main' 
                 onClick={() => {
                     if(!menuCollapsed) {
