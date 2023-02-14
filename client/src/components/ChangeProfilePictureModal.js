@@ -116,6 +116,7 @@ function ChangeProfilePictureModal({ profileImage, setIsVisible, account }) {
                                     color:"#FFFFFF",
                                     fontFamily:"italic"
                                 }}
+                                accept="image/*"
                                 onChange={handleFileChange}
                             />
                         </div>
