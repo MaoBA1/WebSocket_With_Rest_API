@@ -235,10 +235,7 @@
     object-fit:contain;
 }
 
-.media-array-scroll-bar {
-    display: flex;
-    flex-direction: row;
-}
+
 
 
 .x-icon {
