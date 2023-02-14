@@ -223,6 +223,7 @@
 .media-array-item{
     border:1px solid grey;
     padding: 10px;
+    position: relative;
 }
 
 .media-array-item:hover {
