@@ -11,8 +11,14 @@ import Colors from '../../utilities/Colors';
 
 
 
-const PostMediaPart = ({ componentIndex, mediaArray, setMediaArray, setMediaToDisplay }) => {
-    const [ isInProcess, setIsInProcess ] = useState(false);
+const PostMediaPart = ({ 
+    componentIndex,
+    mediaArray,
+    setMediaArray,
+    setMediaToDisplay,
+    isInProcess,
+    setIsInProcess
+}) => {
     const [ processPrecent, setProcessPresent ] = useState(0);
     const [ mediaType, setMediaType ] = useState("image");
 

@@ -7,20 +7,28 @@ import { AiOutlineClose } from 'react-icons/ai';
 // components
 import PostContentPart from './uploadPostModalComponent/PostContentPart';
 import PostMediaPart from './uploadPostModalComponent/PostMediaPart';
+import Colors from '../utilities/Colors';
 
 
 function UploadPostModal({ account, setIsVisible, setMediaToDisplay }) {
     const [ mediaArray, setMediaArray ] = useState([]);
     const [ componentIndex, setComponentIndex ] = useState(0);
+    const [ postContent, setPostContent ] = useState("");
+    const [ isInProcess, setIsInProcess ] = useState(false);
+
     const components = [
         <PostContentPart 
             componentIndex={componentIndex}
+            postContent={postContent}
+            setPostContent={setPostContent}
         />,
         <PostMediaPart 
             componentIndex={componentIndex} 
             mediaArray={mediaArray}
             setMediaArray={setMediaArray}
             setMediaToDisplay={setMediaToDisplay}
+            isInProcess={isInProcess}
+            setIsInProcess={setIsInProcess}
         />
     ]
     
@@ -50,9 +58,13 @@ function UploadPostModal({ account, setIsVisible, setMediaToDisplay }) {
                             flexDirection:"column",
                             alignItems:"center",
                             justifyContent:"center"
-                        }} onClick={() => setComponentIndex(componentIndex + 1)}>
+                        }} onClick={() => {
+                            if((componentIndex % components.length) !== 0) {
+                                setComponentIndex(componentIndex + 1)
+                            }
+                        }}>
                             <FaArrowLeft
-                                color="#FFFFFF"
+                                color={(componentIndex % components.length) !== 0 ? "#FFFFFF" : "grey"}
                             />
                         </div>
                     </div>
@@ -72,9 +84,13 @@ function UploadPostModal({ account, setIsVisible, setMediaToDisplay }) {
                             flexDirection:"column",
                             alignItems:"center",
                             justifyContent:"center"
-                        }} onClick={() => setComponentIndex(componentIndex + 1)}>
+                        }} onClick={() => {
+                            if((componentIndex % components.length) < components.length -1) {
+                                setComponentIndex(componentIndex + 1)
+                            }
+                        }}>
                             <FaArrowRight
-                                color="#FFFFFF"
+                                color={(componentIndex % components.length) < components.length -1 ? "#FFFFFF" : "grey"}
                             />
                         </div>
                     </div>
@@ -86,6 +102,18 @@ function UploadPostModal({ account, setIsVisible, setMediaToDisplay }) {
                             )
                         }
                 </div>
+                {
+                    !isInProcess &&
+                    <button style={{
+                        backgroundColor: Colors.blueBold,
+                        border:`2px solid ${Colors.blueLight}`,
+                        fontFamily:"italic",
+                        color: postContent.length === 0 ? "grey" : "#FFFFFF",
+                        opacity: postContent.length === 0 ? "0.7" : "1"
+                    }}>
+                        Post
+                    </button>
+                }
             </div>
         </div>
     );

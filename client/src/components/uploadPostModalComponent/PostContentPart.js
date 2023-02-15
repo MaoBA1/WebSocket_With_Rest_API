@@ -6,7 +6,7 @@ import Colors from '../../utilities/Colors';
 
 
 
-const PostContentPart = ({ componentIndex }) => {
+const PostContentPart = ({ componentIndex, postContent, setPostContent }) => {
     return(
         <div 
             className={componentIndex % 2 === 0 ? "slide active" : "slide" } 
@@ -36,6 +36,8 @@ const PostContentPart = ({ componentIndex }) => {
                 }}
                 multiple
                 placeholder={"This is the place to share..."}
+                value={postContent}
+                onChange={event => setPostContent(event.target.value)}
             />
         </div>
     )
