@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import Colors from '../utilities/Colors';
-
+import { AiOutlineClose } from 'react-icons/ai';
 
 
 
@@ -30,6 +29,15 @@ function UploadPostModal({ account, setIsVisible, setMediaToDisplay }) {
         <div className='upload-post-modal-container'>
             <div className='upload-post-modal-background'/>
             <div className='upload-post-modal-body'>
+                <div 
+                    className='close-modal'
+                    onClick={() => setIsVisible(false)}
+                >
+                    <AiOutlineClose
+                        color='#FFFFFF'
+                        size={"18px"}
+                    />
+                </div>
                 <div className='state-replacement-container'>
                     <div className='arrow-left-container'>
                         <div style={{
@@ -77,18 +85,6 @@ function UploadPostModal({ account, setIsVisible, setMediaToDisplay }) {
                                 <div key={index} className={index === componentIndex % components.length ? "active indicator" : "indicator"}/>
                             )
                         }
-                </div>
-                <div>
-                    <button style={{
-                        borderRadius:"20px",
-                        backgroundColor: Colors.red,
-                        border:"2px solid #FFFFFF",
-                        color:"#FFFFFF",
-                        fontFamily:"italic",
-                        fontSize:"15px"
-                    }} onClick={() => setIsVisible(false)}>
-                        Cancel
-                    </button>
                 </div>
             </div>
         </div>
