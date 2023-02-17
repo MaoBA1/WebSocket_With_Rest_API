@@ -9,18 +9,21 @@ const {
     sendPasswordResetEmail
 } = require('firebase/auth');
 
-const accountEvents = (socket) => {
 
-    auth.onAuthStateChanged((authUser) => {
-        if(authUser) {
-            Account.findOne({ email: authUser.email })
-            .then(account => {
-                return socket.emit("auth_user", { account: account });        
-            })
-        } else {
-            return socket.emit("auth_user", { account: null });        
-        }
-    })
+const { recive_all_post, recive_user_posts } = require('./Posts');
+
+const accountEvents = (io, socket) => {
+
+    // auth.onAuthStateChanged((authUser) => {
+    //     if(authUser) {
+    //         Account.findOne({ email: authUser.email })
+    //         .then(account => {
+    //             return socket.emit("auth_user", { account: account });        
+    //         })
+    //     } else {
+    //         return socket.emit("auth_user", { account: null });        
+    //     }
+    // })
     
     socket.on("create_account", (data) => {
         const {
@@ -78,12 +81,14 @@ const accountEvents = (socket) => {
             if(account) {
                 signInWithEmailAndPassword(auth, email, password)
                 .then(async () => {
-                    if(!auth?.currentUser?.emailVerified) {
-                        return socket.emit("login", {
-                            status:false,
-                            message: `Your account is not verified`
-                        })
-                    } 
+                    // if(!auth?.currentUser?.emailVerified) {
+                    //     return socket.emit("login", {
+                    //         status:false,
+                    //         message: `Your account is not verified`
+                    //     })
+                    // } 
+                    socket.account = account;
+                    recive_all_post(socket);
                     return socket.emit("login", {
                         status:true,
                         account: account

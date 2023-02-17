@@ -5,16 +5,46 @@ const Schema = mongoose.Schema;
 const postSchema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
     postAuthor:{
-        authorId:{type:mongoose.Schema.Types.ObjectId, ref:"Account"},
-        authorName:String
+        _id: {type:mongoose.Schema.Types.ObjectId, ref:"Account"},
+        email: String,
+        fname: String,
+        lname: String,
+        profileImage: String
     },
     postContent: String,
     postMedia:{
-        mdeia:{type: Boolean, default: false},
-        mediaType:String,
-        url: String
+        mediaExist:{type: Boolean, default: false},
+        media: [
+            {
+                mediaType:String,
+                downloadUrl: String,
+                name: String
+            }
+        ]
     },
+    likes: [
+        {
+            _id: {type:mongoose.Schema.Types.ObjectId, ref:"Account"},
+            email: String,
+            fname: String,
+            lname: String,
+            profileImage: String
+        }
+    ],  
+    comments: [
+        {
+            comment: String,
+            commentAuthor: {
+                _id: {type:mongoose.Schema.Types.ObjectId, ref:"Account"},
+                email: String,
+                fname: String,
+                lname: String,
+                profileImage: String
+            }
+        }
+    ],
     creatAdt: {type: Date, default: Date.now},
+    
 });
 
 

@@ -155,7 +155,9 @@ function Register() {
                                 style={{ 
                                     fontFamily:"italic",
                                     border: `2px solid ${Colors.blueLight}`,
-                                    backgroundColor:Colors.grey
+                                    backgroundColor:Colors.grey,
+                                    height:"35px",
+                                    fontSize:"16px"
                                 }}
                                 placeholder="Email Address..."
                             />
@@ -175,7 +177,9 @@ function Register() {
                                         fontFamily:"italic",
                                         width:"90%",
                                         border: `2px solid ${Colors.blueLight}`,
-                                        backgroundColor:Colors.grey
+                                        backgroundColor:Colors.grey,
+                                        height:"35px",
+                                        fontSize:"16px"
                                     }}
                                     placeholder="First Name..."
                                 />
@@ -193,7 +197,9 @@ function Register() {
                                         fontFamily:"italic",
                                         width:"90%",
                                         border: `2px solid ${Colors.blueLight}`,
-                                        backgroundColor:Colors.grey
+                                        backgroundColor:Colors.grey,
+                                        height:"35px",
+                                        fontSize:"16px"
                                     }}
                                     placeholder="Last Name..."
                                 />
@@ -212,7 +218,9 @@ function Register() {
                                     fontFamily:"italic",
                                     width:"60%",
                                     border: `2px solid ${Colors.blueLight}`,
-                                    backgroundColor:Colors.grey
+                                    backgroundColor:Colors.grey,
+                                    height:"35px",
+                                    fontSize:"16px"
                                 }}
                                 type={"password"}
                                 placeholder="Password..."

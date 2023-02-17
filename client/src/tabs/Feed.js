@@ -3,6 +3,8 @@ import '../utilities/feed.css';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import Colors from '../utilities/Colors';
 import { AiOutlinePlus } from 'react-icons/ai';
+import { useSelector } from 'react-redux';
+import Post from '../components/Post';
 
 function Feed({ account, menuCollapsed, setUploadPostModalVisible }) {
     // const {
@@ -13,8 +15,8 @@ function Feed({ account, menuCollapsed, setUploadPostModalVisible }) {
     //     posts,
     //     profileImage
     // } = account;
-
-
+    const allPostSelector = useSelector(state => state.Reducer.Posts);
+    
     const profileImage = account?.profileImage;
     const fname = account?.fname;
     const lname = account?.lname;
@@ -67,6 +69,24 @@ function Feed({ account, menuCollapsed, setUploadPostModalVisible }) {
                     }}
                     placeholder="Search..."
                 />
+            </div>
+            
+            <div style={{
+                width:"100%",
+                display:"flex",
+                flexDirection:"column",
+                alignItems:"center",
+                marginTop:"30px"
+            }}>
+                {
+                    allPostSelector?.sort((a, b) => (new Date(b.creatAdt) - new Date(a.creatAdt))).map((item, index) =>
+                        <Post 
+                            key={item._id}
+                            post={item}
+                            account={account}
+                        />
+                    )
+                }
             </div>
         </Scrollbars>
     );

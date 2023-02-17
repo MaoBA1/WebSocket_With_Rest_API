@@ -6,7 +6,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 
 // controllers
-const postEvents = require('./controllers/Posts');
+const { postEvents } = require('./controllers/Posts');
 const accountEvents = require('./controllers/Account');
 
 const mongoUrl = `mongodb+srv://maor:wm2qpAw2cZ0nwpkJ@postsandchats.orle5k9.mongodb.net/PostAndChats_db?retryWrites=true&w=majority`;
@@ -22,8 +22,8 @@ const io = require('socket.io')(server, {
 io.on("connection", (socket) => {
     console.log(`User connected: ${socket.id}`);
     
-    postEvents(socket);
-    accountEvents(socket);
+    postEvents(io, socket);
+    accountEvents(io, socket);
 
 
     socket.on("disconnect", () => {

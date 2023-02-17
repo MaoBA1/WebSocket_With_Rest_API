@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { socket } from '../socket.io';
 import '../utilities/dashboard.css';
 import Colors from '../utilities/Colors';
 import { useSelector, useDispatch } from 'react-redux';
 // import { isBrowser } from 'react-device-detect';
-import { isAuthUser } from '../store/actions/index';
+import { 
+    isAuthUser,
+    setAllPosts,
+} from '../store/actions/index';
 // import { Scrollbars } from 'react-custom-scrollbars-2';
 
 // components
@@ -17,6 +20,7 @@ import Friends from '../tabs/Friends';
 import Chats from '../tabs/Chats';
 import UploadPostModal from '../components/UploadPostModal';
 import DisplayMediaModal from '../components/DisplayMediaModal';
+import MyPosts from '../tabs/MyPosts';
 
 
 function Dashboard( props ) {
@@ -26,7 +30,7 @@ function Dashboard( props ) {
         width: window.innerWidth,
         height: window.innerHeight
     });
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const userSelector = useSelector(state => state.Reducer.User);
     const [ currentTab, setCurrentTab ] = useState("Feed");
     const [ UploadPostModalVisible, setUploadPostModalVisible ] = useState(false);
@@ -53,12 +57,19 @@ function Dashboard( props ) {
         }
         window.addEventListener('resize', handelResize);
 
+        if(!userSelector) {
+            navigate("/");
+        }
+
         socket.on("auth_user", (response) => isAuthUser(response, dispatch));
+        socket.on("recive_all_post", (response) => setAllPosts(response, dispatch));
+        
 
         return () => {
             socket.off("auth_user", isAuthUser);
+            socket.off("recive_all_post", setAllPosts);
         }
-    },[dispatch])
+    },[dispatch, useSelector, navigate])
     
     
 
@@ -86,6 +97,7 @@ function Dashboard( props ) {
                 <UploadPostModal
                     setIsVisible={setUploadPostModalVisible}
                     setMediaToDisplay={setMediaToDisplay}
+                    account={userSelector}
                 />
             }
             <div className='main' 
@@ -121,6 +133,14 @@ function Dashboard( props ) {
                     currentTab === "Profile-Setting" 
                     &&
                     <ProfileSetting
+                        account={userSelector}
+                    />
+                }
+
+                { 
+                    currentTab === "My-Posts" 
+                    &&
+                    <MyPosts
                         account={userSelector}
                     />
                 }

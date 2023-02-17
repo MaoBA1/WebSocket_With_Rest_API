@@ -44,7 +44,7 @@ const PostMediaPart = ({
                 setIsInProcess(false);
                 return getDownloadURL(uploadTask.snapshot.ref)
                 .then(downloadUrl => {
-                    setMediaArray((mediaList) => [...mediaList, {downloadUrl, name: fileObj.name, type: mediaType}]);
+                    setMediaArray((mediaList) => [...mediaList, {downloadUrl, name: fileObj.name, mediaType: mediaType}]);
                 })
             }
         )
@@ -93,7 +93,7 @@ const PostMediaPart = ({
                                 onClick={() => setMediaToDisplay(item)}
                             >
                                 {
-                                    mediaType === "image" &&
+                                    item.mediaType === "image" &&
                                     <img
                                         src={item.downloadUrl}
                                         className="media-array-media"
@@ -101,7 +101,7 @@ const PostMediaPart = ({
                                 }
 
                                 {
-                                    mediaType === "video" &&
+                                    item.mediaType === "video" &&
                                     <video
                                         src={item.downloadUrl}
                                         className="media-array-media"

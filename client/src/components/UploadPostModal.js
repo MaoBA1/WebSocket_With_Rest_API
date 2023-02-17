@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { AiOutlineClose } from 'react-icons/ai';
-
+import { ref, deleteObject } from 'firebase/storage';
+import { storage } from '../firebase';
+import { socket } from '../socket.io';
 
 
 // components
@@ -32,14 +34,39 @@ function UploadPostModal({ account, setIsVisible, setMediaToDisplay }) {
         />
     ]
     
+    const deleteFileFromStorage = (fileToRemove) => {
+        const imageRef = ref(storage, "postsMedia/" + fileToRemove.name);
+        deleteObject(imageRef)
+        .then(() => {
+            let media = mediaArray.filter(m => m.name !== fileToRemove.name);
+            setMediaArray(media)
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
+    }
 
+    const createNewPost = () => {
+        socket.emit("create_post", {
+            postAuthor: account,
+            postContent: postContent,
+            postMedia:{
+                mediaExist: mediaArray.length > 0,
+                media: mediaArray
+            }
+        });
+        setIsVisible(false);
+    }
     return (  
         <div className='upload-post-modal-container'>
             <div className='upload-post-modal-background'/>
             <div className='upload-post-modal-body'>
                 <div 
                     className='close-modal'
-                    onClick={() => setIsVisible(false)}
+                    onClick={() => {
+                        mediaArray.forEach(m => deleteFileFromStorage(m));
+                        setIsVisible(false);
+                    }}
                 >
                     <AiOutlineClose
                         color='#FFFFFF'
@@ -104,7 +131,7 @@ function UploadPostModal({ account, setIsVisible, setMediaToDisplay }) {
                 </div>
                 {
                     !isInProcess &&
-                    <button style={{
+                    <button onClick={createNewPost} disabled={postContent.length === 0} style={{
                         backgroundColor: Colors.blueBold,
                         border:`2px solid ${Colors.blueLight}`,
                         fontFamily:"italic",

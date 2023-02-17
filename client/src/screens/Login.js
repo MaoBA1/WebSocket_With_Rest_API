@@ -114,11 +114,11 @@ function Login(props) {
             }
         }
         socket.on("login", handelLogin);
-        socket.on("auth_user", isAuthUser);
+        // socket.on("auth_user", isAuthUser);
 
         return () => {
             socket.off("login", handelLogin);
-            socket.off("auth_user", isAuthUser);
+            // socket.off("auth_user", isAuthUser);
         }
         
     },[animationIndex, animations.length, navigate, dispatch]);
@@ -188,7 +188,9 @@ function Login(props) {
                         style={{
                             fontFamily:"italic",
                             color: Colors.blueMedium,
-                            backgroundColor:Colors.grey
+                            backgroundColor:Colors.grey,
+                            height:"35px",
+                            fontSize:"16px"
                         }}
                         placeholder="Email Address..."
                         value={email}
@@ -199,7 +201,7 @@ function Login(props) {
                         className='input-labels'
                         style={{ 
                             fontFamily:"italic",
-                            color:Colors.blueMedium 
+                            color:Colors.blueMedium ,
                         }}
                     >
                         Password
@@ -209,7 +211,9 @@ function Login(props) {
                         style={{
                             fontFamily:"italic",
                             color: Colors.blueMedium,
-                            backgroundColor:Colors.grey
+                            backgroundColor:Colors.grey,
+                            height:"35px",
+                            fontSize:"16px"
                         }}
                         placeholder="Password..."
                         value={password}
