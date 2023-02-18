@@ -20,6 +20,8 @@ function Post({ post, account }) {
     const postLikses = post.likes;
     const postComments = post?.comments;
 
+    
+
 
     const [ currentMedia, setCurrentMedia ] = useState(0);
     const length = postMedia?.media?.length;
@@ -178,7 +180,7 @@ function Post({ post, account }) {
                 marginTop:"20px",
                 marginLeft:"10px",
             }}>
-                <div style={{
+                <div onClick={() => {}} style={{
                     display:"flex",
                     flexDirection:"row",
                     alignItems:"center",

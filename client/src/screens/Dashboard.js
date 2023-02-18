@@ -21,6 +21,7 @@ import Chats from '../tabs/Chats';
 import UploadPostModal from '../components/UploadPostModal';
 import DisplayMediaModal from '../components/DisplayMediaModal';
 import MyPosts from '../tabs/MyPosts';
+import PostLikersModal from '../components/postModalComponent/PostLikersModal';
 
 
 function Dashboard( props ) {
@@ -35,6 +36,7 @@ function Dashboard( props ) {
     const [ currentTab, setCurrentTab ] = useState("Feed");
     const [ UploadPostModalVisible, setUploadPostModalVisible ] = useState(false);
     const [ mediaToDisplay, setMediaToDisplay ] = useState(null);
+    const [ likersVisible, setLikersVisible ] = useState(false);
     // const {
     //     _id,
     //     email,
@@ -98,6 +100,12 @@ function Dashboard( props ) {
                     setIsVisible={setUploadPostModalVisible}
                     setMediaToDisplay={setMediaToDisplay}
                     account={userSelector}
+                />
+            }
+            {
+                likersVisible &&
+                <PostLikersModal
+                    close={() => setLikersVisible(false)}
                 />
             }
             <div className='main' 
