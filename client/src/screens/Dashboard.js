@@ -22,6 +22,7 @@ import UploadPostModal from '../components/UploadPostModal';
 import DisplayMediaModal from '../components/DisplayMediaModal';
 import MyPosts from '../tabs/MyPosts';
 import PostLikersModal from '../components/postModalComponent/PostLikersModal';
+import PostComments from '../components/postModalComponent/PostComments';
 
 
 function Dashboard( props ) {
@@ -38,6 +39,8 @@ function Dashboard( props ) {
     const [ mediaToDisplay, setMediaToDisplay ] = useState(null);
     const [ likersVisible, setLikersVisible ] = useState(false);
     const [ likersArray, setLikersArray ] = useState([]);
+    const [ commentVisible, setCommentVisible ] = useState(false);
+    const [ commentsArray, setCommentsArray ] = useState([]);
     // const {
     //     _id,
     //     email,
@@ -111,6 +114,7 @@ function Dashboard( props ) {
                     account={userSelector}
                 />
             }
+            <PostComments/>
             <div className='main' 
                 onClick={() => {
                     if(!menuCollapsed) {
