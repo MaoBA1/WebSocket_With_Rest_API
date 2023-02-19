@@ -37,6 +37,7 @@ function Dashboard( props ) {
     const [ UploadPostModalVisible, setUploadPostModalVisible ] = useState(false);
     const [ mediaToDisplay, setMediaToDisplay ] = useState(null);
     const [ likersVisible, setLikersVisible ] = useState(false);
+    const [ likersArray, setLikersArray ] = useState([]);
     // const {
     //     _id,
     //     email,
@@ -106,6 +107,8 @@ function Dashboard( props ) {
                 likersVisible &&
                 <PostLikersModal
                     close={() => setLikersVisible(false)}
+                    likers={likersArray}
+                    account={userSelector}
                 />
             }
             <div className='main' 
@@ -134,6 +137,8 @@ function Dashboard( props ) {
                         account={userSelector}
                         menuCollapsed={menuCollapsed}
                         setUploadPostModalVisible={setUploadPostModalVisible}
+                        setLikersVisible={setLikersVisible}
+                        setLikersArray={setLikersArray}
                     />
                 }
 
@@ -150,6 +155,8 @@ function Dashboard( props ) {
                     &&
                     <MyPosts
                         account={userSelector}
+                        setLikersVisible={setLikersVisible}
+                        setLikersArray={setLikersArray}
                     />
                 }
 

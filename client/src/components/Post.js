@@ -7,7 +7,7 @@ import { FaComment } from 'react-icons/fa';
 import { socket } from '../socket.io';
 
 
-function Post({ post, account }) {
+function Post({ post, account, setLikersArray, setLikersVisible }) {
     const postId = post?._id;
     const postAuthorId = post?.postAuthor?._id;
     const postAuthorFname = post?.postAuthor?.fname;
@@ -180,7 +180,12 @@ function Post({ post, account }) {
                 marginTop:"20px",
                 marginLeft:"10px",
             }}>
-                <div onClick={() => {}} style={{
+                <div onClick={() => {
+                    if(postLikses?.length > 0) {
+                        setLikersArray(postLikses);
+                        setLikersVisible(true);
+                    }
+                }} style={{
                     display:"flex",
                     flexDirection:"row",
                     alignItems:"center",
