@@ -112,7 +112,8 @@ function PostComments({ account, post, setPost, close }) {
                                 <Scrollbars style={{
                                     border:`1px solid ${Colors.blueLight}`,
                                     borderRadius:"20px",
-                                    backgroundColor:Colors.grey
+                                    backgroundColor:Colors.grey,
+                                    padding:"5px"
                                 }}>
                                     {
                                         postComments.sort((a, b) => (new Date(b.creatAdt) - new Date(a.creatAdt))).map((item, index) => 
