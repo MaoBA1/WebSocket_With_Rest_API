@@ -40,7 +40,7 @@ function Dashboard( props ) {
     const [ likersVisible, setLikersVisible ] = useState(false);
     const [ likersArray, setLikersArray ] = useState([]);
     const [ commentVisible, setCommentVisible ] = useState(false);
-    const [ commentsArray, setCommentsArray ] = useState([]);
+    const [ post, setPost ] = useState(null);
     // const {
     //     _id,
     //     email,
@@ -69,11 +69,12 @@ function Dashboard( props ) {
 
         socket.on("auth_user", (response) => isAuthUser(response, dispatch));
         socket.on("recive_all_post", (response) => setAllPosts(response, dispatch));
-        
+        socket.on("get_updated_post", (response) => setPost(response.updated_post));
 
         return () => {
             socket.off("auth_user", isAuthUser);
             socket.off("recive_all_post", setAllPosts);
+            socket.on("get_updated_post", setPost);
         }
     },[dispatch, useSelector, navigate])
     
@@ -114,7 +115,15 @@ function Dashboard( props ) {
                     account={userSelector}
                 />
             }
-            <PostComments/>
+            {
+                commentVisible &&
+                <PostComments
+                    close={() => setCommentVisible(false)}
+                    post={post}
+                    setPost={setPost}
+                    account={userSelector}
+                />
+            }
             <div className='main' 
                 onClick={() => {
                     if(!menuCollapsed) {
@@ -143,6 +152,8 @@ function Dashboard( props ) {
                         setUploadPostModalVisible={setUploadPostModalVisible}
                         setLikersVisible={setLikersVisible}
                         setLikersArray={setLikersArray}
+                        setPost={setPost}
+                        setCommentVisible={setCommentVisible}
                     />
                 }
 

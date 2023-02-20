@@ -7,7 +7,14 @@ import { FaComment } from 'react-icons/fa';
 import { socket } from '../socket.io';
 
 
-function Post({ post, account, setLikersArray, setLikersVisible }) {
+function Post({ 
+    post,
+    account,
+    setLikersArray,
+    setLikersVisible,
+    setCommentVisible,
+    setPost
+}) {
     const postId = post?._id;
     const postAuthorId = post?.postAuthor?._id;
     const postAuthorFname = post?.postAuthor?.fname;
@@ -279,7 +286,13 @@ function Post({ post, account, setLikersArray, setLikersVisible }) {
                     }
                 </div>
 
-                <div className='like-and-comment-container'>
+                <div 
+                    onClick={() => {
+                        setPost(post)
+                        setCommentVisible(true);
+                    }} 
+                    className='like-and-comment-container'
+                >
                     <FaComment
                         color={Colors.blueLight}
                     />

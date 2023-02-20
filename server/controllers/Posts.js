@@ -95,6 +95,41 @@ const postEvents = (io, socket) => {
             console.log(error.message);
         })
     })
+
+    socket.on("add_comment_to_post", (data) => {
+        const {
+            postId,
+            comment,
+            account
+        } = data;
+
+        Post.findById(postId)
+        .then(post => {
+            if(post) {
+                post.comments.push({
+                    comment: comment,
+                    commentAuthor: {
+                        _id: account._id,
+                        email: account.email,
+                        fname: account.fname,
+                        lname: account.lname,
+                        profileImage: account.profileImage
+                    }
+                });
+                return post.save()
+                .then(updated_post => {
+                    Post.find({})
+                    .then((posts) => {
+                        io.emit("recive_all_post", {posts: posts});
+                        io.emit("get_updated_post", {updated_post: updated_post});
+                    }) 
+                })
+            }
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
+    })
 }
 
 

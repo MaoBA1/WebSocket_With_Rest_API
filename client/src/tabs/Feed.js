@@ -7,7 +7,15 @@ import { useSelector } from 'react-redux';
 import Post from '../components/Post';
 
                         
-function Feed({ account, menuCollapsed, setUploadPostModalVisible, setLikersArray, setLikersVisible }) {
+function Feed({ 
+    account,
+    menuCollapsed,
+    setUploadPostModalVisible,
+    setLikersArray,
+    setLikersVisible,
+    setCommentVisible,
+    setPost
+}) {
     // const {
     //     _id,
     //     email,
@@ -88,6 +96,8 @@ function Feed({ account, menuCollapsed, setUploadPostModalVisible, setLikersArra
                                 account={account}
                                 setLikersVisible={setLikersVisible}
                                 setLikersArray={setLikersArray}
+                                setCommentVisible={setCommentVisible}
+                                setPost={setPost}
                             />
                         )
                     }

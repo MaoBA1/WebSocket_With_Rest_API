@@ -40,7 +40,8 @@ const postSchema = new Schema({
                 fname: String,
                 lname: String,
                 profileImage: String
-            }
+            },
+            creatAdt: {type: Date, default: Date.now}
         }
     ],
     creatAdt: {type: Date, default: Date.now},
