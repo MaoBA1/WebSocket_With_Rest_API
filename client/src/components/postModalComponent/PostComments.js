@@ -116,7 +116,7 @@ function PostComments({ account, post, setPost, close }) {
                                 }}>
                                     {
                                         postComments.sort((a, b) => (new Date(b.creatAdt) - new Date(a.creatAdt))).map((item, index) => 
-                                            <div style={{
+                                            <div key={item._id} style={{
                                                 width:"100%",
                                                 padding:"10px",
                                                 display:"flex",
@@ -134,15 +134,16 @@ function PostComments({ account, post, setPost, close }) {
                                                         <img
                                                             src={item.commentAuthor.profileImage}
                                                             style={{
-                                                                width:"35px",
-                                                                height:"35px",
+                                                                width:"30px",
+                                                                height:"30px",
                                                                 borderRadius:"20px"
                                                             }}
                                                         />
                                                         <label style={{
                                                             marginLeft:"10px",
                                                             fontFamily:"italic",
-                                                            color:Colors.blueLight
+                                                            color:Colors.blueLight,
+                                                            fontSize:"14px"
                                                         }}>
                                                             {item.commentAuthor.fname + " " + item.commentAuthor.lname}
                                                         </label>
