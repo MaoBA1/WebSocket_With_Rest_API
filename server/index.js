@@ -5,6 +5,17 @@ const http = require('http');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
+// Routers
+const userRouter = require('./routes/userRoutes');
+
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
+app.use(express.json());
+
+app.use('/api/user', userRouter);
+
+
+
 // controllers
 const { postEvents } = require('./controllers/Posts');
 const accountEvents = require('./controllers/Account');

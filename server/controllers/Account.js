@@ -1,6 +1,14 @@
+const express = require('express');
+const router = express.Router();
+const bycryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+
+
 const Post = require('../models/Posts');
 const Account = require('../models/Account');
+
+
 const { auth } = require('../firebase');
 const { 
     createUserWithEmailAndPassword,
@@ -10,20 +18,124 @@ const {
 } = require('firebase/auth');
 
 
+const register = (request, response) => {
+    const {
+        email,
+        password,
+        fname,
+        lname,
+        profileImage
+    } = request.body;
+
+    const lowercaseEmail = email.toLowerCase();
+    const formattedFname = fname[0].toUpperCase() + fname.substring(1, fname.length);
+    const formattedLname = lname[0].toUpperCase() + lname.substring(1, lname.length);
+
+
+    Account.findOne({ email: lowercaseEmail })
+        .then(account => {
+            if(account) {
+                return response.status(200).json({
+                    status: false,
+                    message: "user has already exist"
+                });
+            } 
+            const newAccount = new Account({
+                _id: mongoose.Types.ObjectId(),
+                email: lowercaseEmail,
+                fname: formattedFname,
+                lname: formattedLname,
+                profileImage: profileImage
+            })
+            return newAccount.save()
+            .then(async(new_account) => {
+                await createUserWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    sendEmailVerification(auth?.currentUser);
+                    return response.status(200).json({
+                        status: true,
+                        account: new_account
+                    });
+                })
+                .catch(error => {
+                    return response.status(403).json({
+                        status: false,
+                        message: error.message
+                    })
+                })
+            })
+        })
+}
+
+const login = (request, response) => {
+    const { email, password } = request.body;
+        Account.findOne({email: email})
+        .then(account => {
+            if(account) {
+                signInWithEmailAndPassword(auth, email, password)
+                .then(async () => {
+                    // if(!auth?.currentUser?.emailVerified) {
+                    //     return socket.emit("login", {
+                    //         status:false,
+                    //         message: `Your account is not verified`
+                    //     })
+                    // } 
+                    // socket.account = account;
+                    // recive_all_post(socket);
+                    const token = await jwt.sign({id: account._id},"A6cXZ9Mj5hM4As2wiIugIz5DHNO3q1VF");
+                    return response.status(200).json({
+                        status:true,
+                        account: token
+                    })
+                })
+                .catch(error => {
+                    console.log(error.message);
+                    return response.status(200).json({
+                        status:false,
+                        message: "Wrong Password"
+                    })
+                })
+            } else {
+                return response.status(403).json({
+                    status:false,
+                    message: `There is no account like ${email}`
+                })
+            }
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
+}
+
+const forget_password = (request, response) => {
+    const { email } = request.body;
+        Account.findOne({ email: email })
+        .then(account => {
+            if(account) {
+                sendPasswordResetEmail(auth, email)
+                .then(() => {
+                    return response.status(200).json({
+                        status:true,
+                        message: `Mail to reset your password was sent to ${email}`
+                    })
+                })
+            } else {
+                return response.status(403).json({
+                    status:false,
+                    message: `There is no account like ${email}`
+                })
+            }
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
+}
+
+
+
 const { recive_all_post, recive_user_posts } = require('./Posts');
 
 const accountEvents = (io, socket) => {
-
-    // auth.onAuthStateChanged((authUser) => {
-    //     if(authUser) {
-    //         Account.findOne({ email: authUser.email })
-    //         .then(account => {
-    //             return socket.emit("auth_user", { account: account });        
-    //         })
-    //     } else {
-    //         return socket.emit("auth_user", { account: null });        
-    //     }
-    // })
     
     socket.on("create_account", (data) => {
         const {
@@ -178,4 +290,9 @@ const accountEvents = (io, socket) => {
 }
 
 
-module.exports = accountEvents;
+module.exports = {
+    accountEvents,
+    register,
+    login,
+    forget_password
+};
