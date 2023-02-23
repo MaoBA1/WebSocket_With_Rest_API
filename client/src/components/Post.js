@@ -5,6 +5,7 @@ import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-ico
 import { AiFillLike, AiFillDislike } from 'react-icons/ai';
 import { FaComment } from 'react-icons/fa';
 import { socket } from '../socket.io';
+import { isBrowser } from 'react-device-detect'; 
 
 
 function Post({ 
@@ -49,7 +50,7 @@ function Post({
 
     
     return (  
-        <div className='post-container'>
+        <div className='post-container' style={{ width: isBrowser ? "600px" : "350px" }}>
             <div className='post-author-part-container'>
                 <img
                     src={postAuthorProfileImage}

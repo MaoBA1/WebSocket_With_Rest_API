@@ -66,7 +66,7 @@ const register = (request, response) => {
 
 const login = (request, response) => {
     const { email, password } = request.body;
-        Account.findOne({email: email})
+        Account.findOne({email: email.toLowerCase()})
         .then(account => {
             if(account) {
                 signInWithEmailAndPassword(auth, email, password)

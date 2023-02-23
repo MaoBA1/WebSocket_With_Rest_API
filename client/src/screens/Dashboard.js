@@ -74,14 +74,14 @@ function Dashboard( props ) {
             navigate("/");
         }
         
-        socket.on("recive_all_post", (response) => setAllPosts(response, dispatch));
-        socket.on("get_updated_post", (response) => setPost(response.updated_post));
-        socket.on("auth_user", (response) => isAuthUser(response, dispatch));
+        socket?.on("recive_all_post", (response) => setAllPosts(response, dispatch));
+        socket?.on("get_updated_post", (response) => setPost(response.updated_post));
+        socket?.on("auth_user", (response) => isAuthUser(response, dispatch));
 
         return () => {
         
-            socket.off("recive_all_post", setAllPosts);
-            socket.on("get_updated_post", setPost);
+            socket?.off("recive_all_post", setAllPosts);
+            socket?.on("get_updated_post", setPost);
         }
     },[dispatch, useSelector, navigate, socket])
     

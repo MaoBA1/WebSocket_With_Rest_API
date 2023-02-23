@@ -84,7 +84,7 @@ function Login(props) {
 
         const isAuthUser = async() => {
             const token = localStorage.getItem("user_token");
-            if(socket) {
+            if(token) {
                 try {
                     await dispatch(getUser(token));
                     navigate('/Home');
@@ -97,7 +97,7 @@ function Login(props) {
 
         isAuthUser();
         
-    },[animationIndex, animations.length, navigate, dispatch]);
+    },[animationIndex, animations.length, navigate, dispatch, socket]);
 
     
     const login = async() => {
@@ -120,6 +120,7 @@ function Login(props) {
                     }, 3000)
                 } else {
                     localStorage.setItem("user_token", loginresponse.token);
+                    navigate('/Home');
                 }
             })
         }

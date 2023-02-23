@@ -10,7 +10,13 @@ function MyPosts({ account }) {
     
     return (  
         <Scrollbars>
-            <div className='my-post-container'>
+            <div style={{
+                width:"100%",
+                display:"flex",
+                flexDirection:"column",
+                alignItems:"center",
+                marginTop:"30px"
+            }}>
                 {
                     allPostSelector?.filter(p => p.postAuthor._id.toString() === account._id.toString())
                     .sort((a, b) => (new Date(b.creatAdt) - new Date(a.creatAdt))).map((item, index) =>
