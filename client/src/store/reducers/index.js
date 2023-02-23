@@ -1,6 +1,6 @@
 import { 
-    SET_CURRENT_USER,
     SET_ALL_POSTS,
+    SET_CURRENT_USER
 } from '../actions/index';
 
 

@@ -43,31 +43,31 @@ function Register() {
             });
         }
         window.addEventListener('resize', handelResize);
-        socket.on("create_account", (response) => {
-            if(!response.status) {
-                console.log(response);
-                setShowModal(true);
-                setModalMessage({message: response.message, fontColor:Colors.red});
-                setModalButtons([{text: "OK", onClick: () => setShowModal(false)}])
-            } else {
-                console.log(response);
-                let fname = response?.account?.fname;
-                let email = response?.account?.email;
-                setShowModal(true);
-                setModalMessage({
-                    message: `Hi ${fname}, Your account\n
-                    has been created successfully!\n
-                    Account verification link sent to\n
-                    ${email}`, 
-                    fontColor:Colors.blueLight
-                });
-                setModalButtons([{text: "OK", onClick: () => {
-                        navigate('/')
-                        setShowModal(false);
-                    }
-                }])
-            }
-        })
+        // socket.on("create_account", (response) => {
+        //     if(!response.status) {
+        //         console.log(response);
+        //         setShowModal(true);
+        //         setModalMessage({message: response.message, fontColor:Colors.red});
+        //         setModalButtons([{text: "OK", onClick: () => setShowModal(false)}])
+        //     } else {
+        //         console.log(response);
+        //         let fname = response?.account?.fname;
+        //         let email = response?.account?.email;
+        //         setShowModal(true);
+        //         setModalMessage({
+        //             message: `Hi ${fname}, Your account\n
+        //             has been created successfully!\n
+        //             Account verification link sent to\n
+        //             ${email}`, 
+        //             fontColor:Colors.blueLight
+        //         });
+        //         setModalButtons([{text: "OK", onClick: () => {
+        //                 navigate('/')
+        //                 setShowModal(false);
+        //             }
+        //         }])
+        //     }
+        // })
     },[email, fname, navigate]);
 
     const handleFileChange = event => {

@@ -25,7 +25,6 @@ function Feed({
     //     profileImage
     // } = account;
     const allPostSelector = useSelector(state => state.Reducer.Posts);
-    
     const profileImage = account?.profileImage;
     const fname = account?.fname;
     const lname = account?.lname;
@@ -91,7 +90,7 @@ function Feed({
                     {
                         allPostSelector?.sort((a, b) => (new Date(b.creatAdt) - new Date(a.creatAdt))).map((item, index) =>
                             <Post 
-                                key={item._id}
+                                key={item?._id}
                                 post={item}
                                 account={account}
                                 setLikersVisible={setLikersVisible}

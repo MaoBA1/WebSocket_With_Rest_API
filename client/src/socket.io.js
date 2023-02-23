@@ -1,3 +1,7 @@
 import { io } from 'socket.io-client';
 
-export const socket = io.connect("http://192.168.0.114:3002");
+export const socket = localStorage.getItem("user_token") ? io("http://localhost:3002", {
+    query: {
+        token: localStorage.getItem("user_token")
+    }
+}).connect() : null;

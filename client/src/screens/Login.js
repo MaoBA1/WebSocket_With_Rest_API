@@ -5,7 +5,7 @@ import { MdOutlineVideoLibrary } from 'react-icons/md';
 import { useNavigate, } from 'react-router-dom';
 import { socket } from '../socket.io'
 import '../utilities/login.css';
-import { SetCurrentUserAction } from '../store/actions/index';
+import { loginAction, getUser } from '../store/actions/index';
 import { useDispatch } from 'react-redux';
 
 
@@ -82,49 +82,25 @@ function Login(props) {
             setAnimationIndex(animationIndex + 1);
         }, 5000);
 
-        const handelLogin = async(response) => {
-            if(!response.status) {
-                console.log(response);
-                setErrorMessage(response.message);
-                setTimeout(() => {
-                    setErrorMessage("");
-                    setEmail("");
-                    setPassword("");
-                }, 3000);
-            } else {
-                let action = SetCurrentUserAction(response.account);
-                try{
-                    await dispatch(action);
+        const isAuthUser = async() => {
+            const token = localStorage.getItem("user_token");
+            if(socket) {
+                try {
+                    await dispatch(getUser(token));
                     navigate('/Home');
                 } catch(error) {
                     console.log(error.message);
                 }
+                
             }
         }
 
-        const isAuthUser = async(response) => {
-            if(response.account) {
-                let action = SetCurrentUserAction(response.account);
-                try{
-                    await dispatch(action);
-                    navigate('/Home');
-                } catch(error) {
-                    console.log(error.message);
-                }
-            }
-        }
-        socket.on("login", handelLogin);
-        // socket.on("auth_user", isAuthUser);
-
-        return () => {
-            socket.off("login", handelLogin);
-            // socket.off("auth_user", isAuthUser);
-        }
+        isAuthUser();
         
     },[animationIndex, animations.length, navigate, dispatch]);
 
     
-    const login = () => {
+    const login = async() => {
         if(email === "" || password === "") {
             setErrorMessage("Email and Password required");
             setTimeout(() => {
@@ -133,7 +109,19 @@ function Login(props) {
                 setPassword("");
             }, 3000)
         } else {
-            socket.emit("login", { email: email, password: password });
+            await loginAction({email, password})
+            .then(loginresponse => {
+                if(!loginresponse.status) {
+                    setErrorMessage(loginresponse.message)
+                    setTimeout(() => {
+                        setErrorMessage("");
+                        setEmail("");
+                        setPassword("");
+                    }, 3000)
+                } else {
+                    localStorage.setItem("user_token", loginresponse.token);
+                }
+            })
         }
     }
 

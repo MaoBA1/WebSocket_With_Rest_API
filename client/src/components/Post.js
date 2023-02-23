@@ -24,7 +24,7 @@ function Post({
     const postMedia = post?.postMedia;
     const postCreateAdt = post?.creatAdt;
     const formattedCreateAdt = new Date(postCreateAdt).toDateString();
-    const postLikses = post.likes;
+    const postLikses = post?.likes;
     const postComments = post?.comments;
 
     
@@ -35,7 +35,7 @@ function Post({
     
 
     const isLiked = () => {
-        return postLikses.filter(l => l._id === account._id).length === 1;
+        return postLikses?.filter(l => l?._id === account?._id).length === 1;
 
     }
 
@@ -46,6 +46,8 @@ function Post({
     const unlike = () => {
         socket.emit("unlike_post", {postId: postId, accountId: account._id});
     }
+
+    
     return (  
         <div className='post-container'>
             <div className='post-author-part-container'>

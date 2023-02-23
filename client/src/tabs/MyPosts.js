@@ -9,17 +9,19 @@ function MyPosts({ account }) {
     
     
     return (  
-        <Scrollbars className='my-post-container'>
-            {
-                allPostSelector?.filter(p => p.postAuthor._id.toString() === account._id.toString())
-                .sort((a, b) => (new Date(b.creatAdt) - new Date(a.creatAdt))).map((item, index) =>
-                    <Post
-                        key={item._id}
-                        post={item}
-                        account={account}
-                    />
-                )
-            }
+        <Scrollbars>
+            <div className='my-post-container'>
+                {
+                    allPostSelector?.filter(p => p.postAuthor._id.toString() === account._id.toString())
+                    .sort((a, b) => (new Date(b.creatAdt) - new Date(a.creatAdt))).map((item, index) =>
+                        <Post
+                            key={item._id}
+                            post={item}
+                            account={account}
+                        />
+                    )
+                }
+            </div>
         </Scrollbars>
     );
 }

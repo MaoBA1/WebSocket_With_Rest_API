@@ -4,12 +4,11 @@ import { socket } from '../socket.io';
 import '../utilities/dashboard.css';
 import Colors from '../utilities/Colors';
 import { useSelector, useDispatch } from 'react-redux';
-// import { isBrowser } from 'react-device-detect';
 import { 
     isAuthUser,
     setAllPosts,
+    getUser
 } from '../store/actions/index';
-// import { Scrollbars } from 'react-custom-scrollbars-2';
 
 // components
 import AfterLoginHeader from '../components/AfterLoginHeader';
@@ -62,21 +61,29 @@ function Dashboard( props ) {
             });
         }
         window.addEventListener('resize', handelResize);
-
-        if(!userSelector) {
+        const get_user = async () => {
+            try {
+                await dispatch(getUser(localStorage.getItem("user_token")));
+            } catch(error) {
+              console.log(error.message);   
+            }
+        }
+        if(localStorage.getItem("user_token")) {
+            get_user();
+        } else {
             navigate("/");
         }
-
-        socket.on("auth_user", (response) => isAuthUser(response, dispatch));
+        
         socket.on("recive_all_post", (response) => setAllPosts(response, dispatch));
         socket.on("get_updated_post", (response) => setPost(response.updated_post));
+        socket.on("auth_user", (response) => isAuthUser(response, dispatch));
 
         return () => {
-            socket.off("auth_user", isAuthUser);
+        
             socket.off("recive_all_post", setAllPosts);
             socket.on("get_updated_post", setPost);
         }
-    },[dispatch, useSelector, navigate])
+    },[dispatch, useSelector, navigate, socket])
     
     
 

@@ -1,19 +1,58 @@
+import serverBaseUrl from "../../serverBaseUrl";
+
+
+export const LOGIN = "LOGIN";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 export const SET_ALL_POSTS = "SET_ALL_POSTS";
 
 
-export const SetCurrentUserAction = (user) => {
+export const setUser = (user) => {
     return dispatch => {
-        dispatch({ type: SET_CURRENT_USER, user: user });
+        dispatch({ type: SET_CURRENT_USER, user });
+    }
+}
+
+export const getUser = ( token ) => {
+    return async dispatch => {
+        try {
+            const response = await fetch(serverBaseUrl.url + "/user/get_user", {
+                method:"GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': 'Bearer ' + token
+                },
+            })
+            const data = await response.json();
+            if(data.status) {
+                dispatch(setUser(data.account));
+            }
+        } catch(error) {
+            throw new Error(error.message);
+        }
+    }
+}
+
+export const loginAction = async(loginDetails) => {
+    try {
+        const response = await fetch(serverBaseUrl.url + "/user/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(loginDetails)
+        })
+
+        const data = await response.json();
+        return data;
+    } catch(error) {
+        throw new Error(error);
     }
 }
 
 
-
-
 export const isAuthUser = async(response, dispatch) => {
     if(response.account) {
-        let action = SetCurrentUserAction(response.account);
+        let action = setUser(response.account);
         try{
             await dispatch(action);
         } catch(error) {
