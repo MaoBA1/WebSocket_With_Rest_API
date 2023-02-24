@@ -20,11 +20,12 @@ const RootReducer = combineReducers({
 const store = createStore(RootReducer, applyMiddleware(ReduxThunk));
 function App() {
   const [socket, setSocket] = useState(null);
-
+  let productionUrl = "https://postandchats.onrender.com:3002";
+  let localurl = "http://192.168.1.41:3002";
   const setupSocket = () => {
     const token = localStorage.getItem("user_token");
     if (token && !socket) {
-      const newSocket = io("http://192.168.1.41:3002", {
+      const newSocket = io(productionUrl, {
         query: {
           token: token
         },
