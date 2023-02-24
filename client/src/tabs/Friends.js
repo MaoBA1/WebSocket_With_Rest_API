@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-function Friends({ account }) {
+function Friends({ account, socket }) {
     return ( 
         <div>
 

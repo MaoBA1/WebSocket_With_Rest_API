@@ -3,17 +3,17 @@ import Colors from '../utilities/Colors';
 import { BsFileEarmarkPost, BsFillChatFill } from 'react-icons/bs';
 import { MdOutlineVideoLibrary } from 'react-icons/md';
 import { useNavigate, } from 'react-router-dom';
-import { socket } from '../socket.io'
 import '../utilities/login.css';
 import { loginAction, getUser } from '../store/actions/index';
 import { useDispatch } from 'react-redux';
+
 
 
 // components
 import BeforLoginHeader from '../components/BeforLoginHeader';
 import ForgetPassword from '../components/ForgetPassword';
 
-function Login(props) {
+function Login({ setupSocket }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [ email, setEmail ] = useState("");
@@ -70,6 +70,20 @@ function Login(props) {
         </label>
     ]
 
+    const isAuthUser = async() => {
+        const token = localStorage.getItem("user_token");
+        if(token) {
+            try {
+                await dispatch(getUser(token));
+                setupSocket()
+                navigate('/Home');
+            } catch(error) {
+                console.log(error.message);
+            }
+            
+        }
+    }
+    isAuthUser();
     useEffect(() => {
         const handelResize = () => {
             setWindowSize({
@@ -81,24 +95,11 @@ function Login(props) {
         setTimeout(() => {
             setAnimationIndex(animationIndex + 1);
         }, 5000);
-
-        const isAuthUser = async() => {
-            const token = localStorage.getItem("user_token");
-            if(token) {
-                try {
-                    await dispatch(getUser(token));
-                    navigate('/Home');
-                } catch(error) {
-                    console.log(error.message);
-                }
-                
-            }
-        }
-
-        isAuthUser();
         
-    },[animationIndex, animations.length, navigate, dispatch, socket]);
+        
+    },[animationIndex, animations.length, navigate, dispatch]);
 
+    
     
     const login = async() => {
         if(email === "" || password === "") {
@@ -120,7 +121,7 @@ function Login(props) {
                     }, 3000)
                 } else {
                     localStorage.setItem("user_token", loginresponse.token);
-                    navigate('/Home');
+                    isAuthUser();
                 }
             })
         }

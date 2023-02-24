@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { socket } from '../socket.io';
 import '../utilities/dashboard.css';
 import Colors from '../utilities/Colors';
 import { useSelector, useDispatch } from 'react-redux';
@@ -24,7 +23,7 @@ import PostLikersModal from '../components/postModalComponent/PostLikersModal';
 import PostComments from '../components/postModalComponent/PostComments';
 
 
-function Dashboard( props ) {
+function Dashboard( { socket, setupSocket } ) {
     const dispatch = useDispatch();
     const [  menuCollapsed, setMenuCollapsed ] = useState(true);
     const [ windowSize, setWindowSize ] = useState({
@@ -54,6 +53,7 @@ function Dashboard( props ) {
     
     
     useEffect(() => {
+        setupSocket();
         const handelResize = () => {
             setWindowSize({
                 width: window.innerWidth,
@@ -68,9 +68,8 @@ function Dashboard( props ) {
               console.log(error.message);   
             }
         }
-        if(localStorage.getItem("user_token")) {
-            get_user();
-        } else {
+        get_user();
+        if(!localStorage.getItem("user_token")) {
             navigate("/");
         }
         
@@ -79,11 +78,11 @@ function Dashboard( props ) {
         socket?.on("auth_user", (response) => isAuthUser(response, dispatch));
 
         return () => {
-        
             socket?.off("recive_all_post", setAllPosts);
             socket?.on("get_updated_post", setPost);
+            socket?.off("auth_user", isAuthUser);
         }
-    },[dispatch, useSelector, navigate, socket])
+    },[dispatch, navigate, socket, setupSocket])
     
     
 
@@ -104,6 +103,7 @@ function Dashboard( props ) {
                 currentTab={currentTab}
                 switchTab={setCurrentTab}
                 setMenuCollapsed={setMenuCollapsed}
+                socket={socket}
             />
             {
                 UploadPostModalVisible 
@@ -112,6 +112,7 @@ function Dashboard( props ) {
                     setIsVisible={setUploadPostModalVisible}
                     setMediaToDisplay={setMediaToDisplay}
                     account={userSelector}
+                    socket={socket}
                 />
             }
             {
@@ -129,6 +130,7 @@ function Dashboard( props ) {
                     post={post}
                     setPost={setPost}
                     account={userSelector}
+                    socket={socket}
                 />
             }
             <div className='main' 
@@ -161,6 +163,7 @@ function Dashboard( props ) {
                         setLikersArray={setLikersArray}
                         setPost={setPost}
                         setCommentVisible={setCommentVisible}
+                        socket={socket}
                     />
                 }
 
@@ -169,6 +172,7 @@ function Dashboard( props ) {
                     &&
                     <ProfileSetting
                         account={userSelector}
+                        socket={socket}
                     />
                 }
 
@@ -179,6 +183,9 @@ function Dashboard( props ) {
                         account={userSelector}
                         setLikersVisible={setLikersVisible}
                         setLikersArray={setLikersArray}
+                        socket={socket}
+                        setPost={setPost}
+                        setCommentVisible={setCommentVisible}
                     />
                 }
 
@@ -187,6 +194,7 @@ function Dashboard( props ) {
                     &&
                     <Friends
                         account={userSelector}
+                        socket={socket}
                     />
                 }
 
@@ -195,6 +203,7 @@ function Dashboard( props ) {
                     &&
                     <Chats
                         account={userSelector}
+                        socket={socket}
                     />
                 }
             </div>

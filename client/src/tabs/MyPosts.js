@@ -4,7 +4,7 @@ import '../utilities/myPosts.css';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import Post from '../components/Post';
 
-function MyPosts({ account }) {
+function MyPosts({ account, socket, setCommentVisible, setPost, setLikersArray, setLikersVisible }) {
     const allPostSelector = useSelector(state => state.Reducer.Posts);
     
     
@@ -24,6 +24,11 @@ function MyPosts({ account }) {
                             key={item._id}
                             post={item}
                             account={account}
+                            socket={socket}
+                            setCommentVisible={setCommentVisible}
+                            setPost={setPost}
+                            setLikersArray={setLikersArray}
+                            setLikersVisible={setLikersVisible}
                         />
                     )
                 }

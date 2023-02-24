@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Colors from '../utilities/Colors';
-import { socket } from '../socket.io';
 import { RiCloseFill } from 'react-icons/ri';
 
 
 
-function ForgetPassword({ setVisible }) {
+function ForgetPassword({ setVisible, socket }) {
     const [ email, setEmail ] = useState("");
     const [ errorMessage, setErrorMessage ] = useState("");
     const [ success, setSuccess ] = useState(false);

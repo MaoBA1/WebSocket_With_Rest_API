@@ -14,7 +14,8 @@ function Feed({
     setLikersArray,
     setLikersVisible,
     setCommentVisible,
-    setPost
+    setPost,
+    socket
 }) {
     // const {
     //     _id,
@@ -97,6 +98,7 @@ function Feed({
                                 setLikersArray={setLikersArray}
                                 setCommentVisible={setCommentVisible}
                                 setPost={setPost}
+                                socket={socket}
                             />
                         )
                     }

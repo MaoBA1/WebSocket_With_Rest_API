@@ -3,8 +3,8 @@ import '../../utilities/post.css';
 import { AiOutlineClose } from 'react-icons/ai';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import Colors from '../../utilities/Colors';
-import { socket } from '../../socket.io';
-function PostComments({ account, post, setPost, close }) {
+
+function PostComments({ account, post, setPost, close, socket }) {
     const postId = post?._id;
     const postAuthorId = post?.postAuthor?._id;
     const postAuthorFname = post?.postAuthor?.fname;

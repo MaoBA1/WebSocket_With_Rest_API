@@ -11,7 +11,7 @@ import { useNavigate, } from 'react-router-dom';
 import BeforLoginHeader from '../components/BeforLoginHeader';
 import CostumModal from '../components/CostumModal';
 
-function Register() {
+function Register({ socket }) {
     const navigate = useNavigate();
     const defaultImage = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png";
     const [ pickedImage, setPickedImage ] = useState(null);

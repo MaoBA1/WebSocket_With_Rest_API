@@ -6,7 +6,7 @@ import { isBrowser } from 'react-device-detect';
 import ChangeProfilePictureModal from '../components/ChangeProfilePictureModal';
 
 
-function ProfileSetting({ account }) {
+function ProfileSetting({ account, socket }) {
     const [ 
         changeProfilePictureModalVisible,
         setChangeProfileModalVisible
@@ -35,6 +35,7 @@ function ProfileSetting({ account }) {
                     profileImage={profileImage}
                     setIsVisible={setChangeProfileModalVisible}
                     account={account}
+                    socket={socket}
                 />
             }
             <div>

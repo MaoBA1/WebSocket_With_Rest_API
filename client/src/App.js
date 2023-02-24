@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import './utilities/fonts.css';
-
+import { io } from 'socket.io-client';
 import Login from './screens/Login';
 import Dashboard from './screens/Dashboard';
 import Register from './screens/Register';
@@ -19,13 +19,40 @@ const RootReducer = combineReducers({
 
 const store = createStore(RootReducer, applyMiddleware(ReduxThunk));
 function App() {
+  const [socket, setSocket] = useState(null);
+
+  const setupSocket = () => {
+    const token = localStorage.getItem("user_token");
+    if (token && !socket) {
+      const newSocket = io("http://192.168.1.41:3002", {
+        query: {
+          token: token
+        },
+      });
+      
+      newSocket.on("disconnect", () => {
+        setSocket(null);
+        setTimeout(setupSocket, 3000);
+        console.log("error", "Socket Disconnected!");
+      });
+
+      newSocket.on("connect", () => {
+        console.log("success", "Socket Connected!");
+      });
+      
+      setSocket(newSocket);
+    }
+  }
+
+  
+
   return (
     <Provider store={store}>
       <Router>
         <Routes>
-          <Route path="/" element={<Login/>}/>
+          <Route path="/" element={<Login setupSocket={setupSocket}/>}/>
           <Route path="/Register" element={<Register/>}/>
-          <Route path="/Home" element={<Dashboard/>}/>
+          <Route path="/Home" element={<Dashboard socket={socket} setupSocket={setupSocket} />}/>
         </Routes>
       </Router>
     </Provider>

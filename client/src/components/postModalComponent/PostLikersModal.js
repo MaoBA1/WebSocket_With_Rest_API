@@ -3,13 +3,13 @@ import '../../utilities/post.css';
 import { AiOutlineClose } from 'react-icons/ai';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import Colors from '../../utilities/Colors';
-
+import { isBrowser } from 'react-device-detect';
 function PostLikersModal({ account, likers, close }) {
     
     return (  
         <div className='post-likers-container'>
             <div className='post-likers-background'/>
-            <div className='post-likers-body'>
+            <div className='post-likers-body' style={{ width: isBrowser ? "600px" : "350px" }}>
                 <div className='post-likers-close-icon' onClick={close}>
                     <AiOutlineClose
                         color='#FFFFFF'

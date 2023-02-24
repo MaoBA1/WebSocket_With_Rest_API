@@ -3,7 +3,7 @@ import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { AiOutlineClose } from 'react-icons/ai';
 import { ref, deleteObject } from 'firebase/storage';
 import { storage } from '../firebase';
-import { socket } from '../socket.io';
+
 
 
 // components
@@ -12,7 +12,7 @@ import PostMediaPart from './uploadPostModalComponent/PostMediaPart';
 import Colors from '../utilities/Colors';
 
 
-function UploadPostModal({ account, setIsVisible, setMediaToDisplay }) {
+function UploadPostModal({ account, setIsVisible, setMediaToDisplay, socket }) {
     const [ mediaArray, setMediaArray ] = useState([]);
     const [ componentIndex, setComponentIndex ] = useState(0);
     const [ postContent, setPostContent ] = useState("");

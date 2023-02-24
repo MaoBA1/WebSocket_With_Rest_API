@@ -4,9 +4,9 @@ import Colors from '../utilities/Colors';
 import { ref, deleteObject, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../firebase';
 import { AiOutlineClose } from 'react-icons/ai';
-import { socket } from '../socket.io';
 
-function ChangeProfilePictureModal({ profileImage, setIsVisible, account }) {
+
+function ChangeProfilePictureModal({ profileImage, setIsVisible, account, socket }) {
     const [ isInProcess, setIsInProcess ] = useState(false);
     const [ processPrecent, setProcessPresent ] = useState(0);
     const [ pickedImage, setPickedImage ] = useState(null);

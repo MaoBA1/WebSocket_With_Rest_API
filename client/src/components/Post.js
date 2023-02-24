@@ -4,7 +4,6 @@ import Colors from '../utilities/Colors';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
 import { AiFillLike, AiFillDislike } from 'react-icons/ai';
 import { FaComment } from 'react-icons/fa';
-import { socket } from '../socket.io';
 import { isBrowser } from 'react-device-detect'; 
 
 
@@ -14,7 +13,8 @@ function Post({
     setLikersArray,
     setLikersVisible,
     setCommentVisible,
-    setPost
+    setPost,
+    socket
 }) {
     const postId = post?._id;
     const postAuthorId = post?.postAuthor?._id;
