@@ -12,6 +12,7 @@ import Register from './screens/Register';
 
 import serverBaseUrl from './serverBaseUrl';
 import Reducer from './store/reducers/index';
+import OtherAccount from './screens/OtherAccount';
 
 
 const RootReducer = combineReducers({
@@ -53,6 +54,7 @@ function App() {
           <Route path="/" element={<Login setupSocket={setupSocket}/>}/>
           <Route path="/Register" element={<Register/>}/>
           <Route path="/Home" element={<Dashboard socket={socket} setupSocket={setupSocket} />}/>
+          <Route path="/Home/:accountId" element={<OtherAccount socket={socket}/>}/>
         </Routes>
       </Router>
     </Provider>

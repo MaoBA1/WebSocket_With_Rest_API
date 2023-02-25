@@ -37,7 +37,7 @@ export const loginAction = async(loginDetails) => {
         const response = await fetch(serverBaseUrl.url + "/user/login", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
             body: JSON.stringify(loginDetails)
         })

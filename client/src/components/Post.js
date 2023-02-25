@@ -5,6 +5,7 @@ import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-ico
 import { AiFillLike, AiFillDislike } from 'react-icons/ai';
 import { FaComment } from 'react-icons/fa';
 import { isBrowser } from 'react-device-detect'; 
+import { useNavigate } from 'react-router-dom'; 
 
 
 function Post({ 
@@ -17,6 +18,7 @@ function Post({
     socket,
     setMediaToDisplay
 }) {
+    const navigate = useNavigate();
     const postId = post?._id;
     const postAuthorId = post?.postAuthor?._id;
     const postAuthorFname = post?.postAuthor?.fname;
@@ -52,7 +54,11 @@ function Post({
     
     return (  
         <div className='post-container' style={{ width: isBrowser ? "600px" : "350px" }}>
-            <div className='post-author-part-container'>
+            <div className='post-author-part-container' onClick={() => {
+                if(postAuthorId !== account._id) {
+                    navigate(`/Home/${postAuthorId}`);
+                }
+            }}>
                 <img
                     src={postAuthorProfileImage}
                     style={{

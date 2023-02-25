@@ -151,6 +151,25 @@ const get_user = (request, response) => {
     })
 }
 
+const getUserById = (request, response) => {
+    const { accountId } = request.body;
+    Account.findById(accountId)
+    .then(account => {
+        if(account) {
+            return response.status(200).json({
+                status: true,
+                account: account
+            })
+        }
+    })
+    .catch(error => {
+        console.log(error);
+        return response.status(500).json({
+            status: false,
+            message: "Somthing went wrong"
+        })
+    })
+}
 
 
 
@@ -203,5 +222,6 @@ module.exports = {
     register,
     login,
     forget_password,
-    get_user
+    get_user,
+    getUserById
 };
