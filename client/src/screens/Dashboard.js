@@ -163,7 +163,8 @@ function Dashboard( { socket, setupSocket } ) {
                         setLikersArray={setLikersArray}
                         setPost={setPost}
                         setCommentVisible={setCommentVisible}
-                        socket={socket}
+                        socket={socket}   
+                        setMediaToDisplay={setMediaToDisplay}                 
                     />
                 }
 
@@ -186,6 +187,7 @@ function Dashboard( { socket, setupSocket } ) {
                         socket={socket}
                         setPost={setPost}
                         setCommentVisible={setCommentVisible}
+                        setMediaToDisplay={setMediaToDisplay}
                     />
                 }
 

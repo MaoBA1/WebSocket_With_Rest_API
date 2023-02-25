@@ -16,6 +16,7 @@ function PostComments({ account, post, setPost, close, socket }) {
     const [ comment, setComment ] = useState("");
 
     const sendComment = () => {
+        if(comment === "") return;
         socket.emit("add_comment_to_post", { postId: postId, comment: comment, account: account });
         setComment("");
     }
@@ -71,7 +72,7 @@ function PostComments({ account, post, setPost, close, socket }) {
                             fontFamily:"italic",
                             fontSize:"14px"
                         }}>
-                            {postContent.slice(0, 100)}{postContent.length > 100 && "......."}
+                            {postContent?.slice(0, 100)}{postContent?.length > 100 && "......."}
                         </label>
                     </div>
                 </div>
@@ -113,7 +114,7 @@ function PostComments({ account, post, setPost, close, socket }) {
                                     border:`1px solid ${Colors.blueLight}`,
                                     borderRadius:"20px",
                                     backgroundColor:Colors.grey,
-                                    padding:"5px"
+                                    padding:"15px"
                                 }}>
                                     {
                                         postComments.sort((a, b) => (new Date(b.creatAdt) - new Date(a.creatAdt))).map((item, index) => 
@@ -123,7 +124,11 @@ function PostComments({ account, post, setPost, close, socket }) {
                                                 display:"flex",
                                                 flexDirection:"column",
                                                 backgroundColor: "#FFFFFF",
-                                                borderBottom:`1px solid ${Colors.blueLight}`
+                                                borderBottom:`1px solid ${Colors.blueLight}`,
+                                                borderTopLeftRadius: index === 0 ? "20px" : "0px",
+                                                borderTopRightRadius: index === 0 ? "20px" : "0px",
+                                                borderBottomLeftRadius: index === postComments.length - 1 ? "20px" : "0px",
+                                                borderBottomRightRadius: index === postComments.length - 1 ? "20px" : "0px",
                                             }}>
                                                 <div style={{
                                                     display:"flex",
@@ -173,39 +178,49 @@ function PostComments({ account, post, setPost, close, socket }) {
                     
                 </div>
                 <div style={{
-                        flex:0.1,
+                        flex:0.05,
+                        height:"max-content",
                         width:"90%",
+                        alignItems:"center",
                         display:"flex",
                         flexDirection:"row",
-                        borderRadius:"20px",
-                        border:`1px solid ${Colors.blueLight}`
+                        justifyContent:"space-around",
                     }}
                 >
-                    <textarea
+                    <input
                         style={{
-                            flex:1,
+                            width:"67%",
                             borderTopLeftRadius:"20px",
                             borderBottomLeftRadius:"20px",
-                            border:"0px",
                             borderRight:`1px solid ${Colors.blueLight}`,
                             padding:"10px",
                             fontFamily:"italic",
+                            fontSize:"12px",
+                            borderRadius:"20px",
+                            height:"60%"
                         }}
-                        multiple={false}
-                        placeholder={"This is the place to comment..."}
+                        onKeyDown={(event) => {
+                            if(event.key === "Enter") {
+                                sendComment();
+                            }
+                        }}
+                        multiple
+                        placeholder={"New Comment..."}
                         value={comment}
                         onChange={(event) => setComment(event.target.value)}
                     />
                     <button onClick={sendComment} style={{
-                        flex:0.0,
-                        borderRadius:"0px",
-                        height:"100%",
+                        width:"30%",
+                        borderRadius:"20px",
                         backgroundColor: Colors.blueLight,
                         fontFamily:"italic",
-                        borderBottomRightRadius:"20px",
-                        borderTopRightRadius:"20px",
-                        border:"0px",
-                        borderLeft:`1px solid ${Colors.blueLight}`
+                        fontSize:"14px",
+                        height:"60%",
+                        border:`1px solid ${Colors.blueLight}`,
+                        display:"flex",
+                        flexDirection:"column",
+                        alignItems:"center",
+                        justifyContent:"center"
                     }}>
                         Comment
                     </button>

@@ -3,6 +3,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 
 
 function DisplayMediaModal({ media, setMedia }) {
+    console.log(media);
     return (  
         <div className='display-modal-cover'>
             <AiOutlineClose
@@ -16,14 +17,32 @@ function DisplayMediaModal({ media, setMedia }) {
                 onClick={() => setMedia(null)}
             />
             {
-                media.type === "image"  &&
-                <img
-                    src={media.downloadUrl}
-                    style={{
-                        objectFit:"cover"
-                    }}
-                />
+                media.mediaType === "image"  ?
+                (
+                    <img
+                        alt="post-video"
+                        src={media.downloadUrl}
+                        style={{
+                            objectFit:"contain",
+                            // height:"50%",
+                            // width:"80%"
+                        }}
+                    />
+                )
+                :
+                (
+                    <video
+                        alt="post-video"
+                        src={media.downloadUrl}
+                        style={{
+                            objectFit:"contain"
+                        }}
+                        controls
+                        
+                    />
+                )
             }
+            
         </div>
     );
 }

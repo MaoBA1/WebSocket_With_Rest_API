@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import '../utilities/myPosts.css';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import Post from '../components/Post';
+import Colors from '../utilities/Colors';
 
-function MyPosts({ account, socket, setCommentVisible, setPost, setLikersArray, setLikersVisible }) {
+function MyPosts({ account, socket, setCommentVisible, setPost, setLikersArray, setLikersVisible, setMediaToDisplay }) {
     const allPostSelector = useSelector(state => state.Reducer.Posts);
-    
     
     return (  
         <Scrollbars>
@@ -29,8 +29,22 @@ function MyPosts({ account, socket, setCommentVisible, setPost, setLikersArray, 
                             setPost={setPost}
                             setLikersArray={setLikersArray}
                             setLikersVisible={setLikersVisible}
+                            setMediaToDisplay={setMediaToDisplay}                 
                         />
                     )
+                }
+                {
+                    allPostSelector?.filter(p => p.postAuthor._id.toString() === account._id.toString())?.length === 0 &&
+                    <label style={{
+                        fontFamily:"italic",
+                        color: Colors.blueLight,
+                        fontSize:"18px",
+                        position:"absolute",
+                        top:"40%"
+                    }}>
+                        You have not uploaded any post yet...
+                    </label>
+                    
                 }
             </div>
         </Scrollbars>

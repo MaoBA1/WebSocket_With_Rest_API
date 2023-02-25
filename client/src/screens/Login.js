@@ -164,6 +164,10 @@ function Login({ setupSocket }) {
                     width:"60%",
                     borderRadius:"20px",
                     boxShadow:"#000000 0px 5px 15px"
+                }} onKeyDown={(event) => {
+                    if(event.key === "Enter") {
+                        login();
+                    }
                 }}>
                     <label 
                         className='input-labels'

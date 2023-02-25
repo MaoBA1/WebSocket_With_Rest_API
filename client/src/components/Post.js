@@ -14,7 +14,8 @@ function Post({
     setLikersVisible,
     setCommentVisible,
     setPost,
-    socket
+    socket,
+    setMediaToDisplay
 }) {
     const postId = post?._id;
     const postAuthorId = post?.postAuthor?._id;
@@ -130,6 +131,7 @@ function Post({
                                                                 alt="post-image"
                                                                 src={item.downloadUrl}
                                                                 className="media"
+                                                                onClick={() => setMediaToDisplay(item)}
                                                             />
                                                         }
                                                     </>
@@ -144,6 +146,7 @@ function Post({
                                                                 src={item.downloadUrl}
                                                                 className="media"
                                                                 controls
+                                                                onClick={() => setMediaToDisplay(item)}
                                                             />
                                                         }
                                                     </>

@@ -3,9 +3,8 @@ import Colors from '../utilities/Colors';
 import '../utilities/register.css';
 import { ref, deleteObject, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../firebase';
-import { socket } from '../socket.io';
 import { useNavigate, } from 'react-router-dom';
-
+import serverBaseUrl from '../serverBaseUrl';
 
 // components
 import BeforLoginHeader from '../components/BeforLoginHeader';
@@ -109,18 +108,47 @@ function Register({ socket }) {
         })
     }
 
-    const signUp = () => {
+    const signUp = async() => {
         const checkEmail = email.includes('@') && email.includes('.com') && email.indexOf('@') < email.indexOf('.com');
         const checkPassword = password.length >= 6;
         const checkName = fname.length >= 2 || lname.length >= 2;
         if(checkEmail && checkPassword && checkName) {
-            socket.emit("create_account", {
-                email: email,
-                password: password,
-                fname: fname,
-                lname: lname,
-                profileImage: pickedImage ? pickedImage.downloadUrl : defaultImage 
-            });
+            const response = await fetch(serverBaseUrl.url + "/user/register", {
+                method:"POST",
+                headers: {
+                    "Content-Type" : "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                    fname: fname,
+                    lname: lname,
+                    profileImage: pickedImage ? pickedImage.downloadUrl : defaultImage 
+                })
+            })
+
+            const data = await response.json();
+            if(data.status) {
+                let fname = data?.account?.fname;
+                let email = data?.account?.email;
+                setShowModal(true);
+                setModalMessage({
+                    message: `Hi ${fname}, Your account\n
+                    has been created successfully!\n
+                    Account verification link sent to\n
+                    ${email}`, 
+                    fontColor:Colors.blueLight
+                });
+                setModalButtons([{text: "OK", onClick: () => {
+                        navigate('/')
+                        setShowModal(false);
+                    }
+                }])
+            } else {
+                setShowModal(true);
+                setModalMessage({message: data.message, fontColor:Colors.red});
+                setModalButtons([{text: "OK", onClick: () => setShowModal(false)}])
+            }
         }
         
     }

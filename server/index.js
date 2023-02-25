@@ -30,9 +30,8 @@ const mongoUrl = `mongodb+srv://maor:wm2qpAw2cZ0nwpkJ@postsandchats.orle5k9.mong
 
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
-    transports: ['websocket'],
     cors: {
-        origin: "https://friendly-praline-f8a245.netlify.app",
+        origin: "*",
         methods: [ "GET", "POST", "PUT", "DELETE" ]
     }
 });
