@@ -130,7 +130,6 @@ const forget_password = (request, response) => {
 
 const get_user = (request, response) => {
     const accountId = request.accountId;
-    console.log(accountId);
     Account.findById(accountId)
     .then(account => {
         if(account) {

@@ -10,8 +10,9 @@ import Login from './screens/Login';
 import Dashboard from './screens/Dashboard';
 import Register from './screens/Register';
 
-
+import serverBaseUrl from './serverBaseUrl';
 import Reducer from './store/reducers/index';
+
 
 const RootReducer = combineReducers({
       Reducer: Reducer
@@ -20,12 +21,10 @@ const RootReducer = combineReducers({
 const store = createStore(RootReducer, applyMiddleware(ReduxThunk));
 function App() {
   const [socket, setSocket] = useState(null);
-  let productionUrl = "https://postandchats.onrender.com:3002";
-  let localurl = "http://192.168.1.41:3002";
   const setupSocket = () => {
     const token = localStorage.getItem("user_token");
     if (token && !socket) {
-      const newSocket = io(productionUrl, {
+      const newSocket = io(serverBaseUrl.productionServerSocketUrl, {
         query: {
           token: token
         },
