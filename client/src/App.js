@@ -54,7 +54,7 @@ function App() {
           <Route path="/" element={<Login setupSocket={setupSocket}/>}/>
           <Route path="/Register" element={<Register/>}/>
           <Route path="/Home" element={<Dashboard socket={socket} setupSocket={setupSocket} />}/>
-          <Route path="/Home/:accountId" element={<OtherAccount socket={socket}/>}/>
+          <Route path="/Home/:accountId" element={<OtherAccount socket={socket} setupSocket={setupSocket}/>}/>
         </Routes>
       </Router>
     </Provider>

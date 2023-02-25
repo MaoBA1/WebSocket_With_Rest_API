@@ -151,27 +151,6 @@ const get_user = (request, response) => {
     })
 }
 
-const getUserById = (request, response) => {
-    const { accountId } = request.body;
-    Account.findById(accountId)
-    .then(account => {
-        if(account) {
-            return response.status(200).json({
-                status: true,
-                account: account
-            })
-        }
-    })
-    .catch(error => {
-        console.log(error);
-        return response.status(500).json({
-            status: false,
-            message: "Somthing went wrong"
-        })
-    })
-}
-
-
 
 
 const accountEvents = (io, socket) => {
@@ -214,6 +193,39 @@ const accountEvents = (io, socket) => {
         })
     })
     
+    socket.on("get_account_by_id", (data) => {
+        const { accountId } = data;
+        Account.findById(accountId)
+        .then(account => {
+            if(account) {
+                Post.find({ })
+                .then((posts) => {
+                    let accountPosts = posts.filter(p => p.postAuthor._id.toString() === accountId.toString());
+                    let account_updated = {
+                        _id: account._id,
+                        email: account.email,
+                        fname: account.fname,
+                        lname: account.lname,
+                        profileImage: account.profileImage,
+                        lastProfileImage: account.lastProfileImage,
+                        posts: accountPosts
+                    }
+                        
+                    return socket.emit('get_account_by_id', {
+                        status:true,
+                        account: account_updated  
+                    })
+                })
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            return socket.emit('get_account_by_id', {
+                status: false,
+                message: "Somthing went wrong"
+            })
+        })
+    })
 }
 
 
@@ -223,5 +235,4 @@ module.exports = {
     login,
     forget_password,
     get_user,
-    getUserById
 };

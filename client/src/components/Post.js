@@ -56,6 +56,7 @@ function Post({
         <div className='post-container' style={{ width: isBrowser ? "600px" : "350px" }}>
             <div className='post-author-part-container' onClick={() => {
                 if(postAuthorId !== account._id) {
+                    socket.disconnect();
                     navigate(`/Home/${postAuthorId}`);
                 }
             }}>
