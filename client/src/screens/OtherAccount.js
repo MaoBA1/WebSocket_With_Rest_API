@@ -17,6 +17,7 @@ import { IoMdPersonAdd } from 'react-icons/io';
 import { isBrowser } from 'react-device-detect';
 
 function OtherAccount({ socket, setupSocket }) {
+    let lastScrollY = window.pageYOffset;
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { accountId } = useParams();
@@ -27,12 +28,37 @@ function OtherAccount({ socket, setupSocket }) {
     const [ commentVisible, setCommentVisible ] = useState(false);
     const [ post, setPost ] = useState(null);
     const userSelector = useSelector(state => state.Reducer.User);
-    
+    const [ labelVisbilty, setLabelVisbilty ] = useState(true);
+
+    const [ windowSize, setWindowSize ] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight
+    });
     
     socket?.emit('get_account_by_id', { accountId: accountId });
     useEffect(() => {
         setupSocket();
 
+        const handelResize = () => {
+            setWindowSize({
+                width: window.innerWidth,
+                height: window.innerHeight
+            });
+        }
+        window.addEventListener('resize', handelResize);
+
+
+        const handelIconsUI = () => {
+            // console.log(window , windowSize.width);
+            if(
+                window.pageYOffset - 50 < lastScrollY ||
+                window.screenX * 0.8 < windowSize.width ||
+                !isBrowser
+            ) {
+                setLabelVisbilty(false);
+            }
+        }
+        handelIconsUI();
         const get_current_user = async () => {
             try {
                 await dispatch(getUser(localStorage.getItem("user_token")));
@@ -59,7 +85,14 @@ function OtherAccount({ socket, setupSocket }) {
             socket?.off('get_account_by_id', getUserData);
             socket?.off("get_updated_post", setPost);
         }
-    }, [socket, setupSocket])
+    }, [
+        socket,
+        setupSocket,
+        dispatch,
+        lastScrollY,
+        userSelector,
+        windowSize.width
+    ])
 
     
     
@@ -116,7 +149,7 @@ function OtherAccount({ socket, setupSocket }) {
                             size={"20px"}
                         />
                         {
-                            isBrowser &&
+                            labelVisbilty &&
                             <label style={{
                                 fontFamily:"italic",
                                 color:"#FFFFFF",
@@ -146,7 +179,7 @@ function OtherAccount({ socket, setupSocket }) {
                             size={"20px"}
                         />
                         {
-                            isBrowser &&
+                            labelVisbilty &&
                             <label style={{
                                 fontFamily:"italic",
                                 color:"#FFFFFF",
@@ -157,7 +190,10 @@ function OtherAccount({ socket, setupSocket }) {
                         }
                     </div>
                 </div>
-                <Scrollbars className='scrollbar'>
+                <Scrollbars
+                    className='scrollbar'
+                    
+                >
                     <div className='account-details-part'
                         style={{
                             backgroundColor: Colors.blueBold
