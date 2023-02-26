@@ -7,15 +7,16 @@ import Scrollbars from 'react-custom-scrollbars-2';
 import { AiOutlineClose } from 'react-icons/ai';
 import Colors from '../utilities/Colors';
 import Post from '../components/Post';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import DisplayMediaModal from '../components/DisplayMediaModal';
 import PostLikersModal from '../components/postModalComponent/PostLikersModal';
 import PostComments from '../components/postModalComponent/PostComments';
-
+import { getUser } from '../store/actions/index';
 
 
 function OtherAccount({ socket, setupSocket }) {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { accountId } = useParams();
     const [ userData, setUserData ] = useState(null);
     const [ mediaToDisplay, setMediaToDisplay ] = useState(null);
@@ -29,19 +30,36 @@ function OtherAccount({ socket, setupSocket }) {
     socket?.emit('get_account_by_id', { accountId: accountId });
     useEffect(() => {
         setupSocket();
+
+        const get_current_user = async () => {
+            try {
+                await dispatch(getUser(localStorage.getItem("user_token")));
+            } catch(error) {
+              console.log(error.message);   
+            }
+        }
+        if(!userSelector) {
+            get_current_user();
+        }
+        
+
         const getUserData = (data) => {
             if(data.status) {
                 setUserData(data.account);
             }
         }
+
+        
         socket?.on('get_account_by_id', getUserData);        
+        socket?.on("get_updated_post", (response) => setPost(response.updated_post));
 
         return () => {
             socket?.off('get_account_by_id', getUserData);
+            socket?.off("get_updated_post", setPost);
         }
     }, [socket, setupSocket])
 
-    // console.log(userData);
+    
     
     return (  
         <div className='account-main-container'>
@@ -76,6 +94,18 @@ function OtherAccount({ socket, setupSocket }) {
                     <AiOutlineClose
                         color='#FFFFFF'
                     />
+                </div>
+                <div className='friendship-container'>
+                    <div style={{
+
+                    }}>
+                        <label style={{
+                            fontFamily:"italic",
+                            color:"#FFFFFF"
+                        }}>
+                            Friendship
+                        </label>
+                    </div>
                 </div>
                 <Scrollbars className='scrollbar'>
                     <div className='account-details-part'

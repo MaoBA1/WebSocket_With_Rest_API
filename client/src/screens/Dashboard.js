@@ -79,7 +79,7 @@ function Dashboard( { socket, setupSocket } ) {
 
         return () => {
             socket?.off("recive_all_post", setAllPosts);
-            socket?.on("get_updated_post", setPost);
+            socket?.off("get_updated_post", setPost);
             socket?.off("auth_user", isAuthUser);
         }
     },[dispatch, navigate, socket, setupSocket])
