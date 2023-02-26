@@ -13,6 +13,8 @@ import PostLikersModal from '../components/postModalComponent/PostLikersModal';
 import PostComments from '../components/postModalComponent/PostComments';
 import { getUser } from '../store/actions/index';
 
+import { IoMdPersonAdd } from 'react-icons/io';
+import { isBrowser } from 'react-device-detect';
 
 function OtherAccount({ socket, setupSocket }) {
     const navigate = useNavigate();
@@ -95,16 +97,64 @@ function OtherAccount({ socket, setupSocket }) {
                         color='#FFFFFF'
                     />
                 </div>
-                <div className='friendship-container'>
+                <div 
+                    className='friendship-container' 
+                    style={{ 
+                        left: isBrowser && "50px",
+                        top:"100px",
+                        right: !isBrowser && "10px"
+                    }}
+                >
                     <div style={{
-
+                        display:"flex",
+                        flexDirection:"row",
+                        alignItems:"center"
+                        
                     }}>
-                        <label style={{
-                            fontFamily:"italic",
-                            color:"#FFFFFF"
-                        }}>
-                            Friendship
-                        </label>
+                        <IoMdPersonAdd
+                            color='#FFFFFF'
+                            size={"20px"}
+                        />
+                        {
+                            isBrowser &&
+                            <label style={{
+                                fontFamily:"italic",
+                                color:"#FFFFFF",
+                                marginLeft:"5px"
+                            }}>
+                                Friendship request
+                            </label>
+                        }
+                    </div>
+                </div>
+                <div 
+                    className='friendship-container' 
+                    style={{ 
+                        left: isBrowser && "50px",
+                        top:"170px",
+                        right: !isBrowser && "10px"
+                    }}
+                >
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"row",
+                        alignItems:"center"
+                        
+                    }}>
+                        <IoMdPersonAdd
+                            color='#FFFFFF'
+                            size={"20px"}
+                        />
+                        {
+                            isBrowser &&
+                            <label style={{
+                                fontFamily:"italic",
+                                color:"#FFFFFF",
+                                marginLeft:"5px"
+                            }}>
+                                Friendship request
+                            </label>
+                        }
                     </div>
                 </div>
                 <Scrollbars className='scrollbar'>
