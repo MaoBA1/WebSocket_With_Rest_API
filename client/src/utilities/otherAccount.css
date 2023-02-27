@@ -22,8 +22,19 @@
 .scrollbar {
     border-radius: 10px !important;
     border-collapse: collapse;
+    position: absolute;
+    inset: 0px;
+    overflow: scroll;
+    margin-right: -17px;
+    margin-bottom: -17px;
 }
 
+.scrollbar::-webkit-scrollbar-thumb {
+    width: 0px;
+}
+.scrollbar::-webkit-scrollbar-track {
+    width: 0px;
+}
 .account-details-part {
     width: 100%;
     display:flex;

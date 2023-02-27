@@ -16,7 +16,7 @@ import { getUser } from '../store/actions/index';
 import { IoMdPersonAdd } from 'react-icons/io';
 import { isBrowser } from 'react-device-detect';
 
-function OtherAccount({ socket, setupSocket }) {
+function OtherAccount({ socket }) {
     let lastScrollY = window.pageYOffset;
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -29,7 +29,7 @@ function OtherAccount({ socket, setupSocket }) {
     const [ post, setPost ] = useState(null);
     const userSelector = useSelector(state => state.Reducer.User);
     const [ labelVisbilty, setLabelVisbilty ] = useState(true);
-
+    const { width } = window.screen;
     const [ windowSize, setWindowSize ] = useState({
         width: window.innerWidth,
         height: window.innerHeight
@@ -37,8 +37,7 @@ function OtherAccount({ socket, setupSocket }) {
     
     socket?.emit('get_account_by_id', { accountId: accountId });
     useEffect(() => {
-        setupSocket();
-
+        if(!socket) navigate(-1);
         const handelResize = () => {
             setWindowSize({
                 width: window.innerWidth,
@@ -46,13 +45,14 @@ function OtherAccount({ socket, setupSocket }) {
             });
         }
         window.addEventListener('resize', handelResize);
-
+        
 
         const handelIconsUI = () => {
-            // console.log(window , windowSize.width);
+            // console.log(window.screenY , lastScrollY);
+            // console.log(width * 0.8 , windowSize.width);
             if(
                 window.pageYOffset - 50 < lastScrollY ||
-                window.screenX * 0.8 < windowSize.width ||
+                width * 0.8 > windowSize.width ||
                 !isBrowser
             ) {
                 setLabelVisbilty(false);
@@ -87,7 +87,6 @@ function OtherAccount({ socket, setupSocket }) {
         }
     }, [
         socket,
-        setupSocket,
         dispatch,
         lastScrollY,
         userSelector,
@@ -190,9 +189,11 @@ function OtherAccount({ socket, setupSocket }) {
                         }
                     </div>
                 </div>
-                <Scrollbars
+                <div
                     className='scrollbar'
-                    
+                    onScroll={(e) => {
+                        console.log(e.target);
+                    }}
                 >
                     <div className='account-details-part'
                         style={{
@@ -255,7 +256,7 @@ function OtherAccount({ socket, setupSocket }) {
 
                             }
                     </div>
-                </Scrollbars>
+                </div>
             </div>
         </div>
     );
