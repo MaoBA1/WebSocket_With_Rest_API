@@ -7,6 +7,7 @@ export const SET_ALL_POSTS = "SET_ALL_POSTS";
 
 
 export const setUser = (user) => {
+    console.log(user);
     return dispatch => {
         dispatch({ type: SET_CURRENT_USER, user });
     }

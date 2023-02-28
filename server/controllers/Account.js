@@ -226,6 +226,29 @@ const accountEvents = (io, socket) => {
             })
         })
     })
+
+    socket.on("send_friendship_request", async(data) => {
+        const currentAccountId = socket.userId;
+        const { acccountId } = data;
+
+        const account1 = await Account.findById(currentAccountId);
+        const account2 = await Account.findById(acccountId);
+
+        account1.friends.push({
+            _id: account2._id,
+            status: "requsted"
+        })
+        account1.save();
+
+        account2.friends.push({
+            _id: account1._id,
+            status:"wait"
+        })
+        account2.save();
+        
+        return socket.emit("account_changes", { account: account1 })
+
+    })
 }
 
 

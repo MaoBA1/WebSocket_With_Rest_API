@@ -21,20 +21,30 @@
 
 .scrollbar {
     border-radius: 10px !important;
-    border-collapse: collapse;
     position: absolute;
     inset: 0px;
     overflow: scroll;
-    margin-right: -17px;
-    margin-bottom: -17px;
+    /* margin-right: -17px; */
+    /* margin-bottom: -17px; */
+    overflow-x: hidden;
+    /* overflow-y: hidden; */
 }
 
+.scrollbar::-webkit-scrollbar {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-color: rgb(236, 233, 233);
+}
+
+
 .scrollbar::-webkit-scrollbar-thumb {
-    width: 0px;
+    background-color: rgb(162, 162, 162);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
-.scrollbar::-webkit-scrollbar-track {
-    width: 0px;
-}
+
+
+
 .account-details-part {
     width: 100%;
     display:flex;
@@ -42,7 +52,7 @@
     align-items: center;
     padding: 20px;
     border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    /* border-top-right-radius: 10px; */
 }
 
 .x-icon-container{

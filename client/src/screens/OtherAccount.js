@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import serverBaseUrl from '../serverBaseUrl';
+// import serverBaseUrl from '../serverBaseUrl';
 import '../utilities/otherAccount.css';
-import Scrollbars from 'react-custom-scrollbars-2';
-import { AiOutlineClose } from 'react-icons/ai';
+import { AiOutlineClose, AiFillMessage } from 'react-icons/ai';
+import { BiHistory } from 'react-icons/bi';
 import Colors from '../utilities/Colors';
 import Post from '../components/Post';
 import { useDispatch, useSelector } from 'react-redux';
 import DisplayMediaModal from '../components/DisplayMediaModal';
 import PostLikersModal from '../components/postModalComponent/PostLikersModal';
 import PostComments from '../components/postModalComponent/PostComments';
-import { getUser } from '../store/actions/index';
+import { getUser, setUser } from '../store/actions/index';
 
 import { IoMdPersonAdd } from 'react-icons/io';
 import { isBrowser } from 'react-device-detect';
@@ -28,7 +28,7 @@ function OtherAccount({ socket }) {
     const [ commentVisible, setCommentVisible ] = useState(false);
     const [ post, setPost ] = useState(null);
     const userSelector = useSelector(state => state.Reducer.User);
-    const [ labelVisbilty, setLabelVisbilty ] = useState(true);
+    const [ labelVisbilty, setLabelVisbilty ] = useState(isBrowser);
     const { width } = window.screen;
     const [ windowSize, setWindowSize ] = useState({
         width: window.innerWidth,
@@ -36,29 +36,31 @@ function OtherAccount({ socket }) {
     });
     
     socket?.emit('get_account_by_id', { accountId: accountId });
+    
     useEffect(() => {
         if(!socket) navigate(-1);
         const handelResize = () => {
+            console.log(width * 0.8 , windowSize.width);
             setWindowSize({
                 width: window.innerWidth,
                 height: window.innerHeight
             });
         }
         window.addEventListener('resize', handelResize);
-        
-
+        const scrollbar = document.getElementById("scroll-bar");
         const handelIconsUI = () => {
-            // console.log(window.screenY , lastScrollY);
-            // console.log(width * 0.8 , windowSize.width);
             if(
-                window.pageYOffset - 50 < lastScrollY ||
-                width * 0.8 > windowSize.width ||
+                scrollbar.scrollTop > 100 ||
                 !isBrowser
             ) {
                 setLabelVisbilty(false);
+            } else {
+                setLabelVisbilty(true);
             }
         }
-        handelIconsUI();
+        scrollbar.addEventListener("scroll", handelIconsUI)
+        
+        
         const get_current_user = async () => {
             try {
                 await dispatch(getUser(localStorage.getItem("user_token")));
@@ -80,20 +82,103 @@ function OtherAccount({ socket }) {
         
         socket?.on('get_account_by_id', getUserData);        
         socket?.on("get_updated_post", (response) => setPost(response.updated_post));
-
+        socket?.on("account_changes", (response) => setUser(response.account));
         return () => {
             socket?.off('get_account_by_id', getUserData);
             socket?.off("get_updated_post", setPost);
+            socket?.off("account_changes", setUser);
         }
     }, [
         socket,
         dispatch,
         lastScrollY,
         userSelector,
-        windowSize.width
+        windowSize.width,
+        navigate,
+        width
     ])
-
     
+    const friendshipComponent = () => {
+        let friendship = userSelector?.friends?.filter(f => f?._id.toString() === accountId.toString());
+        friendship = !friendship || friendship?.length === 0 ? null : friendship[0];
+        // console.log(friendship);
+        if(!friendship) {
+            return (
+                <div 
+                    className='friendship-container' 
+                    style={{ 
+                        left: isBrowser && "60px",
+                        top:"20px",
+                        right: !isBrowser && "10px",
+                        backgroundColor: Colors.blackBlue
+                    }}
+                >
+                    <div 
+                        style={{
+                            display:"flex",
+                            flexDirection:"row",
+                            alignItems:"center"
+                            
+                        }} 
+                        onClick={() => socket?.emit("send_friendship_request", {acccountId: accountId })}
+                    >
+                        <IoMdPersonAdd
+                            color='#FFFFFF'
+                            size={"20px"}
+                        />
+                        {
+                            labelVisbilty &&
+                            <label style={{
+                                fontFamily:"italic",
+                                color:"#FFFFFF",
+                                marginLeft:"5px"
+                            }}>
+                                Friendship request
+                            </label>
+                        }
+                    </div>
+                </div>
+            )
+        }
+        if(friendship.status === "requsted") {
+            return (
+                <div 
+                    className='friendship-container' 
+                    style={{ 
+                        left: isBrowser && "60px",
+                        top:"20px",
+                        right: !isBrowser && "10px",
+                        backgroundColor: "grey"
+                    }}
+                >
+                    <div 
+                        style={{
+                            display:"flex",
+                            flexDirection:"row",
+                            alignItems:"center"
+                            
+                        }} 
+                        
+                    >
+                        <BiHistory
+                            color='#FFFFFF'
+                            size={"20px"}
+                        />
+                        {
+                            labelVisbilty &&
+                            <label style={{
+                                fontFamily:"italic",
+                                color:"#FFFFFF",
+                                marginLeft:"5px"
+                            }}>
+                                Request was Send
+                            </label>
+                        }
+                    </div>
+                </div>
+            )
+        }
+    }
     
     return (  
         <div className='account-main-container'>
@@ -124,83 +209,61 @@ function OtherAccount({ socket }) {
                 />
             }
             <div className='account-page-body'>
-                <div className='x-icon-container' onClick={() => {navigate(-1); socket.disconnect();}}>
+                <div className='x-icon-container' onClick={() => {socket.disconnect();}}>
                     <AiOutlineClose
                         color='#FFFFFF'
                     />
                 </div>
-                <div 
-                    className='friendship-container' 
-                    style={{ 
-                        left: isBrowser && "50px",
-                        top:"100px",
-                        right: !isBrowser && "10px"
-                    }}
-                >
-                    <div style={{
-                        display:"flex",
-                        flexDirection:"row",
-                        alignItems:"center"
+                {
+                    width * 0.5 < windowSize.width && 
+                    <div>
                         
-                    }}>
-                        <IoMdPersonAdd
-                            color='#FFFFFF'
-                            size={"20px"}
-                        />
-                        {
-                            labelVisbilty &&
-                            <label style={{
-                                fontFamily:"italic",
-                                color:"#FFFFFF",
-                                marginLeft:"5px"
+                        {friendshipComponent()}
+
+                        <div 
+                            className='friendship-container' 
+                            style={{ 
+                                left: isBrowser && "60px",
+                                top:"80px",
+                                right: !isBrowser && "10px"
+                            }}
+                        >
+                            <div style={{
+                                display:"flex",
+                                flexDirection:"row",
+                                alignItems:"center"
+                                
                             }}>
-                                Friendship request
-                            </label>
-                        }
+                                <AiFillMessage
+                                    color='#FFFFFF'
+                                    size={"20px"}
+                                />
+                                {
+                                    labelVisbilty &&
+                                    <label style={{
+                                        fontFamily:"italic",
+                                        color:"#FFFFFF",
+                                        marginLeft:"5px"
+                                    }}>
+                                        Send message
+                                    </label>
+                                }
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div 
-                    className='friendship-container' 
-                    style={{ 
-                        left: isBrowser && "50px",
-                        top:"170px",
-                        right: !isBrowser && "10px"
-                    }}
-                >
-                    <div style={{
-                        display:"flex",
-                        flexDirection:"row",
-                        alignItems:"center"
-                        
-                    }}>
-                        <IoMdPersonAdd
-                            color='#FFFFFF'
-                            size={"20px"}
-                        />
-                        {
-                            labelVisbilty &&
-                            <label style={{
-                                fontFamily:"italic",
-                                color:"#FFFFFF",
-                                marginLeft:"5px"
-                            }}>
-                                Friendship request
-                            </label>
-                        }
-                    </div>
-                </div>
+                }
+                
                 <div
                     className='scrollbar'
-                    onScroll={(e) => {
-                        console.log(e.target);
-                    }}
+                    id='scroll-bar'
                 >
                     <div className='account-details-part'
                         style={{
-                            backgroundColor: Colors.blueBold
+                            backgroundColor: Colors.blueBold,
                         }}
                     >
                         <img
+                            alt='profile'
                             src={userData?.profileImage}
                             style={{
                                 width:"100px",
@@ -239,8 +302,8 @@ function OtherAccount({ socket }) {
                     </div>
                     <div className='account-posts-part'>
                             {
-                                userData?.posts?.sort((a, b) => (new Date(b.creatAdt) - new Date(a.creatAdt))).
-                                map((item, index) => 
+                                userData?.posts?.sort((a, b) => (new Date(b.creatAdt) - new Date(a.creatAdt)))
+                                .map((item, index) => 
                                     <Post 
                                         key={item?._id}
                                         post={item}
