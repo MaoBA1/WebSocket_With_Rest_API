@@ -6,7 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { 
     isAuthUser,
     setAllPosts,
-    getUser
+    getUser,
+    setUser
 } from '../store/actions/index';
 
 // components
@@ -72,15 +73,25 @@ function Dashboard( { socket, setupSocket } ) {
         if(!localStorage.getItem("user_token")) {
             navigate("/");
         }
+        const handelUserChanges = (data) => {
+            try {
+                dispatch(setUser(data.account));
+            } catch(error) {
+                console.log(error.message);
+            }
+        }
+
         
         socket?.on("recive_all_post", (response) => setAllPosts(response, dispatch));
         socket?.on("get_updated_post", (response) => setPost(response.updated_post));
         socket?.on("auth_user", (response) => isAuthUser(response, dispatch));
+        socket?.on("account_changes", handelUserChanges);
 
         return () => {
             socket?.off("recive_all_post", setAllPosts);
             socket?.off("get_updated_post", setPost);
             socket?.off("auth_user", isAuthUser);
+            socket?.off("account_changes", handelUserChanges);
         }
     },[dispatch, navigate, socket, setupSocket])
     

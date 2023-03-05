@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 // import serverBaseUrl from '../serverBaseUrl';
 import '../utilities/otherAccount.css';
 import { AiOutlineClose, AiFillMessage } from 'react-icons/ai';
+import { GiConfirmed } from 'react-icons/gi';
 import { BiHistory } from 'react-icons/bi';
 import Colors from '../utilities/Colors';
 import Post from '../components/Post';
@@ -12,9 +13,13 @@ import DisplayMediaModal from '../components/DisplayMediaModal';
 import PostLikersModal from '../components/postModalComponent/PostLikersModal';
 import PostComments from '../components/postModalComponent/PostComments';
 import { getUser, setUser } from '../store/actions/index';
-
+import { BsFillPersonFill } from 'react-icons/bs';
 import { IoMdPersonAdd } from 'react-icons/io';
 import { isBrowser } from 'react-device-detect';
+
+
+import CostumModal from '../components/CostumModal';
+
 
 function OtherAccount({ socket }) {
     let lastScrollY = window.pageYOffset;
@@ -29,6 +34,9 @@ function OtherAccount({ socket }) {
     const [ post, setPost ] = useState(null);
     const userSelector = useSelector(state => state.Reducer.User);
     const [ labelVisbilty, setLabelVisbilty ] = useState(isBrowser);
+    const [ costumeMoadlVisible, setCostumModalVisible ] = useState(false);
+    const [ costumeModalMessage, setCostumeModalMessage ] = useState("");
+    const [ costumeModalButtons, setCostumeModalButtons ] = useState([]);
     const { width } = window.screen;
     const [ windowSize, setWindowSize ] = useState({
         width: window.innerWidth,
@@ -40,7 +48,6 @@ function OtherAccount({ socket }) {
     useEffect(() => {
         if(!socket) navigate(-1);
         const handelResize = () => {
-            console.log(width * 0.8 , windowSize.width);
             setWindowSize({
                 width: window.innerWidth,
                 height: window.innerHeight
@@ -79,14 +86,22 @@ function OtherAccount({ socket }) {
             }
         }
 
+        const handelUserChanges = (data) => {
+            console.log(data);
+            try {
+                dispatch(setUser(data.account));
+            } catch(error) {
+                console.log(error.message);
+            }
+        }
         
         socket?.on('get_account_by_id', getUserData);        
         socket?.on("get_updated_post", (response) => setPost(response.updated_post));
-        socket?.on("account_changes", (response) => setUser(response.account));
+        socket?.on("account_changes", handelUserChanges);
         return () => {
             socket?.off('get_account_by_id', getUserData);
             socket?.off("get_updated_post", setPost);
-            socket?.off("account_changes", setUser);
+            socket?.off("account_changes", handelUserChanges);
         }
     }, [
         socket,
@@ -95,13 +110,13 @@ function OtherAccount({ socket }) {
         userSelector,
         windowSize.width,
         navigate,
-        width
+        width,
     ])
     
     const friendshipComponent = () => {
         let friendship = userSelector?.friends?.filter(f => f?._id.toString() === accountId.toString());
         friendship = !friendship || friendship?.length === 0 ? null : friendship[0];
-        // console.log(friendship);
+
         if(!friendship) {
             return (
                 <div 
@@ -158,7 +173,26 @@ function OtherAccount({ socket }) {
                             alignItems:"center"
                             
                         }} 
-                        
+                        onClick={() => {
+                            setCostumeModalMessage({
+                                message:"Are you sure you want to cancel the membership request?",
+                                fontColor:"#FFFFFFFF"
+                            });
+                            setCostumeModalButtons([
+                                {text:"No", onClick: () => {
+                                    setCostumeModalMessage("");
+                                    setCostumeModalButtons([]);
+                                    setCostumModalVisible(false);
+                                }},
+                                {text: "Yes", onClick:() => {
+                                    socket?.emit("cancel_friendship", {acccountId: accountId });
+                                    setCostumeModalMessage("");
+                                    setCostumeModalButtons([]);
+                                    setCostumModalVisible(false);
+                                }}
+                            ])
+                            setCostumModalVisible(true);
+                        }}
                     >
                         <BiHistory
                             color='#FFFFFF'
@@ -172,6 +206,127 @@ function OtherAccount({ socket }) {
                                 marginLeft:"5px"
                             }}>
                                 Request was Send
+                            </label>
+                        }
+                    </div>
+                </div>
+            )
+        }
+        
+        if(friendship.status === "wait") {
+            return (
+                <div 
+                    className='confirm-or-ignore-container'
+                    style={{ 
+                        left: isBrowser && "60px",
+                        top:"20px",
+                        right: !isBrowser && "10px",
+                    }}
+                >
+                    <div style={{
+                        border:"1px solid #FFFFFF",
+                        borderRadius:"20px",
+                        padding:"10px",
+                        backgroundColor:"green",
+                        display:"flex",
+                        flexDirection:"row",
+                        alignItems:"center"
+                    }} onClick={() => socket?.emit("confirm_friendship", {acccountId: accountId })}>
+                        <GiConfirmed
+                            color='#FFFFFF'
+                        />
+                        {
+                            labelVisbilty &&
+                            <label style={{
+                                fontFamily:"italic",
+                                color:"#FFFFFF",
+                                marginLeft:"5px"
+                            }}>
+                                Confirm
+                            </label>
+                        }
+                    </div>
+
+                    <div style={{
+                        border:"1px solid #FFFFFF",
+                        borderRadius:"20px",
+                        padding:"10px",
+                        backgroundColor:"red",
+                        display:"flex",
+                        flexDirection:"row",
+                        alignItems:"center",
+                        marginLeft:"5px"
+                    }} onClick={() => socket?.emit("cancel_friendship", {acccountId: accountId })}>
+                        <AiOutlineClose
+                            color='#FFFFFF'
+                        />
+                        {
+                            labelVisbilty &&
+                            <label style={{
+                                fontFamily:"italic",
+                                color:"#FFFFFF",
+                                marginLeft:"5px"
+                            }}>
+                                Ignore
+                            </label>
+                        }
+                    </div>   
+                </div>
+                    
+            )
+        }
+
+        if(friendship.status === "friend") {
+            return (
+                <div 
+                    className='friendship-container' 
+                    style={{ 
+                        left: isBrowser && "60px",
+                        top:"20px",
+                        right: !isBrowser && "10px",
+                        backgroundColor: Colors.blackBlue
+                    }}
+                    onClick={() => {
+                        setCostumeModalMessage({
+                            message:"Are you sure you want to remove this friendship?",
+                            fontColor:"#FFFFFFFF"
+                        });
+                        setCostumeModalButtons([
+                            {text:"No", onClick: () => {
+                                setCostumeModalMessage("");
+                                setCostumeModalButtons([]);
+                                setCostumModalVisible(false);
+                            }},
+                            {text: "Yes", onClick:() => {
+                                socket?.emit("cancel_friendship", {acccountId: accountId });
+                                setCostumeModalMessage("");
+                                setCostumeModalButtons([]);
+                                setCostumModalVisible(false);
+                            }}
+                        ])
+                        setCostumModalVisible(true);
+                    }}
+                >
+                    <div 
+                        style={{
+                            display:"flex",
+                            flexDirection:"row",
+                            alignItems:"center"
+                            
+                        }} 
+                    >
+                        <BsFillPersonFill
+                            color='#FFFFFF'
+                            size={"20px"}
+                        />
+                        {
+                            labelVisbilty &&
+                            <label style={{
+                                fontFamily:"italic",
+                                color:"#FFFFFF",
+                                marginLeft:"5px"
+                            }}>
+                                Friend
                             </label>
                         }
                     </div>
@@ -206,6 +361,16 @@ function OtherAccount({ socket }) {
                     setPost={setPost}
                     account={userSelector}
                     socket={socket}
+                />
+            }
+            {
+                costumeMoadlVisible &&
+                <CostumModal
+                    message={costumeModalMessage}
+                    buttons={costumeModalButtons}
+                    backgroundColor={Colors.blackBlue}
+                    width={"300px"}
+                    height={"150px"}
                 />
             }
             <div className='account-page-body'>

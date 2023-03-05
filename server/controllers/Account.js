@@ -245,9 +245,71 @@ const accountEvents = (io, socket) => {
             status:"wait"
         })
         account2.save();
+
+        const sockets = await io.fetchSockets();
+        const account2Socket = sockets.filter(s => s.userId.toString() === account2._id.toString());
+        
+        if(account2Socket.length === 1) {
+            socket.broadcast.to(account2Socket[0].id).emit("account_changes", account2);
+        }
         
         return socket.emit("account_changes", { account: account1 })
 
+    })
+
+    socket.on("cancel_friendship", async(data) => {
+        const currentAccountId = socket.userId;
+        const { acccountId } = data;
+
+        const account1 = await Account.findById(currentAccountId);
+        const account2 = await Account.findById(acccountId);
+
+        account1.friends = account1.friends.filter(f => f._id.toString() !== acccountId.toString());
+        account2.friends = account2.friends.filter(f => f._id.toString() !== currentAccountId.toString());
+        account1.save();
+        account2.save();
+
+        const sockets = await io.fetchSockets();
+        const account2Socket = sockets.filter(s => s.userId.toString() === account2._id.toString());
+        
+        if(account2Socket.length === 1) {
+            socket.broadcast.to(account2Socket[0].id).emit("account_changes", account2);
+        }
+
+        return socket.emit("account_changes", { account: account1 });
+    })
+
+    socket.on("confirm_friendship", async(data) => {
+        const currentAccountId = socket.userId;
+        const { acccountId } = data;
+
+       const account1 = await Account.findOneAndUpdate(
+            {_id: currentAccountId},
+            {$set: {"friends.$[el].status": "friend"}},
+            {
+                arrayFilters: [{'el._id': acccountId}],
+                new: true
+            }
+       );
+
+       const account2 = await Account.findOneAndUpdate(
+            {_id: acccountId},
+            {$set: {"friends.$[el].status": 'friend'}},
+            {
+                arrayFilters: [{'el._id': currentAccountId}],
+                new: true
+            }
+        );
+        
+        
+        const sockets = await io.fetchSockets();
+        const account2Socket = sockets.filter(s => s.userId.toString() === account2._id.toString());
+        
+        if(account2Socket.length === 1) {
+            socket.broadcast.to(account2Socket[0].id).emit("account_changes", account2);
+        }
+
+        return socket.emit("account_changes", { account: account1 });
     })
 }
 

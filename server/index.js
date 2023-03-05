@@ -48,7 +48,7 @@ io.use(async (socket, next) => {
     }
 });
 
-io.on("connection", (socket) => {
+io.on("connection", async(socket) => {
     console.log(`User connected: ${socket.userId}`);
     
     recive_all_post(socket);

@@ -12,7 +12,8 @@ function CostumModal({
         <div style={{
             width:"100%",
             height:"100%",
-            position:"absolute"
+            position:"absolute",
+            zIndex:"10"
         }}>
             <div style={{
                 width:"100%",

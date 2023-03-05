@@ -55,12 +55,13 @@ function Post({
     return (  
         <div className='post-container' style={{ width: isBrowser ? "600px" : "350px" }}>
             <div className='post-author-part-container' onClick={() => {
-                if(postAuthorId !== account._id) {
+                if(postAuthorId !== account?._id) {
                     navigate(`/Home/${postAuthorId}`);
                 }
             }}>
                 <img
                     src={postAuthorProfileImage}
+                    alt={"proifle"}
                     style={{
                         width:"50px",
                         height:"50px",
@@ -134,7 +135,7 @@ function Post({
                                                         {
                                                             index === currentMedia &&
                                                             <img
-                                                                alt="post-image"
+                                                                alt="post"
                                                                 src={item.downloadUrl}
                                                                 className="media"
                                                                 onClick={() => setMediaToDisplay(item)}

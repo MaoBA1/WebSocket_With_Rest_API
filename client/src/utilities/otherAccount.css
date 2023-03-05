@@ -89,3 +89,10 @@
     display: flex;
     flex-direction: row;
 }
+
+.confirm-or-ignore-container{
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    flex-direction: row;
+}
