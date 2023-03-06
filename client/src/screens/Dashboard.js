@@ -74,8 +74,9 @@ function Dashboard( { socket, setupSocket } ) {
             navigate("/");
         }
         const handelUserChanges = (data) => {
+            console.log(data);
             try {
-                dispatch(setUser(data.account));
+                dispatch(setUser(data.account || data));
             } catch(error) {
                 console.log(error.message);
             }

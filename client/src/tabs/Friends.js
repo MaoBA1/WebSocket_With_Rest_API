@@ -11,11 +11,12 @@ function Friends({ account, socket }) {
     const userSelector = useSelector(state => state.Reducer.User);
     const friends = userSelector?.friends;
     const [ allFriendsAcconts, setAllFriendsAccounts ] = useState([]);
-    // console.log(allFriendsAcconts);
+    const [ intialUserData, setIntialUserData ] = useState(userSelector);
 
     useEffect(() => {
-        if(allFriendsAcconts.length === 0) {
+        if(allFriendsAcconts.length === 0 || userSelector !== intialUserData) {
             socket?.emit("get_all_user_friend", { friends });
+            setIntialUserData(userSelector);
         }
         
         
@@ -42,7 +43,7 @@ function Friends({ account, socket }) {
             <div 
                 className='friends-container'
                 style={{
-                    gridTemplateColumns: isBrowser? "repeat(4, 23%)" : "repeat(2, 48%)" 
+                    gridTemplateColumns: isBrowser? "repeat(4, 200px)" : "repeat(2, 48%)",
                 }}
             >
                 {
