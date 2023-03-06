@@ -51,7 +51,6 @@ function Friends({ account, socket }) {
                 className='friends-container'
                 style={{
                     gridTemplateColumns: isBrowser? "repeat(4, 370px)" : "repeat(2, 180px)",
-                    marginBottom:"20px"
                 }}
             >
                 {
@@ -228,6 +227,88 @@ function Friends({ account, socket }) {
                                             marginLeft:"5px"
                                         }}>
                                             cancel request
+                                        </label>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+            </div>
+
+            {
+                allFriendsAcconts?.filter(f => f.status === "friend")?.length > 0 &&
+                <div style={{
+                    paddingLeft:"25px",
+                    padding:"10px"
+                }}>
+                    <label style={{
+                        fontFamily:"italic",
+                        color: Colors.blueBold,
+                        fontSize:"18px"
+                    }}>
+                        your friends
+                    </label>
+                </div>
+            }
+            <div 
+                className='friends-container'
+                style={{
+                    gridTemplateColumns: isBrowser? "repeat(4, 370px)" : "repeat(2, 180px)",
+                }}
+            >
+                {
+                    allFriendsAcconts?.filter(f => f.status === "friend")?.map((item, index) => 
+                    
+                        <div key={item?._id} className="friend-array-item">
+                            <img
+                                alt='profile'
+                                style={{ 
+                                    width: isBrowser ? "85px" : "60px",
+                                    height: isBrowser ? "85px" : "60px",
+                                    borderRadius:"50px",
+                                    border:`2px solid ${Colors.blueLight}`
+                                }}
+                                src={item?.profileImage}
+                            />
+                            <label style={{
+                                fontFamily:"italic",
+                                color: Colors.blueLight,
+                                marginTop:"10px",
+                                fontSize: isBrowser ? "18px" : "15px",
+                                textAlign:"center"
+                            }}>
+                                {item.fname + " " + item.lname}
+                            </label>
+                            
+                            <div 
+                                className='confirm-or-ignore-container-relative'
+                                style={{ 
+                                    left: isBrowser && "60px",
+                                    top:"20px",
+                                    right: !isBrowser && "10px",
+                                }}
+                            >
+                                <div style={{
+                                    border:"1px solid #FFFFFF",
+                                    borderRadius:"20px",
+                                    padding:"10px",
+                                    backgroundColor:"grey",
+                                    display:"flex",
+                                    flexDirection:"row",
+                                    alignItems:"center"
+                                }} onClick={() => socket?.emit("cancel_friendship", {acccountId: item._id })}>
+                                    <AiOutlineClose
+                                        color='#FFFFFF'
+                                    />
+                                    {
+                                        labelVisbilty &&
+                                        <label style={{
+                                            fontFamily:"italic",
+                                            color:"#FFFFFF",
+                                            marginLeft:"5px"
+                                        }}>
+                                            cancel friendship
                                         </label>
                                     }
                                 </div>
