@@ -1,0 +1,38 @@
+.friend-screen-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.friends-item-container{
+    margin:5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.media-array-item{
+    border:1px solid grey;
+    border-radius: 20px;
+    background-color: #FFFFFF;
+    padding: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.media-array-item:hover {
+    border:2px solid #778da9;
+}
+
+.friends-container{
+    padding: 15px;
+    margin:0 auto;
+    border-radius: 10px;
+    display: grid;
+    justify-content: space-between;
+    /* grid-template-rows: repeat(3, 33.33%); */
+  }

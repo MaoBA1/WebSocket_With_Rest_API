@@ -87,7 +87,6 @@ function OtherAccount({ socket }) {
         }
 
         const handelUserChanges = (data) => {
-            console.log(data);
             try {
                 dispatch(setUser(data.account));
             } catch(error) {
@@ -374,7 +373,7 @@ function OtherAccount({ socket }) {
                 />
             }
             <div className='account-page-body'>
-                <div className='x-icon-container' onClick={() => {socket.disconnect();}}>
+                <div className='x-icon-container' onClick={() => {navigate(-1)}}>
                     <AiOutlineClose
                         color='#FFFFFF'
                     />

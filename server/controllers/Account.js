@@ -311,6 +311,27 @@ const accountEvents = (io, socket) => {
 
         return socket.emit("account_changes", { account: account1 });
     })
+
+    socket.on("get_all_user_friend", async(data) => {
+        const { friends } = data;
+        let AllFriendsAccounts = await Account.find({
+            '_id': {
+                $in: friends?.map(f => mongoose.Types.ObjectId(f._id))
+            }
+        })
+        AllFriendsAccounts = AllFriendsAccounts.map((item, index) => item = {
+            _id: item._id,
+            email: item.email,
+            fname: item.fname,
+            lname: item.lname,
+            profileImage: item.profileImage,
+            friends: item.friends,
+            status: friends[index].status
+        });
+            
+        return socket.emit("get_all_user_friend", { AllFriendsAccounts });
+        
+    })
 }
 
 
