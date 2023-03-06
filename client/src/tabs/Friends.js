@@ -43,13 +43,13 @@ function Friends({ account, socket }) {
             <div 
                 className='friends-container'
                 style={{
-                    gridTemplateColumns: isBrowser? "repeat(4, 200px)" : "repeat(2, 48%)",
+                    gridTemplateColumns: isBrowser? "repeat(4, 370px)" : "repeat(2, 48%)",
                 }}
             >
                 {
                     allFriendsAcconts?.filter(f => f.status === "wait")?.map((item, index) => 
                     
-                        <div key={item?._id} className="media-array-item">
+                        <div key={item?._id} className="friend-array-item">
                             <img
                                 alt='profile'
                                 style={{ 
