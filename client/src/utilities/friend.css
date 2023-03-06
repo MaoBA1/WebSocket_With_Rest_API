@@ -30,9 +30,13 @@
 
 .friends-container{
     padding: 15px;
-    /* margin:0 auto; */
     border-radius: 10px;
     display: grid;
-    /* justify-content: space-between; */
-    /* grid-template-rows: repeat(3, 33.33%); */
-  }
+}
+
+  .confirm-or-ignore-container-relative{
+    margin-top: 10px;
+    z-index: 2;
+    display: flex;
+    flex-direction: row;
+}

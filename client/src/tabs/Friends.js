@@ -4,7 +4,8 @@ import Colors from '../utilities/Colors';
 import { useDispatch, useSelector } from 'react-redux';
 import '../utilities/friend.css';
 import { isBrowser } from 'react-device-detect';
-import { setUser } from '../store/actions/index';
+import { AiOutlineClose } from 'react-icons/ai';
+import { GiConfirmed } from 'react-icons/gi';
 
 function Friends({ account, socket }) {
     const dispatch = useDispatch();
@@ -12,6 +13,7 @@ function Friends({ account, socket }) {
     const friends = userSelector?.friends;
     const [ allFriendsAcconts, setAllFriendsAccounts ] = useState([]);
     const [ intialUserData, setIntialUserData ] = useState(userSelector);
+    const [ labelVisbilty, setLabelVisbilty ] = useState(isBrowser);
 
     useEffect(() => {
         if(allFriendsAcconts.length === 0 || userSelector !== intialUserData) {
@@ -43,7 +45,7 @@ function Friends({ account, socket }) {
             <div 
                 className='friends-container'
                 style={{
-                    gridTemplateColumns: isBrowser? "repeat(4, 370px)" : "repeat(2, 48%)",
+                    gridTemplateColumns: isBrowser? "repeat(4, 370px)" : "repeat(2, 180px)",
                 }}
             >
                 {
@@ -76,6 +78,64 @@ function Friends({ account, socket }) {
                             }}>
                                 sent you friendship request
                             </label>
+
+                            <div 
+                                className='confirm-or-ignore-container-relative'
+                                style={{ 
+                                    left: isBrowser && "60px",
+                                    top:"20px",
+                                    right: !isBrowser && "10px",
+                                }}
+                            >
+                                <div style={{
+                                    border:"1px solid #FFFFFF",
+                                    borderRadius:"20px",
+                                    padding:"10px",
+                                    backgroundColor:"green",
+                                    display:"flex",
+                                    flexDirection:"row",
+                                    alignItems:"center"
+                                }} onClick={() => socket?.emit("confirm_friendship", {acccountId: item._id })}>
+                                    <GiConfirmed
+                                        color='#FFFFFF'
+                                    />
+                                    {
+                                        labelVisbilty &&
+                                        <label style={{
+                                            fontFamily:"italic",
+                                            color:"#FFFFFF",
+                                            marginLeft:"5px"
+                                        }}>
+                                            Confirm
+                                        </label>
+                                    }
+                                </div>
+
+                                <div style={{
+                                    border:"1px solid #FFFFFF",
+                                    borderRadius:"20px",
+                                    padding:"10px",
+                                    backgroundColor:"red",
+                                    display:"flex",
+                                    flexDirection:"row",
+                                    alignItems:"center",
+                                    marginLeft:"5px"
+                                }} onClick={() => socket?.emit("cancel_friendship", {acccountId: item._id })}>
+                                    <AiOutlineClose
+                                        color='#FFFFFF'
+                                    />
+                                    {
+                                        labelVisbilty &&
+                                        <label style={{
+                                            fontFamily:"italic",
+                                            color:"#FFFFFF",
+                                            marginLeft:"5px"
+                                        }}>
+                                            Ignore
+                                        </label>
+                                    }
+                                </div>   
+                            </div>
                         </div>
                     )
                 }
