@@ -282,7 +282,7 @@ const accountEvents = (io, socket) => {
     socket.on("confirm_friendship", async(data) => {
         const currentAccountId = socket.userId;
         const { acccountId } = data;
-
+        console.log(data);
        const account1 = await Account.findOneAndUpdate(
             {_id: currentAccountId},
             {$set: {"friends.$[el].status": "friend"}},
