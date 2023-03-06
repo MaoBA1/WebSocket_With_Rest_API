@@ -50,6 +50,7 @@ function Friends({ account, socket }) {
                 className='friends-container'
                 style={{
                     gridTemplateColumns: isBrowser? "repeat(4, 370px)" : "repeat(2, 180px)",
+                    marginBottom:"20px"
                 }}
             >
                 {
@@ -144,8 +145,7 @@ function Friends({ account, socket }) {
                     )
                 }
             </div>
-
-            <div style={{ marginTop:"20px" }} />
+            
 
             {
                 allFriendsAcconts?.filter(f => f.status === "requsted")?.length > 0 &&
