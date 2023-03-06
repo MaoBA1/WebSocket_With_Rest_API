@@ -6,6 +6,7 @@ import '../utilities/friend.css';
 import { isBrowser } from 'react-device-detect';
 import { AiOutlineClose } from 'react-icons/ai';
 import { GiConfirmed } from 'react-icons/gi';
+import { BiHistory } from 'react-icons/bi';
 
 function Friends({ account, socket }) {
     const dispatch = useDispatch();
@@ -196,7 +197,7 @@ function Friends({ account, socket }) {
                                 textAlign:"center",
                                 fontSize: isBrowser ? "15px" : "12px",
                             }}>
-                                sent you friendship request
+                                get friendship request from you
                             </label>
 
                             <div 
@@ -211,12 +212,12 @@ function Friends({ account, socket }) {
                                     border:"1px solid #FFFFFF",
                                     borderRadius:"20px",
                                     padding:"10px",
-                                    backgroundColor:"green",
+                                    backgroundColor:"grey",
                                     display:"flex",
                                     flexDirection:"row",
                                     alignItems:"center"
-                                }} onClick={() => socket?.emit("confirm_friendship", {acccountId: item._id })}>
-                                    <GiConfirmed
+                                }} onClick={() => socket?.emit("cancel_friendship", {acccountId: item._id })}>
+                                    <BiHistory
                                         color='#FFFFFF'
                                     />
                                     {
@@ -226,35 +227,10 @@ function Friends({ account, socket }) {
                                             color:"#FFFFFF",
                                             marginLeft:"5px"
                                         }}>
-                                            Confirm
+                                            cancel request
                                         </label>
                                     }
                                 </div>
-
-                                <div style={{
-                                    border:"1px solid #FFFFFF",
-                                    borderRadius:"20px",
-                                    padding:"10px",
-                                    backgroundColor:"red",
-                                    display:"flex",
-                                    flexDirection:"row",
-                                    alignItems:"center",
-                                    marginLeft:"5px"
-                                }} onClick={() => socket?.emit("cancel_friendship", {acccountId: item._id })}>
-                                    <AiOutlineClose
-                                        color='#FFFFFF'
-                                    />
-                                    {
-                                        labelVisbilty &&
-                                        <label style={{
-                                            fontFamily:"italic",
-                                            color:"#FFFFFF",
-                                            marginLeft:"5px"
-                                        }}>
-                                            Ignore
-                                        </label>
-                                    }
-                                </div>   
                             </div>
                         </div>
                     )

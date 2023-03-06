@@ -250,7 +250,7 @@ const accountEvents = (io, socket) => {
         const account2Socket = sockets.filter(s => s.userId.toString() === account2._id.toString());
         
         if(account2Socket.length === 1) {
-            socket.broadcast.to(account2Socket[0].id).emit("account_changes", account2);
+            socket.broadcast.to(account2Socket[0].id).emit("account_changes", { account: account2 });
         }
         
         return socket.emit("account_changes", { account: account1 })
