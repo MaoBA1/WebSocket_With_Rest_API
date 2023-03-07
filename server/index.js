@@ -25,6 +25,7 @@ app.use('/api/user', userRouter);
 // controllers
 const { postEvents, recive_all_post } = require('./controllers/Posts');
 const { accountEvents } = require('./controllers/Account');
+const chatEvents = require('./controllers/Chats');
 
 const mongoUrl = `mongodb+srv://maor:wm2qpAw2cZ0nwpkJ@postsandchats.orle5k9.mongodb.net/PostAndChats_db?retryWrites=true&w=majority`;
 
@@ -54,6 +55,7 @@ io.on("connection", async(socket) => {
     recive_all_post(socket);
     postEvents(io, socket);
     accountEvents(io, socket);
+    chatEvents(io, socket);
 
 
     socket.on("disconnect", () => {
