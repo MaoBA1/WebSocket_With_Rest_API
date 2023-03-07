@@ -35,15 +35,27 @@ function MyPosts({ account, socket, setCommentVisible, setPost, setLikersArray, 
                 }
                 {
                     allPostSelector?.filter(p => p.postAuthor._id.toString() === account._id.toString())?.length === 0 &&
-                    <label style={{
-                        fontFamily:"italic",
-                        color: Colors.blueLight,
-                        fontSize:"18px",
-                        position:"absolute",
-                        top:"40%"
-                    }}>
-                        You have not uploaded any post yet...
-                    </label>
+                    <div
+                        style={{
+                            width:"100%",
+                            height:"100%",
+                            display:"flex",
+                            flexDirection:"column",
+                            alignItems:"center",
+                            justifyContent:"center",
+                            position:"absolute",
+                            padding:"5px"
+                        }}
+                    >   
+                        <label style={{
+                            fontFamily:"italic",
+                            fontSize:"30px",
+                            color: Colors.blueBold,
+                            textAlign:"center"
+                        }}>
+                            You have not uploaded any post yet...
+                        </label>
+                    </div>
                     
                 }
             </div>

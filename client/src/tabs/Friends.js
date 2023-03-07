@@ -7,8 +7,10 @@ import { isBrowser } from 'react-device-detect';
 import { AiOutlineClose } from 'react-icons/ai';
 import { GiConfirmed } from 'react-icons/gi';
 import { BiHistory } from 'react-icons/bi';
+import { useNavigate } from 'react-router-dom';
 
 function Friends({ account, socket }) {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const userSelector = useSelector(state => state.Reducer.User);
     const friends = userSelector?.friends;
@@ -33,6 +35,28 @@ function Friends({ account, socket }) {
     return ( 
         <Scrollbars className='friend-screen-container'>
             {
+                allFriendsAcconts.length === 0 &&
+                <div
+                    style={{
+                        width:"100%",
+                        height:"100%",
+                        display:"flex",
+                        flexDirection:"column",
+                        alignItems:"center",
+                        justifyContent:"center"
+                    }}
+                >   
+                    <label style={{
+                        fontFamily:"italic",
+                        fontSize:"30px",
+                        color: Colors.blueBold,
+                        textAlign:"center"
+                    }}>
+                        You don't have friends yet, start making new connections!
+                    </label>
+                </div>
+            }
+            {
                 allFriendsAcconts?.filter(f => f.status === "wait")?.length > 0 &&
                 <div style={{
                     paddingLeft:"25px",
@@ -56,26 +80,39 @@ function Friends({ account, socket }) {
                 {
                     allFriendsAcconts?.filter(f => f.status === "wait")?.map((item, index) => 
                     
-                        <div key={item?._id} className="friend-array-item">
-                            <img
-                                alt='profile'
-                                style={{ 
-                                    width: isBrowser ? "85px" : "60px",
-                                    height: isBrowser ? "85px" : "60px",
-                                    borderRadius:"50px",
-                                    border:`2px solid ${Colors.blueLight}`
+                        <div 
+                            key={item?._id}
+                            className="friend-array-item"
+                        >
+                            <div 
+                                onClick={() => navigate(`/Home/${item._id}`)}
+                                style={{
+                                    display:"flex",
+                                    flexDirection:"column",
+                                    alignItems:"center",
+                                    justifyContent:"center"
                                 }}
-                                src={item?.profileImage}
-                            />
-                            <label style={{
-                                fontFamily:"italic",
-                                color: Colors.blueLight,
-                                marginTop:"10px",
-                                fontSize: isBrowser ? "18px" : "15px",
-                                textAlign:"center"
-                            }}>
-                                {item.fname + " " + item.lname}
-                            </label>
+                            >
+                                <img
+                                    alt='profile'
+                                    style={{ 
+                                        width: isBrowser ? "85px" : "60px",
+                                        height: isBrowser ? "85px" : "60px",
+                                        borderRadius:"50px",
+                                        border:`2px solid ${Colors.blueLight}`
+                                    }}
+                                    src={item?.profileImage}
+                                />
+                                <label style={{
+                                    fontFamily:"italic",
+                                    color: Colors.blueLight,
+                                    marginTop:"10px",
+                                    fontSize: isBrowser ? "18px" : "15px",
+                                    textAlign:"center"
+                                }}>
+                                    {item.fname + " " + item.lname}
+                                </label>
+                            </div>
                             <label style={{ 
                                 fontFamily:"italic",
                                 textAlign:"center",
@@ -171,26 +208,39 @@ function Friends({ account, socket }) {
                 {
                     allFriendsAcconts?.filter(f => f.status === "requsted")?.map((item, index) => 
                     
-                        <div key={item?._id} className="friend-array-item">
-                            <img
-                                alt='profile'
-                                style={{ 
-                                    width: isBrowser ? "85px" : "60px",
-                                    height: isBrowser ? "85px" : "60px",
-                                    borderRadius:"50px",
-                                    border:`2px solid ${Colors.blueLight}`
+                        <div 
+                            key={item?._id}
+                            className="friend-array-item"
+                        >
+                            <div 
+                                onClick={() => navigate(`/Home/${item._id}`)}
+                                style={{
+                                    display:"flex",
+                                    flexDirection:"column",
+                                    alignItems:"center",
+                                    justifyContent:"center"
                                 }}
-                                src={item?.profileImage}
-                            />
-                            <label style={{
-                                fontFamily:"italic",
-                                color: Colors.blueLight,
-                                marginTop:"10px",
-                                fontSize: isBrowser ? "18px" : "15px",
-                                textAlign:"center"
-                            }}>
-                                {item.fname + " " + item.lname}
-                            </label>
+                            >
+                                <img
+                                    alt='profile'
+                                    style={{ 
+                                        width: isBrowser ? "85px" : "60px",
+                                        height: isBrowser ? "85px" : "60px",
+                                        borderRadius:"50px",
+                                        border:`2px solid ${Colors.blueLight}`
+                                    }}
+                                    src={item?.profileImage}
+                                />
+                                <label style={{
+                                    fontFamily:"italic",
+                                    color: Colors.blueLight,
+                                    marginTop:"10px",
+                                    fontSize: isBrowser ? "18px" : "15px",
+                                    textAlign:"center"
+                                }}>
+                                    {item.fname + " " + item.lname}
+                                </label>
+                            </div>
                             <label style={{ 
                                 fontFamily:"italic",
                                 textAlign:"center",
@@ -260,26 +310,39 @@ function Friends({ account, socket }) {
                 {
                     allFriendsAcconts?.filter(f => f.status === "friend")?.map((item, index) => 
                     
-                        <div key={item?._id} className="friend-array-item">
-                            <img
-                                alt='profile'
-                                style={{ 
-                                    width: isBrowser ? "85px" : "60px",
-                                    height: isBrowser ? "85px" : "60px",
-                                    borderRadius:"50px",
-                                    border:`2px solid ${Colors.blueLight}`
+                        <div 
+                            key={item?._id}
+                            className="friend-array-item"
+                        >
+                            <div 
+                                onClick={() => navigate(`/Home/${item._id}`)}
+                                style={{
+                                    display:"flex",
+                                    flexDirection:"column",
+                                    alignItems:"center",
+                                    justifyContent:"center"
                                 }}
-                                src={item?.profileImage}
-                            />
-                            <label style={{
-                                fontFamily:"italic",
-                                color: Colors.blueLight,
-                                marginTop:"10px",
-                                fontSize: isBrowser ? "18px" : "15px",
-                                textAlign:"center"
-                            }}>
-                                {item.fname + " " + item.lname}
-                            </label>
+                            >
+                                <img
+                                    alt='profile'
+                                    style={{ 
+                                        width: isBrowser ? "85px" : "60px",
+                                        height: isBrowser ? "85px" : "60px",
+                                        borderRadius:"50px",
+                                        border:`2px solid ${Colors.blueLight}`
+                                    }}
+                                    src={item?.profileImage}
+                                />
+                                <label style={{
+                                    fontFamily:"italic",
+                                    color: Colors.blueLight,
+                                    marginTop:"10px",
+                                    fontSize: isBrowser ? "18px" : "15px",
+                                    textAlign:"center"
+                                }}>
+                                    {item.fname + " " + item.lname}
+                                </label>
+                            </div>
                             
                             <div 
                                 className='confirm-or-ignore-container-relative'
