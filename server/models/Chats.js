@@ -16,6 +16,7 @@ const chatSchema = new Schema({
                 lname: String,
                 profileImage: String,
             },
+            newMessage: { type: Boolean, default: true },
             message: String,
             creatAdt: {type: Date, default: Date.now},
         }

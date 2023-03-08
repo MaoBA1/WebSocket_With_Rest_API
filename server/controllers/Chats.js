@@ -4,7 +4,7 @@ const Chat = require('../models/Chats');
 
 
 const chatEvents = (io, socket) => {
-    socket.on("create_new_private", async(data) => {
+    socket.on("create_new_private_chat", async(data) => {
         const creatorAccountId = socket.userId;
         const { accountId, message } = data;
         const secondChatParticipantId = accountId;
@@ -31,9 +31,15 @@ const chatEvents = (io, socket) => {
             ]
         })
 
+        
         return newChat.save()
-        .then((chat) => {
-            
+        .then(async(chat) => {
+            const allChatsOfCreator = await Chat.find({ participants: { $in: [ creatorAccountId ] }});
+            const allChatsOfReciver = await Chat.find({ participants: { $in: [ secondChatParticipantId ] }});
+            return () => {
+                socket.emit("active_chat", { chat: chat });
+
+            }
         })
     })
 }
