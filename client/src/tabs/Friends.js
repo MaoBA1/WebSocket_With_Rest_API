@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import Colors from '../utilities/Colors';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import '../utilities/friend.css';
 import { isBrowser } from 'react-device-detect';
 import { AiOutlineClose } from 'react-icons/ai';
@@ -11,11 +11,11 @@ import { useNavigate } from 'react-router-dom';
 
 function Friends({ account, socket }) {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const userSelector = useSelector(state => state.Reducer.User);
     const friends = userSelector?.friends;
     const [ allFriendsAcconts, setAllFriendsAccounts ] = useState([]);
     const [ intialUserData, setIntialUserData ] = useState(userSelector);
+    // eslint-disable-next-line
     const [ labelVisbilty, setLabelVisbilty ] = useState(isBrowser);
 
     useEffect(() => {
@@ -23,14 +23,12 @@ function Friends({ account, socket }) {
             socket?.emit("get_all_user_friend", { friends });
             setIntialUserData(userSelector);
         }
-        
-        
 
         socket?.on("get_all_user_friend", ({ AllFriendsAccounts }) => {setAllFriendsAccounts(AllFriendsAccounts)});
         return () => {
             socket?.off("get_all_user_friend", setAllFriendsAccounts);
         }
-    })
+    }, [allFriendsAcconts, userSelector, intialUserData, friends, socket])
     
     return ( 
         <Scrollbars className='friend-screen-container'>

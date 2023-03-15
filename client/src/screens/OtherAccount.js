@@ -397,7 +397,7 @@ function OtherAccount({ socket }) {
                                 flexDirection:"row",
                                 alignItems:"center"
                                 
-                            }}>
+                            }} onClick={() => navigate(`/Home/chatScreen/${userSelector?._id}/${accountId}`)}>
                                 <AiFillMessage
                                     color='#FFFFFF'
                                     size={"20px"}

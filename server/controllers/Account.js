@@ -153,6 +153,15 @@ const get_user = (request, response) => {
 
 
 
+const getUserSocketByAccountId = async(accountId) => {
+    const sockets = await io.fetchSockets();
+    const accountSocket = sockets.filter(s => s.userId.toString() === accountId.toString());
+    if(accountSocket.length === 1) {
+        return accountSocket[0].id;
+    }
+    return null;
+}
+
 const accountEvents = (io, socket) => {
     socket.on("change_profile_image", (data) => {
         const accountId = data.account._id;
@@ -341,4 +350,5 @@ module.exports = {
     login,
     forget_password,
     get_user,
+    getUserSocketByAccountId
 };

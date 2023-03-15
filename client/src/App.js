@@ -9,10 +9,10 @@ import { io } from 'socket.io-client';
 import Login from './screens/Login';
 import Dashboard from './screens/Dashboard';
 import Register from './screens/Register';
-
 import serverBaseUrl from './serverBaseUrl';
 import Reducer from './store/reducers/index';
 import OtherAccount from './screens/OtherAccount';
+import ChatScreen from './screens/ChatScreen';
 
 
 const RootReducer = combineReducers({
@@ -25,7 +25,7 @@ function App() {
   const setupSocket = () => {
     const token = localStorage.getItem("user_token");
     if (token && !socket) {
-      const newSocket = io(serverBaseUrl. localServerSocketUrl, {
+      const newSocket = io(serverBaseUrl.localServerSocketUrl, {
         query: {
           token: token
         },
@@ -55,6 +55,7 @@ function App() {
           <Route path="/Register" element={<Register/>}/>
           <Route path="/Home" element={<Dashboard socket={socket} setupSocket={setupSocket} />}/>
           <Route path="/Home/:accountId" element={<OtherAccount socket={socket}/>}/>
+          <Route path="/Home/chatScreen/:id1/:id2" element={<ChatScreen socket={socket} setupSocket={setupSocket}/>}/>
         </Routes>
       </Router>
     </Provider>
