@@ -5,10 +5,13 @@
     border-radius: 10px !important;
     border-collapse: collapse;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .header {
-    height: 100px;
+    flex: 0.15;
+    /* height: 100px; */
     background-color: #0d1b2a;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
@@ -16,4 +19,17 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+
+.messages-container {
+    flex: 0.75;
+}
+
+.input-container {
+    flex: 0.1;
+    background-color: #0d1b2a;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    display: grid;
 }
