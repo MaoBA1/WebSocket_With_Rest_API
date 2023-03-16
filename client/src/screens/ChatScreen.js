@@ -7,11 +7,12 @@ import { getUser } from '../store/actions';
 import { AiOutlineClose } from 'react-icons/ai';
 import { MdSend } from 'react-icons/md';
 import Colors from '../utilities/Colors';
-
+import { isBrowser } from 'react-device-detect';
 
 
 function ChatScreen({ socket, setupSocket }) {
     const { width } = window.screen; 
+    // eslint-disable-next-line
     const [ windowSize, setWindowSize ] = useState({
         width: window.innerWidth,
         height: window.innerHeight
@@ -26,7 +27,7 @@ function ChatScreen({ socket, setupSocket }) {
     socket?.emit('get_account_by_id', { accountId: accountId });
     useEffect(() => {
         if(!socket) {
-            setupSocket();
+            navigate("/Home")
         }
         const handelResize = () => {
             setWindowSize({
@@ -58,11 +59,23 @@ function ChatScreen({ socket, setupSocket }) {
         return () => {
             socket?.off('get_account_by_id', getUserData);
         }
-    },[socket]);
+    },[
+        socket,
+        dispatch,
+        setupSocket,
+        userSelector
+    ]);
 
     return (  
         <div className='account-main-container'>
-            <div className='chat-container'>
+            <div 
+                className='chat-container'
+                style={{ 
+                    width: !isBrowser && "80%",
+                    height: !isBrowser && "80%" ,
+                    gridTemplateRows: !isBrowser && "20% 70% 10%"
+                }}
+            >
                 <div className='header'>
                     <div className='x-icon-container' onClick={() => {navigate(-1)}}>
                         <AiOutlineClose
@@ -75,6 +88,7 @@ function ChatScreen({ socket, setupSocket }) {
                         alignItems:"center"
                     }}>
                         <img
+                            alt='profile'
                             src={userData?.profileImage}
                             style={{ 
                                 width:"65px",
@@ -97,7 +111,7 @@ function ChatScreen({ socket, setupSocket }) {
                 <div 
                     className='input-container'
                     style={{
-                        gridTemplateColumns: `${width * 0.7}px ${width * 0.3}px`
+                        gridTemplateColumns: !isBrowser && "80% 20%"
                     }}
                 >
                     <div style={{ 
@@ -113,6 +127,7 @@ function ChatScreen({ socket, setupSocket }) {
                                 height:"25px",
                                 padding:"10px",
                                 backgroundColor:"#FFFFFF",
+                                border:`2px solid ${Colors.blueLight}`
                             }}
                         />
                     </div>
@@ -124,19 +139,22 @@ function ChatScreen({ socket, setupSocket }) {
                         alignItems:"center",
                         justifyContent:"center"
                     }}>
-                        <button style={{
+                        <div style={{
                             height:"40px",
                             width:"40px",
                             backgroundColor: Colors.grey,
                             display:"flex",
                             flexDirection:"row",
                             alignItems:"center",
-                            justifyContent:"center"
+                            justifyContent:"center",
+                            borderRadius:"50%",
+                            border:`2px solid ${Colors.blueLight}`
                         }}>
                             <MdSend
                                 color={Colors.blueLight}
+                                size="20px"
                             />
-                        </button>
+                        </div>
                     </div>
                 </div>
             </div>

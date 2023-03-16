@@ -1,17 +1,17 @@
 .chat-container {
-    width: 95%;
-    height: 95%;
+    width: 700px;
+    height: 700px;
     background-color: #e0e1dd;
     border-radius: 10px !important;
     border-collapse: collapse;
     position: relative;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 110px 490px 100px;
+    grid-template-columns: 100%;
 }
 
 .header {
     flex: 0.15;
-    /* height: 100px; */
     background-color: #0d1b2a;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
@@ -23,7 +23,7 @@
 
 
 .messages-container {
-    flex: 0.75;
+    
 }
 
 .input-container {
@@ -32,4 +32,5 @@
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     display: grid;
+    grid-template-columns: 90% 10%;
 }
