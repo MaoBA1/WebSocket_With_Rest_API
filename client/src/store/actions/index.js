@@ -4,6 +4,7 @@ import serverBaseUrl from "../../serverBaseUrl";
 export const LOGIN = "LOGIN";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 export const SET_ALL_POSTS = "SET_ALL_POSTS";
+export const SET_ALL_CHATS = "SET_ALL_CHATS";
 
 
 export const setUser = (user) => {
@@ -80,3 +81,8 @@ export const setAllPosts = async( response, dispatch ) => {
 
 }
 
+export const setAllChats = (chats) => {
+    return dispatch => {
+        dispatch({ type: SET_ALL_CHATS, chats: chats })
+    }
+}

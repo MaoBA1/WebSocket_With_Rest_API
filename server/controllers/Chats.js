@@ -4,7 +4,7 @@ const Chat = require('../models/Chats');
 const { getUserSocketByAccountId } = require('./Account');
 
 const getAllChatsOfAccountByHisId = async(accountId) => {
-    const accountChats = await Chat.find({ participants: { $in: [  mongoose.Types.ObjectId(accountId) ] }});
+    const accountChats = await Chat.find({ participants: { $in:  [ {_id: mongoose.Types.ObjectId(accountId)} ] }});
     return accountChats;
 }
 
@@ -37,17 +37,23 @@ const chatEvents = (io, socket) => {
         })
         
         return newChat.save()
-        .then(() => {
-            return () => {
-                socket.broadcast.to(getUserSocketByAccountId(creatorAccountId)).emit("get_all_chats", getAllChatsOfAccountByHisId(creatorAccountId));
-                socket.broadcast.to(getUserSocketByAccountId(secondChatParticipantId)).emit("get_all_chats", getAllChatsOfAccountByHisId(secondChatParticipantId));
-            }
+        .then(async() => {
+            // return () => {
+                const firstUserchats = await getAllChatsOfAccountByHisId(creatorAccountId);
+                const secondUserChats = await getAllChatsOfAccountByHisId(secondChatParticipantId);
+                const socket1 = await getUserSocketByAccountId(io, creatorAccountId);
+                const socket2 = await getUserSocketByAccountId(io, secondChatParticipantId);
+                socket.to(socket1).emit("get_all_chats", { accountChats: firstUserchats });
+                socket.broadcast.to(socket2).emit("get_all_chats", { accountChats: secondUserChats });
+            // }
         })
     })
 
-    socket.on("get_all_chats", (data) => {
+    
+    socket.on("get_all_chats", async(data) => {
         const { accountId } = data;
-        return socket.broadcast.to(getUserSocketByAccountId(accountId)).emit("get_all_chats", getAllChatsOfAccountByHisId(accountId));
+        const chtas = await getAllChatsOfAccountByHisId(accountId);
+        return socket.emit("get_all_chats", { accountChats: chtas });
     })
 }
 

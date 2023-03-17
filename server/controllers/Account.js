@@ -153,7 +153,7 @@ const get_user = (request, response) => {
 
 
 
-const getUserSocketByAccountId = async(accountId) => {
+const getUserSocketByAccountId = async(io, accountId) => {
     const sockets = await io.fetchSockets();
     const accountSocket = sockets.filter(s => s.userId.toString() === accountId.toString());
     if(accountSocket.length === 1) {

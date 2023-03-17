@@ -3,15 +3,14 @@ import '../utilities/otherAccount.css';
 import '../utilities/chat.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser } from '../store/actions';
+import { getUser, setAllChats } from '../store/actions';
 import { AiOutlineClose } from 'react-icons/ai';
 import { MdSend } from 'react-icons/md';
 import Colors from '../utilities/Colors';
 import { isBrowser } from 'react-device-detect';
 
 
-function ChatScreen({ socket, setupSocket }) {
-    const { width } = window.screen; 
+function ChatScreen({ socket }) {
     // eslint-disable-next-line
     const [ windowSize, setWindowSize ] = useState({
         width: window.innerWidth,
@@ -22,9 +21,12 @@ function ChatScreen({ socket, setupSocket }) {
     const { accountId } = useParams();
     const [ userData, setUserData ] = useState(null);
     const userSelector = useSelector(state => state.Reducer.User);
+    const userChats = useSelector(state => state.Reducer.Chats);
+    const [ message, setMessage ] = useState("");
     
-    
-    socket?.emit('get_account_by_id', { accountId: accountId });
+    // console.log(userChats);
+    socket?.emit("get_all_chats", { accountId: userSelector?._id });
+
     useEffect(() => {
         if(!socket) {
             navigate("/Home")
@@ -42,7 +44,7 @@ function ChatScreen({ socket, setupSocket }) {
                 setUserData(data.account);
             }
         }
-
+        
         const get_current_user = async () => {
             try {
                 await dispatch(getUser(localStorage.getItem("user_token")));
@@ -50,22 +52,48 @@ function ChatScreen({ socket, setupSocket }) {
               console.log(error.message);   
             }
         }
+
         if(!userSelector) {
             get_current_user();
         }
 
+        const handelReciveMessage = async(data) => {
+            try {
+                await dispatch(setAllChats(data.accountChats));
+            } catch(error) {
+              console.log(error.message);   
+            }    
+        }
+        
+        
+        socket?.emit('get_account_by_id', { accountId: accountId });
         socket?.on('get_account_by_id', getUserData);  
-
+        socket?.on("get_all_chats", handelReciveMessage);
         return () => {
             socket?.off('get_account_by_id', getUserData);
+            socket?.off("get_all_chats", handelReciveMessage);
         }
     },[
         socket,
         dispatch,
-        setupSocket,
-        userSelector
+        userSelector,
+        navigate,
+        accountId
     ]);
 
+    const getCurrentChatMessages = () => {
+        if(userChats) {
+            return userChats?.filter(chat => chat.chatType === "private" && chat.participants.filter(p => p._id === accountId).length > 0)[0]?.messages;
+        }
+        return null;
+    }
+    getCurrentChatMessages();
+
+    const sendMessage = () => {
+        if(message.length === 0) return;
+        if(getCurrentChatMessages())
+        socket?.emit("create_new_private_chat", { accountId, message })
+    }
     return (  
         <div className='account-main-container'>
             <div 
@@ -129,6 +157,13 @@ function ChatScreen({ socket, setupSocket }) {
                                 backgroundColor:"#FFFFFF",
                                 border:`2px solid ${Colors.blueLight}`
                             }}
+                            value={message}
+                            onChange={(event) => setMessage(event.target.value)}
+                            onKeyDown={(event) => {
+                                if(event.key === "Enter") {
+                                    sendMessage();
+                                }
+                            }}
                         />
                     </div>
 
@@ -149,7 +184,7 @@ function ChatScreen({ socket, setupSocket }) {
                             justifyContent:"center",
                             borderRadius:"50%",
                             border:`2px solid ${Colors.blueLight}`
-                        }}>
+                        }} onClick={sendMessage}>
                             <MdSend
                                 color={Colors.blueLight}
                                 size="20px"

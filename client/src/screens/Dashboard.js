@@ -51,7 +51,7 @@ function Dashboard( { socket, setupSocket } ) {
 
     const profileImage = userSelector?.profileImage;
     
-    console.log(socket);
+    
     
     useEffect(() => {
         setupSocket();

@@ -55,7 +55,7 @@ function App() {
           <Route path="/Register" element={<Register/>}/>
           <Route path="/Home" element={<Dashboard socket={socket} setupSocket={setupSocket} />}/>
           <Route path="/Home/:accountId" element={<OtherAccount socket={socket}/>}/>
-          <Route path="/Home/chatScreen/:accountId" element={<ChatScreen socket={socket} setupSocket={setupSocket}/>}/>
+          <Route path="/Home/chatScreen/:accountId" element={<ChatScreen socket={socket}/>}/>
         </Routes>
       </Router>
     </Provider>
