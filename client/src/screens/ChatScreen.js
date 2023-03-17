@@ -1,21 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../utilities/otherAccount.css';
 import '../utilities/chat.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser, setAllChats } from '../store/actions';
 import { AiOutlineClose } from 'react-icons/ai';
-import { MdSend } from 'react-icons/md';
+import { MdSend, MdKeyboardArrowDown } from 'react-icons/md';
 import Colors from '../utilities/Colors';
 import { isBrowser } from 'react-device-detect';
+import Scrollbars from 'react-custom-scrollbars-2';
 
 
 function ChatScreen({ socket }) {
-    // eslint-disable-next-line
-    const [ windowSize, setWindowSize ] = useState({
-        width: window.innerWidth,
-        height: window.innerHeight
-    });
+    const scrollRef = useRef(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { accountId } = useParams();
@@ -23,21 +20,15 @@ function ChatScreen({ socket }) {
     const userSelector = useSelector(state => state.Reducer.User);
     const userChats = useSelector(state => state.Reducer.Chats);
     const [ message, setMessage ] = useState("");
+    const [ stickToBottom, setStickToBottom ] = useState(true);
     
-    // console.log(userChats);
     socket?.emit("get_all_chats", { accountId: userSelector?._id });
-
+    socket?.emit('get_account_by_id', { accountId: accountId });
+    
     useEffect(() => {
         if(!socket) {
             navigate("/Home")
         }
-        const handelResize = () => {
-            setWindowSize({
-                width: window.innerWidth,
-                height: window.innerHeight
-            });
-        }
-        window.addEventListener('resize', handelResize);
 
         const getUserData = (data) => {
             if(data.status) {
@@ -64,10 +55,20 @@ function ChatScreen({ socket }) {
               console.log(error.message);   
             }    
         }
+
+        if(
+            scrollRef.current 
+            && userChats 
+            && stickToBottom 
+            &&  scrollRef?.current?.getValues()?.top !== 1
+        ) {
+            scrollRef.current.scrollToBottom();
+        }
         
+        if(!userData) {
+            socket?.on('get_account_by_id', getUserData);  
+        }
         
-        socket?.emit('get_account_by_id', { accountId: accountId });
-        socket?.on('get_account_by_id', getUserData);  
         socket?.on("get_all_chats", handelReciveMessage);
         return () => {
             socket?.off('get_account_by_id', getUserData);
@@ -78,22 +79,42 @@ function ChatScreen({ socket }) {
         dispatch,
         userSelector,
         navigate,
-        accountId
+        accountId,
+        scrollRef,
+        userChats,
+        stickToBottom,
+        userData
     ]);
 
     const getCurrentChatMessages = () => {
         if(userChats) {
-            return userChats?.filter(chat => chat.chatType === "private" && chat.participants.filter(p => p._id === accountId).length > 0)[0]?.messages;
+            if(userChats?.length === 0) return userChats;
+            const filterdChats = userChats?.filter(chat => chat.chatType === "private" && chat.participants.filter(p => p._id === accountId).length > 0);
+            return filterdChats.length === 0 ? [] : filterdChats[0].messages;
         }
         return null;
     }
-    getCurrentChatMessages();
+    
 
     const sendMessage = () => {
         if(message.length === 0) return;
-        if(getCurrentChatMessages())
-        socket?.emit("create_new_private_chat", { accountId, message })
+        setStickToBottom(true);
+        if(Array.isArray(getCurrentChatMessages()) && getCurrentChatMessages()?.length > 0){
+            socket?.emit("send_new_private_message", { accountId, message });    
+        } else {
+            socket?.emit("create_new_private_chat", { accountId, message });
+        }
+        return setMessage("");
     }
+
+    const islocalDateStringRequired = (item, index, list) => {
+        if(index === 0) return true;
+        if(index < list.length - 1) {
+            return new Date(list[index].creatAdt).getDay() < new Date(list[index + 1].creatAdt).getDay() 
+        }
+        return false;
+    }
+
     return (  
         <div className='account-main-container'>
             <div 
@@ -110,32 +131,240 @@ function ChatScreen({ socket }) {
                             color='#FFFFFF'
                         />
                     </div>
-                    <div style={{
-                        display:"flex",
-                        flexDirection:"column",
-                        alignItems:"center"
-                    }}>
-                        <img
-                            alt='profile'
-                            src={userData?.profileImage}
-                            style={{ 
-                                width:"65px",
-                                height:"65px",
-                                borderRadius:"50%",
-                                border:"2px solid #FFFFFF"
-                            }}
+                    {
+                        userData ? 
+                        (
+                            <div style={{
+                                display:"flex",
+                                flexDirection:"column",
+                                alignItems:"center"
+                            }}>
+                                <img
+                                    alt='profile'
+                                    src={userData?.profileImage}
+                                    style={{ 
+                                        width:"65px",
+                                        height:"65px",
+                                        borderRadius:"50%",
+                                        border:"2px solid #FFFFFF"
+                                    }}
+                                />
+                                <label style={{
+                                    color:"#FFFFFF",
+                                    fontFamily:"Italic"
+                                }}>
+                                    {userData?.fname + " " + userData?.lname}
+                                </label>
+                            </div>
+                        )
+                        :
+                        (
+                            <div style={{
+                                display:"flex",
+                                flexDirection:"column",
+                                alignItems:"center"
+                            }}>
+                                <div  
+                                    className='placeholder'
+                                    style={{
+                                        width:"65px",
+                                        height:"65px",
+                                        borderRadius:"50%",
+                                    }}
+                                />
+                                <div 
+                                    className='placeholder'
+                                    style={{
+                                        width:"100px",
+                                        height:"20px",
+                                        borderRadius:"20px",
+                                        marginTop:"5px"
+                                    }}
+                                />
+                            </div>
+                        )
+                    }
+                </div>
+                {
+                    scrollRef?.current?.getValues()?.top !== 1 &&
+                    <div 
+                        onClick={() => {
+                            setStickToBottom(true);
+                        }}
+                        style={{
+                            width:"50px",
+                            height:"50px",
+                            position:"absolute",
+                            backgroundColor:"#FFFFFF",
+                            bottom: isBrowser ? "16%" : "12%",
+                            left:"10px",
+                            zIndex:2,
+                            border:`2px solid ${Colors.blueLight}`,
+                            borderRadius:"50%",
+                            display:"flex",
+                            flexDirection:"column",
+                            alignItems:"center",
+                            justifyContent:"center"
+                        }}
+                    >
+                        <MdKeyboardArrowDown
+                            color={Colors.blueLight}
+                            size="30px"
                         />
-                        <label style={{
-                            color:"#FFFFFF",
-                            fontFamily:"Italic"
-                        }}>
-                            {userData?.fname + " " + userData?.lname}
-                        </label>
                     </div>
-                </div>
-                <div className='messages-container'>
-
-                </div>
+                }
+                {
+                    !userChats ?
+                    (
+                        <div className='messages-container-loading'/>
+                    )
+                    :
+                    (
+                        <Scrollbars
+                            ref={scrollRef}
+                            onScrollStart={() => setStickToBottom(false)}
+                            onScroll={() => {
+                                if(scrollRef.current.getValues().top === 1) {
+                                    setStickToBottom(true);
+                                }
+                            }}
+                        >
+                            <div className='messages-container'>
+                                {
+                                    getCurrentChatMessages()?.map((item, index) => 
+                                        <div key={item?._id} className='message-row'>
+                                            {
+                                                islocalDateStringRequired(item, index, getCurrentChatMessages()) &&
+                                                <div style={{
+                                                    display:"flex",
+                                                    flexDirection:"column",
+                                                    alignItems:"center"
+                                                }}>
+                                                    <div style={{
+                                                        backgroundColor: "#7C869B",
+                                                        paddingTop:"2px",
+                                                        paddingBottom:"2px",
+                                                        paddingLeft:"10px",
+                                                        paddingRight:"10px",
+                                                        margin:"10px",
+                                                        borderRadius:"20px",
+                                                        opacity:"0.8"
+                                                    }}>
+                                                        <label style={{
+                                                            fontFamily:"italic",
+                                                            fontSize:"12px",
+                                                            color:"#FFFFFF"
+                                                        }}>
+                                                            {new Date(item.creatAdt).toLocaleDateString()}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            }
+                                            {
+                                                item?.messageAuthor?._id === userSelector._id ?
+                                                (
+                                                    <div style={{
+                                                        display:"flex",
+                                                        flexDirection:"row",
+                                                        alignItems:"flex-end",
+                                                        alignSelf:"flex-end"
+                                                    }}>
+                                                        <div style={{
+                                                            paddingTop:"5px",
+                                                            paddingBottom:"5px",
+                                                            paddingRight:"10px",
+                                                            paddingLeft:"10px",
+                                                            backgroundColor: Colors.blueLight,
+                                                            borderTopRightRadius:"20px",
+                                                            borderTopLeftRadius:"20px",
+                                                            borderBottomLeftRadius:"20px",
+                                                            display:"flex",
+                                                            flexDirection:"column"
+                                                        }}>
+                                                            <label style={{
+                                                                fontFamily:"italic",
+                                                                color:"#FFFFFF",
+                                                                fontSize:"15px"
+                                                            }}>
+                                                                {item?.message}
+                                                            </label>
+                                                            <label style={{
+                                                                fontFamily:"italic",
+                                                                color:"#FFFFFF",
+                                                                fontSize:"10px",
+                                                                alignSelf:"flex-end"
+                                                            }}>
+                                                                {new Date(item?.creatAdt).toLocaleTimeString().split(":").slice(0,2).join(":")}
+                                                            </label>
+                                                        </div>
+                                                        <img
+                                                          src={item?.messageAuthor?.profileImage}
+                                                          style={{
+                                                            marginLeft:"5px",
+                                                            width:"30px",
+                                                            height:"30px",
+                                                            borderRadius:"50%"
+                                                          }}
+                                                          alt="profile"
+                                                        />
+                                                    </div>       
+                                                )
+                                                :
+                                                (
+                                                    <div style={{
+                                                        display:"flex",
+                                                        flexDirection:"row",
+                                                        alignItems:"flex-end",
+                                                    }}>
+                                                        <img
+                                                            alt="profile"
+                                                            src={item?.messageAuthor?.profileImage}
+                                                            style={{
+                                                                marginRight:"5px",
+                                                                width:"30px",
+                                                                height:"30px",
+                                                                borderRadius:"50%"
+                                                            }}
+                                                        />
+                                                        <div style={{
+                                                            paddingTop:"5px",
+                                                            paddingBottom:"5px",
+                                                            paddingRight:"10px",
+                                                            paddingLeft:"10px",
+                                                            backgroundColor: Colors.blueBold,
+                                                            borderTopRightRadius:"20px",
+                                                            borderTopLeftRadius:"20px",
+                                                            borderBottomRightRadius:"20px",
+                                                            display:"flex",
+                                                            flexDirection:"column"
+                                                        }}>
+                                                            <label style={{
+                                                                fontFamily:"italic",
+                                                                color:"#FFFFFF",
+                                                                fontSize:"15px"
+                                                            }}>
+                                                                {item?.message}
+                                                            </label>
+                                                            <label style={{
+                                                                fontFamily:"italic",
+                                                                color:"#FFFFFF",
+                                                                fontSize:"10px",
+                                                            }}>
+                                                                {new Date(item?.creatAdt).toLocaleTimeString().split(":").slice(0,2).join(":")}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            }
+                                        </div>
+                                    )
+                                }
+                            </div>
+                        </Scrollbars>
+                    )
+                    
+                    
+                }
                 <div 
                     className='input-container'
                     style={{
@@ -152,10 +381,14 @@ function ChatScreen({ socket }) {
                         <input
                             style={{
                                 width:"95%",
-                                height:"25px",
-                                padding:"10px",
+                                display:"flex",
+                                flexDirection:"row",
+                                alignItems:"center",
                                 backgroundColor:"#FFFFFF",
-                                border:`2px solid ${Colors.blueLight}`
+                                border:`2px solid ${Colors.blueLight}`,
+                                fontFamily:"italic",
+                                fontSize:"12px",
+                                color:Colors.blueLight
                             }}
                             value={message}
                             onChange={(event) => setMessage(event.target.value)}

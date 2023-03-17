@@ -24,6 +24,33 @@
 
 .messages-container {
     
+    
+}
+
+.message-row {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+.messages-container-loading {
+    animation-name: loading;
+    animation-duration: 1s;
+    background-color: #7C869B;
+    opacity: 0.8;
+    animation-iteration-count: infinite;
+}
+
+.placeholder {
+    animation-name: loading;
+    animation-duration: 1s;
+    background-color: #7C869B;
+    opacity: 0.8;
+    animation-iteration-count: infinite;
+}
+
+@keyframes loading {
+    50%{background-color: #6e7583; opacity: 1;}
+    100%{background-color: #7C869B; opacity: 0.8;}   
 }
 
 .input-container {

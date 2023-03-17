@@ -35,17 +35,15 @@ const chatEvents = (io, socket) => {
                 }
             ]
         })
-        
         return newChat.save()
         .then(async() => {
-            // return () => {
-                const firstUserchats = await getAllChatsOfAccountByHisId(creatorAccountId);
-                const secondUserChats = await getAllChatsOfAccountByHisId(secondChatParticipantId);
-                const socket1 = await getUserSocketByAccountId(io, creatorAccountId);
-                const socket2 = await getUserSocketByAccountId(io, secondChatParticipantId);
-                socket.to(socket1).emit("get_all_chats", { accountChats: firstUserchats });
-                socket.broadcast.to(socket2).emit("get_all_chats", { accountChats: secondUserChats });
-            // }
+            const firstUserchats = await getAllChatsOfAccountByHisId(creatorAccountId);
+            const secondUserChats = await getAllChatsOfAccountByHisId(secondChatParticipantId);
+            const socket1 = await getUserSocketByAccountId(io, creatorAccountId);
+            const socket2 = await getUserSocketByAccountId(io, secondChatParticipantId);
+            socket.to(socket1).emit("get_all_chats", { accountChats: firstUserchats });
+            socket.broadcast.to(socket2).emit("get_all_chats", { accountChats: secondUserChats });
+            
         })
     })
 
@@ -54,6 +52,47 @@ const chatEvents = (io, socket) => {
         const { accountId } = data;
         const chtas = await getAllChatsOfAccountByHisId(accountId);
         return socket.emit("get_all_chats", { accountChats: chtas });
+    })
+
+    socket.on("send_new_private_message", async(data) => {
+        const creatorAccountId = socket.userId;
+        const { accountId, message } = data;
+        const secondChatParticipantId = accountId;
+        const creator = await Account.findById(creatorAccountId);
+
+        const chats = await Chat.find({
+            participants: { 
+                $in: [
+                    {_id: mongoose.Types.ObjectId(creatorAccountId)},
+                    {_id: mongoose.Types.ObjectId(secondChatParticipantId)} 
+                ] 
+            }
+        })
+        chats[0].messages.push({
+            _id: mongoose.Types.ObjectId(),
+            messageAuthor: {
+                _id: creatorAccountId,
+                fname: creator.fname,
+                lname: creator.lname,
+                profileImage: creator.profileImage
+            },
+            message: message
+        })
+        
+        return chats[0].save()
+        .then(async() => {
+            const firstUserchats = await getAllChatsOfAccountByHisId(creatorAccountId);
+            const secondUserChats = await getAllChatsOfAccountByHisId(secondChatParticipantId);
+            const socket1 = await getUserSocketByAccountId(io, creatorAccountId);
+            const socket2 = await getUserSocketByAccountId(io, secondChatParticipantId);
+            socket.to(socket1).emit("get_all_chats", { accountChats: firstUserchats });
+            socket.broadcast.to(socket2).emit("get_all_chats", { accountChats: secondUserChats });
+            
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
+        
     })
 }
 
