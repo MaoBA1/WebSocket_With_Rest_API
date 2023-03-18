@@ -7,7 +7,9 @@ import {
     isAuthUser,
     setAllPosts,
     getUser,
-    setUser
+    setUser,
+    setAllChats,
+    cleanAllReducerStates
 } from '../store/actions/index';
 
 // components
@@ -33,6 +35,7 @@ function Dashboard( { socket, setupSocket } ) {
     });
     const navigate = useNavigate();
     const userSelector = useSelector(state => state.Reducer.User);
+    const userChats = useSelector(state => state.Reducer.Chats);
     const [ currentTab, setCurrentTab ] = useState("Feed");
     const [ UploadPostModalVisible, setUploadPostModalVisible ] = useState(false);
     const [ mediaToDisplay, setMediaToDisplay ] = useState(null);
@@ -52,7 +55,6 @@ function Dashboard( { socket, setupSocket } ) {
     const profileImage = userSelector?.profileImage;
     
     
-    
     useEffect(() => {
         setupSocket();
         const handelResize = () => {
@@ -70,9 +72,19 @@ function Dashboard( { socket, setupSocket } ) {
             }
         }
         get_user();
+
         if(!localStorage.getItem("user_token")) {
-            navigate("/");
+            try {
+                dispatch(cleanAllReducerStates())
+                .then(() => {
+                    navigate("/");
+                })
+                
+            } catch(error) {
+                console.log(error.message);
+            }
         }
+
         const handelUserChanges = (data) => {
             console.log(data);
             try {
@@ -81,6 +93,20 @@ function Dashboard( { socket, setupSocket } ) {
                 console.log(error.message);
             }
         }
+
+        const handelReciveMessage = async(data) => {
+            try {
+                await dispatch(setAllChats(data.accountChats));
+            } catch(error) {
+              console.log(error.message);   
+            }    
+        }
+
+        
+
+        if(!userChats) {
+            socket?.emit("get_all_chats", { accountId: userSelector?._id });
+        } 
 
         
         socket?.on("recive_all_post", (response) => setAllPosts(response, dispatch));
@@ -93,8 +119,16 @@ function Dashboard( { socket, setupSocket } ) {
             socket?.off("get_updated_post", setPost);
             socket?.off("auth_user", isAuthUser);
             socket?.off("account_changes", handelUserChanges);
+            socket?.off("get_all_chats", handelReciveMessage);
         }
-    },[dispatch, navigate, socket, setupSocket])
+    },[
+        dispatch,
+        navigate,
+        socket,
+        setupSocket,
+        userChats,
+        userSelector
+    ])
     
     
     

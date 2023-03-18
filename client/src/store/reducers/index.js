@@ -1,7 +1,8 @@
 import { 
     SET_ALL_POSTS,
     SET_CURRENT_USER,
-    SET_ALL_CHATS
+    SET_ALL_CHATS,
+    CLEAN_ALL_REDUCER_STATES
 } from '../actions/index';
 
 
@@ -28,6 +29,13 @@ export default (state = intialState, action) => {
             return {
                 ...state,
                 Chats: action.chats
+            }
+        case CLEAN_ALL_REDUCER_STATES:
+            return {
+                ...state,
+                User: null,
+                Posts: null,
+                Chats: null
             }
         default:
             return state

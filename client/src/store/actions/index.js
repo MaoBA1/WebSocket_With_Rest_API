@@ -5,7 +5,13 @@ export const LOGIN = "LOGIN";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 export const SET_ALL_POSTS = "SET_ALL_POSTS";
 export const SET_ALL_CHATS = "SET_ALL_CHATS";
+export const CLEAN_ALL_REDUCER_STATES = "CLEAN_ALL_REDUCER_STATES";
 
+export const cleanAllReducerStates = () => {
+    return dispatch => {
+        dispatch({ type: CLEAN_ALL_REDUCER_STATES });
+    }
+}
 
 export const setUser = (user) => {
     return dispatch => {

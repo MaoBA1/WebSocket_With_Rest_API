@@ -22,7 +22,7 @@ function ChatScreen({ socket }) {
     const [ message, setMessage ] = useState("");
     const [ stickToBottom, setStickToBottom ] = useState(true);
     
-    socket?.emit("get_all_chats", { accountId: userSelector?._id });
+    
     socket?.emit('get_account_by_id', { accountId: accountId });
     
     useEffect(() => {
@@ -50,6 +50,7 @@ function ChatScreen({ socket }) {
 
         const handelReciveMessage = async(data) => {
             try {
+                setStickToBottom(true);
                 await dispatch(setAllChats(data.accountChats));
             } catch(error) {
               console.log(error.message);   
@@ -68,7 +69,9 @@ function ChatScreen({ socket }) {
         if(!userData) {
             socket?.on('get_account_by_id', getUserData);  
         }
-        
+        if(!userChats) {
+            socket?.emit("get_all_chats", { accountId: userSelector?._id });
+        }    
         socket?.on("get_all_chats", handelReciveMessage);
         return () => {
             socket?.off('get_account_by_id', getUserData);
@@ -85,25 +88,22 @@ function ChatScreen({ socket }) {
         stickToBottom,
         userData
     ]);
-
+    
     const getCurrentChatMessages = () => {
         if(userChats) {
             if(userChats?.length === 0) return userChats;
-            const filterdChats = userChats?.filter(chat => chat.chatType === "private" && chat.participants.filter(p => p._id === accountId).length > 0);
+            const filterdChats = userChats?.filter(chat => chat.chatType === "private" && chat.participants.find(p => p._id === accountId) && chat.participants.find(p => p._id === userSelector._id) );
             return filterdChats.length === 0 ? [] : filterdChats[0].messages;
         }
         return null;
     }
     
+    
 
     const sendMessage = () => {
         if(message.length === 0) return;
         setStickToBottom(true);
-        if(Array.isArray(getCurrentChatMessages()) && getCurrentChatMessages()?.length > 0){
-            socket?.emit("send_new_private_message", { accountId, message });    
-        } else {
-            socket?.emit("create_new_private_chat", { accountId, message });
-        }
+        socket?.emit("send_message", { sender: userSelector, reciver: userData, message });    
         return setMessage("");
     }
 
