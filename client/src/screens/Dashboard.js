@@ -75,18 +75,15 @@ function Dashboard( { socket, setupSocket } ) {
 
         if(!localStorage.getItem("user_token")) {
             try {
-                dispatch(cleanAllReducerStates())
-                .then(() => {
-                    navigate("/");
-                })
                 
+                dispatch(cleanAllReducerStates())
+                navigate("/");
             } catch(error) {
                 console.log(error.message);
             }
         }
 
         const handelUserChanges = (data) => {
-            console.log(data);
             try {
                 dispatch(setUser(data.account || data));
             } catch(error) {

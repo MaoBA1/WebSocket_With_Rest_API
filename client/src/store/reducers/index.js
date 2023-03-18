@@ -33,9 +33,9 @@ export default (state = intialState, action) => {
         case CLEAN_ALL_REDUCER_STATES:
             return {
                 ...state,
-                User: null,
-                Posts: null,
-                Chats: null
+                User: action.clean,
+                Posts: action.clean,
+                Chats: action.clean
             }
         default:
             return state

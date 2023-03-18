@@ -2,24 +2,39 @@ import React from 'react';
 import Colors from '../utilities/Colors';
 import '../utilities/dashboard.css';
 import { useNavigate } from 'react-router-dom';
-// import { isBrowser } from 'react-device-detect';
 import { BsFileEarmarkPost, BsFillChatFill } from 'react-icons/bs';
 import { AiFillSetting, AiOutlineLogout } from 'react-icons/ai';
 import { MdOutlineDynamicFeed } from 'react-icons/md';
 import { FaUserFriends } from 'react-icons/fa';
+import { useDispatch } from 'react-redux';
+import { cleanAllReducerStates } from '../store/actions/index';
 
 
 
 
 function SideBar({ flex, height, menuCollapsed, switchTab, currentTab, setMenuCollapsed, socket }) {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const nav = [
         {item: "Feed", func: () => switchTab("Feed"), icon: <MdOutlineDynamicFeed/>},
         {item: "Profile-Setting", func: () => switchTab("Profile-Setting"), icon: <AiFillSetting/>},
         {item: "My-Posts", func: () => switchTab("My-Posts"), icon: <BsFileEarmarkPost/>},
         {item: "Friends", func: () => switchTab("Friends"), icon: <FaUserFriends/>},
         {item: "Chats", func: () => switchTab("Chats"), icon: <BsFillChatFill/>},
-        {item: "Sign-Out", func: () => { localStorage.removeItem("user_token"); navigate("/"); socket.disconnect() }, icon: <AiOutlineLogout/>}
+        {
+            item: "Sign-Out", 
+            func: () => { 
+                try {
+                    localStorage.removeItem("user_token"); 
+                    dispatch(cleanAllReducerStates());
+                    navigate("/");
+                    socket.disconnect() 
+                } catch(error) {
+                    console.log(error.message);
+                }
+            },
+            icon: <AiOutlineLogout/>
+        }
     ]
     return ( 
         <div className='side-bar-nav' style={{

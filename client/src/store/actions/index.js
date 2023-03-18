@@ -9,7 +9,7 @@ export const CLEAN_ALL_REDUCER_STATES = "CLEAN_ALL_REDUCER_STATES";
 
 export const cleanAllReducerStates = () => {
     return dispatch => {
-        dispatch({ type: CLEAN_ALL_REDUCER_STATES });
+        dispatch({ type: CLEAN_ALL_REDUCER_STATES, clean: null });
     }
 }
 
