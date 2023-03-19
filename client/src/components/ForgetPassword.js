@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Colors from '../utilities/Colors';
 import { RiCloseFill } from 'react-icons/ri';
-
+import serverBaseUrl from '../serverBaseUrl';
 
 
 function ForgetPassword({ setVisible, socket }) {
@@ -10,22 +10,27 @@ function ForgetPassword({ setVisible, socket }) {
     const [ success, setSuccess ] = useState(false);
     const [ successMessage, setSuccessMessage ] = useState("");
 
-    const sendEmailPasswordLink = () => {
+    const sendEmailPasswordLink = async() => {
         setErrorMessage("");
         if(email === "") {
             setErrorMessage("Email Required!");
             return;
         }
-        socket.emit("forget_password", {email: email});
-    }
+        const response = await fetch(serverBaseUrl.url + "/user/forget_password", {
+            method:"POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: email })
+        })
 
-    useEffect(() => {
-        socket.on("forget_password", (response) => {
-            if(!response.status) {
-                setErrorMessage(response.message);
+        const data = await response.json();
+        console.log(data);
+        if(data) {
+            if(!data.status) {
+                setErrorMessage(data.message);
                 return
             }
-            console.log(response);
             setSuccess(true);
             setSuccessMessage(response.message)
             setTimeout(() => {
@@ -33,8 +38,8 @@ function ForgetPassword({ setVisible, socket }) {
                 setSuccessMessage("");
                 setVisible(false);
             }, 3000)
-        });
-    },[setVisible]);
+        }
+    }
 
 
     return (
@@ -118,13 +123,17 @@ function ForgetPassword({ setVisible, socket }) {
                                 </label>}
                                 <form>
                                     <input 
-                                        required
                                         value={email}
                                         onChange={event => setEmail(event.target.value)}
                                         style={{ 
                                             fontFamily:"Regular",
                                             border: `2px solid ${Colors.blueLight}`,
                                             backgroundColor:Colors.grey,
+                                        }}
+                                        onKeyDown={(event) => {
+                                            if(event.key === "Enter") {
+                                                sendEmailPasswordLink();
+                                            }
                                         }}
                                         placeholder="Email Address..."
                                     />

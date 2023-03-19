@@ -5,7 +5,12 @@ const chatSchema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
     chatType: String,
     participants: [
-        {_id: {type:mongoose.Schema.Types.ObjectId, ref:"Account"}}
+        {
+            _id: {type:mongoose.Schema.Types.ObjectId, ref:"Account"},
+            fname: String,
+            lname: String,
+            profileImage: String,
+        }
     ],
     messages: [
         {

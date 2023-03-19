@@ -54,9 +54,8 @@ function Dashboard( { socket, setupSocket } ) {
 
     const profileImage = userSelector?.profileImage;
     
-    
     useEffect(() => {
-        setupSocket();
+        if(!socket) setupSocket();
         const handelResize = () => {
             setWindowSize({
                 width: window.innerWidth,
@@ -71,7 +70,7 @@ function Dashboard( { socket, setupSocket } ) {
               console.log(error.message);   
             }
         }
-        get_user();
+        if(!userSelector) get_user();
 
         if(!localStorage.getItem("user_token")) {
             try {
@@ -101,7 +100,7 @@ function Dashboard( { socket, setupSocket } ) {
 
         
 
-        if(!userChats) {
+        if(!userChats && userSelector) {
             socket?.emit("get_all_chats", { accountId: userSelector?._id });
         } 
 
@@ -110,7 +109,7 @@ function Dashboard( { socket, setupSocket } ) {
         socket?.on("get_updated_post", (response) => setPost(response.updated_post));
         socket?.on("auth_user", (response) => isAuthUser(response, dispatch));
         socket?.on("account_changes", handelUserChanges);
-
+        socket?.on("get_all_chats", handelReciveMessage);
         return () => {
             socket?.off("recive_all_post", setAllPosts);
             socket?.off("get_updated_post", setPost);
@@ -127,8 +126,7 @@ function Dashboard( { socket, setupSocket } ) {
         userSelector
     ])
     
-    
-    
+    console.log('test');
 
     return ( 
         <div className='screen-container'>

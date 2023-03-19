@@ -4,7 +4,19 @@ const Chat = require('../models/Chats');
 const { getUserSocketByAccountId } = require('./Account');
 
 const getAllChatsOfAccountByHisId = async(accountId) => {
-    const accountChats = await Chat.find({ participants: { $in:  [ {_id: mongoose.Types.ObjectId(accountId)} ] }});
+    const account = await Account.findById(accountId);
+    const accountChats = await Chat.find({ 
+        participants: { 
+            $in:  [
+                {
+                    _id: mongoose.Types.ObjectId(account?._id),
+                    fname: account?.fname,
+                    lname: account?.lname,
+                    profileImage: account?.profileImage
+                } 
+            ] 
+        }
+    });
     return accountChats;
 }
 
@@ -22,20 +34,20 @@ const chatEvents = (io, socket) => {
             reciver,
             message
         } = data;
-        const option1 = await Chat.findOne({ 
-                participants: 
-                [
-                    {_id: mongoose.Types.ObjectId(sender._id)},
-                    {_id: mongoose.Types.ObjectId(reciver._id)}
-                ]
-        })
-        const option2 = await Chat.findOne({ 
-            participants: 
-            [
-                {_id: mongoose.Types.ObjectId(reciver._id)},
-                {_id: mongoose.Types.ObjectId(sender._id)}
-            ]
-        })
+        const formattedSender = {
+            _id: mongoose.Types.ObjectId(sender._id),
+            fname: sender.fname,
+            lname: sender.lname,
+            profileImage: sender.profileImage
+        }
+        const formattedReciver = {
+            _id: mongoose.Types.ObjectId(reciver._id),
+            fname: reciver.fname,
+            lname: reciver.lname,
+            profileImage: reciver.profileImage
+        }
+        const option1 = await Chat.findOne({ participants: [ formattedSender, formattedReciver] });
+        const option2 = await Chat.findOne({ participants: [ formattedReciver, formattedSender] });
         const chat = option1 || option2;
         console.log(chat);
         if(!chat) {
@@ -43,8 +55,8 @@ const chatEvents = (io, socket) => {
                 _id: mongoose.Types.ObjectId(),
                 chatType: "private",
                 participants: [
-                    { _id: sender._id },
-                    { _id: reciver._id }
+                    formattedSender,
+                    formattedReciver
                 ],
                 messages: [
                     {
