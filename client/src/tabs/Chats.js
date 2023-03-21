@@ -45,8 +45,7 @@ function Chats({ account }) {
             <div 
                 className='chat-tab-chats-container'
                 style={{
-                    width: isBrowser ? "1000px" : "300px",
-                    height: isBrowser ? "600px" : "80%"
+                    width: isBrowser ? "1000px" : "300px"
                 }}
             >
                 <Scrollbars>
