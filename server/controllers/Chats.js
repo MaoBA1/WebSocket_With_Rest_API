@@ -112,7 +112,7 @@ const chatEvents = (io, socket) => {
             profileImage: firstAccount.profileImage
         }
         const formattedReciver = {
-            _id: mongoose.Types.ObjectId(secondAccount._id),
+            _id: mongoose.Types.ObjectId(secondAccount?._id),
             fname: secondAccount.fname,
             lname: secondAccount.lname,
             profileImage: secondAccount.profileImage

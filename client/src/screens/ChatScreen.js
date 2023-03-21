@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../utilities/otherAccount.css';
 import '../utilities/chat.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser, setAllChats } from '../store/actions';
+import { setAllChats } from '../store/actions';
 import { AiOutlineClose } from 'react-icons/ai';
 import { MdSend, MdKeyboardArrowDown } from 'react-icons/md';
 import Colors from '../utilities/Colors';
@@ -21,19 +21,10 @@ function ChatScreen({ socket }) {
     const userChats = useSelector(state => state.Reducer.Chats);
     const [ message, setMessage ] = useState("");
     const [ stickToBottom, setStickToBottom ] = useState(true);
-    
+    const [ chat, setChat ] = useState([]);
     
     socket?.emit('get_account_by_id', { accountId: accountId });
-    
 
-    const getCurrentChatMessages = () => {
-        if(userChats) {
-            if(userChats?.length === 0) return userChats;
-            const filterdChats = userChats?.filter(chat => chat.chatType === "private" && chat.participants.find(p => p._id === accountId) && chat.participants.find(p => p._id === userSelector._id) );
-            return filterdChats.length === 0 ? [] : filterdChats[0].messages;
-        }
-        return null;
-    }
     
     useEffect(() => {
         if(!socket) {
@@ -46,24 +37,21 @@ function ChatScreen({ socket }) {
                 setUserData(data.account);
             }
         }
-        
-        const get_current_user = async () => {
-            try {
-                await dispatch(getUser(localStorage.getItem("user_token")));
-            } catch(error) {
-              console.log(error.message);   
-            }
-        }
 
-        if(!userSelector) {
-            get_current_user();
+        const getCurrentChatMessages = (data) => {
+            if(data) {
+                if(data?.length === 0) return data;
+                const filterdChats = data?.filter(chat => chat.chatType === "private" && chat.participants.find(p => p._id === accountId) && chat.participants.find(p => p._id === userSelector._id) );
+                return setChat(filterdChats.length === 0 ? [] : filterdChats[0].messages);
+            }
+            return setChat([]);
         }
 
         const handelReciveMessage = async(data) => {
             try {
-                socket?.emit("mark_all_chat_messages_as_readed", { firstAccount: userSelector, secondAccount: userData });
+                getCurrentChatMessages(data.accountChats);
                 setStickToBottom(true);
-                await dispatch(setAllChats(data.accountChats));
+                dispatch(setAllChats(data.accountChats));
             } catch(error) {
               console.log(error.message);   
             }    
@@ -81,10 +69,16 @@ function ChatScreen({ socket }) {
         if(!userData) {
             socket?.on('get_account_by_id', getUserData);  
         }
-        console.log(getCurrentChatMessages()?.filter(m => m?.newMessage)?.length > 0);
+        
+        if(userChats && chat.length === 0) {
+            getCurrentChatMessages(userChats);
+        }
         if(!userChats) {
             socket?.emit("get_all_chats", { accountId: userSelector?._id });
-        }    
+        }
+
+        
+
         socket?.on("get_all_chats", handelReciveMessage);
         return () => {
             socket?.off('get_account_by_id', getUserData);
@@ -100,7 +94,7 @@ function ChatScreen({ socket }) {
         userChats,
         stickToBottom,
         userData,
-        getCurrentChatMessages
+        chat
     ]);
     
     
@@ -235,10 +229,10 @@ function ChatScreen({ socket }) {
                         >
                             <div className='messages-container'>
                                 {
-                                    getCurrentChatMessages()?.map((item, index) => 
+                                    chat?.map((item, index) => 
                                         <div key={item?._id} className='message-row'>
                                             {
-                                                islocalDateStringRequired(item, index, getCurrentChatMessages()) &&
+                                                islocalDateStringRequired(item, index, chat) &&
                                                 <div style={{
                                                     display:"flex",
                                                     flexDirection:"column",
