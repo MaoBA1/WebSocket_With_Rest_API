@@ -109,10 +109,7 @@ function ChatScreen({ socket }) {
 
     const islocalDateStringRequired = (item, index, list) => {
         if(index === 0) return true;
-        if(index < list.length - 1) {
-            return new Date(list[index].creatAdt).getDay() < new Date(list[index + 1].creatAdt).getDay() 
-        }
-        return false;
+        return new Date(list[index].creatAdt).getDay() > new Date(list[index - 1].creatAdt).getDay();
     }
 
     return (  
