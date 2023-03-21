@@ -102,18 +102,38 @@ const chatEvents = (io, socket) => {
         }
     })
 
-    socket.on("mark_all_chat_messages_as_readed", (data) => {
-        const { chatId, accountId, participantId } = data;
-        Chat.findById(chatId)
-        .then(async(chat) => {
-            chat.messages = chat.messages.map(c => {
-                if(c.messageAuthor._id === participantId) {
-                    c.newMessage = false;
-                }
-            })
-            const userChats = await getAllChatsOfAccountByHisId(accountId);
+    socket.on("mark_all_chat_messages_as_readed", async(data) => {
+        const { firstAccount, secondAccount } = data;
+
+        const formattedSender = {
+            _id: mongoose.Types.ObjectId(firstAccount._id),
+            fname: firstAccount.fname,
+            lname: firstAccount.lname,
+            profileImage: firstAccount.profileImage
+        }
+        const formattedReciver = {
+            _id: mongoose.Types.ObjectId(secondAccount._id),
+            fname: secondAccount.fname,
+            lname: secondAccount.lname,
+            profileImage: secondAccount.profileImage
+        }
+        const option1 = await Chat.findOne({ participants: [ formattedSender, formattedReciver] });
+        const option2 = await Chat.findOne({ participants: [ formattedReciver, formattedSender] });
+        const chat = option1 || option2;
+        
+        chat.messages = chat.messages.map(c => {
+            if(c.messageAuthor._id === mongoose.Types.ObjectId(secondAccount._id)) {
+                c.newMessage = false;
+            }
+        })
+        const userChats = await getAllChatsOfAccountByHisId(firstAccount._id);
+        return chat.save()
+        .then(() => {
             return socket.emit("get_all_chats", { accountChats: userChats });
         })
+        
+
+        
     })
 }
 

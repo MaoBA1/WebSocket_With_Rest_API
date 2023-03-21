@@ -65,7 +65,8 @@ function ChatScreen({ socket }) {
 
         const handelReciveMessage = async(data) => {
             try {
-                socket?.emit("mark_all_chat_messages_as_readed", { chatid: data?.accountChats?._id,  accountId: userSelector?._id, participantId: userData?._id });
+                console.log(data);
+                socket?.emit("mark_all_chat_messages_as_readed", { firstAccount: userSelector, secondAccount: userData });
                 setStickToBottom(true);
                 await dispatch(setAllChats(data.accountChats));
             } catch(error) {
