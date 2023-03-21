@@ -101,6 +101,20 @@ const chatEvents = (io, socket) => {
             })
         }
     })
+
+    socket.on("mark_all_chat_messages_as_readed", (data) => {
+        const { chatId, accountId, participantId } = data;
+        Chat.findById(chatId)
+        .then(async(chat) => {
+            chat.messages = chat.messages.map(c => {
+                if(c.messageAuthor._id === participantId) {
+                    c.newMessage = false;
+                }
+            })
+            const userChats = await getAllChatsOfAccountByHisId(accountId);
+            return socket.emit("get_all_chats", { accountChats: userChats });
+        })
+    })
 }
 
 module.exports = chatEvents;
