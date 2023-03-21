@@ -121,15 +121,19 @@ const chatEvents = (io, socket) => {
         const option2 = await Chat.findOne({ participants: [ formattedReciver, formattedSender] });
         const chat = option1 || option2;
         
-        chat.messages = chat.messages.map(c => {
-            if(c.messageAuthor._id === mongoose.Types.ObjectId(secondAccount._id)) {
+        chat.messages.map(c => {
+            if(c?.messageAuthor?._id === mongoose.Types.ObjectId(secondAccount._id)) {
                 c.newMessage = false;
             }
+            return c
         })
         const userChats = await getAllChatsOfAccountByHisId(firstAccount._id);
         return chat.save()
         .then(() => {
             return socket.emit("get_all_chats", { accountChats: userChats });
+        })
+        .catch(error => {
+            console.log(error.message);
         })
         
 

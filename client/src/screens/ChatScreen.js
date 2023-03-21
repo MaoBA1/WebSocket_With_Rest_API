@@ -26,18 +26,14 @@ function ChatScreen({ socket }) {
     socket?.emit('get_account_by_id', { accountId: accountId });
     
 
-    const getCurrentChatMessages = useCallback(() => {
+    const getCurrentChatMessages = () => {
         if(userChats) {
             if(userChats?.length === 0) return userChats;
             const filterdChats = userChats?.filter(chat => chat.chatType === "private" && chat.participants.find(p => p._id === accountId) && chat.participants.find(p => p._id === userSelector._id) );
             return filterdChats.length === 0 ? [] : filterdChats[0].messages;
         }
         return null;
-    }, [
-        accountId,
-        userChats,
-        userSelector
-    ])
+    }
     
     useEffect(() => {
         if(!socket) {
@@ -65,7 +61,6 @@ function ChatScreen({ socket }) {
 
         const handelReciveMessage = async(data) => {
             try {
-                console.log(data);
                 socket?.emit("mark_all_chat_messages_as_readed", { firstAccount: userSelector, secondAccount: userData });
                 setStickToBottom(true);
                 await dispatch(setAllChats(data.accountChats));
@@ -86,7 +81,8 @@ function ChatScreen({ socket }) {
         if(!userData) {
             socket?.on('get_account_by_id', getUserData);  
         }
-        if(!userChats || getCurrentChatMessages()?.filter(m => m.newMessage)?.length > 0) {
+        console.log(getCurrentChatMessages()?.filter(m => m?.newMessage)?.length > 0);
+        if(!userChats) {
             socket?.emit("get_all_chats", { accountId: userSelector?._id });
         }    
         socket?.on("get_all_chats", handelReciveMessage);
@@ -120,7 +116,7 @@ function ChatScreen({ socket }) {
 
     const islocalDateStringRequired = (item, index, list) => {
         if(index === 0) return true;
-        return new Date(list[index].creatAdt).getDay() > new Date(list[index - 1].creatAdt).getDay();
+        return new Date(list[index]?.creatAdt).getDay() > new Date(list[index - 1]?.creatAdt).getDay();
     }
 
     return (  
@@ -263,7 +259,7 @@ function ChatScreen({ socket }) {
                                                             fontSize:"12px",
                                                             color:"#FFFFFF"
                                                         }}>
-                                                            {new Date(item.creatAdt).toLocaleDateString()}
+                                                            {new Date(item?.creatAdt).toLocaleDateString()}
                                                         </label>
                                                     </div>
                                                 </div>
