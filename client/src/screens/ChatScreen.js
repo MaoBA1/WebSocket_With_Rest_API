@@ -28,7 +28,6 @@ function ChatScreen({ socket }) {
     
     useEffect(() => {
         if(!socket) {
-            // socket?.emit("mark_all_chat_messages_as_readed", { chatid: data?.accountChats?._id,  accountId: userSelector?._id, participantId: userData?._id });
             navigate("/Home")
         }
 
@@ -70,13 +69,13 @@ function ChatScreen({ socket }) {
             socket?.on('get_account_by_id', getUserData);  
         }
         
-        if(userChats && chat.length === 0) {
+        if(userChats && chat.length === 0 && userData) {
+            socket?.emit("mark_all_chat_messages_as_readed", { firstAccount: userSelector, secondAccount: userData});
             getCurrentChatMessages(userChats);
         }
         if(!userChats) {
             socket?.emit("get_all_chats", { accountId: userSelector?._id });
         }
-
         
 
         socket?.on("get_all_chats", handelReciveMessage);

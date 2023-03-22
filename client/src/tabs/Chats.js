@@ -28,7 +28,8 @@ function Chats({ account }) {
                 new Date(creatAdt).toLocaleDateString()
             }
             let sender = chat?.messages[chat?.messages?.length - 1]?.messageAuthor?._id === userSelector?._id ? "You" : chat?.messages[chat?.messages?.length - 1]?.messageAuthor?.fname;
-            let notReaded = chat?.messages?.filter(chat => chat?.newMessage)?.length;
+            let notReaded = chat?.messages?.filter(chat => chat?.newMessage && chat?.messageAuthor._id !== userSelector._id)?.length;
+            
             return {
                 header,
                 image,
@@ -117,24 +118,27 @@ function Chats({ account }) {
                                                 {chat?.lastMessage?.creatAdt}
                                             </label>
 
-                                            <div style={{
-                                                backgroundColor:Colors.blueLight,
-                                                width:"20px",
-                                                height:"20px",
-                                                borderRadius:"50%",
-                                                display:"flex",
-                                                flexDirection:"column",
-                                                alignItems:"center",
-                                                justifyContent:"center"
-                                            }}>
-                                                <label style={{
-                                                    fontFamily:"italic",
-                                                    color:"#FFFFFF",
-                                                    fontSize:"12px"
+                                            {
+                                                chat?.notReaded > 0 &&
+                                                <div style={{
+                                                    backgroundColor:Colors.blueLight,
+                                                    width:"20px",
+                                                    height:"20px",
+                                                    borderRadius:"50%",
+                                                    display:"flex",
+                                                    flexDirection:"column",
+                                                    alignItems:"center",
+                                                    justifyContent:"center"
                                                 }}>
-                                                    {chat?.notReaded}
-                                                </label>
-                                            </div>
+                                                    <label style={{
+                                                        fontFamily:"italic",
+                                                        color:"#FFFFFF",
+                                                        fontSize:"12px"
+                                                    }}>
+                                                        {chat?.notReaded}
+                                                    </label>
+                                                </div>
+                                            }
                                         </div>
                                     </div>
                                 )
