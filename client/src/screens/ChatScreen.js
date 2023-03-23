@@ -24,7 +24,7 @@ function ChatScreen({ socket }) {
     const [ chat, setChat ] = useState([]);
     
     socket?.emit('get_account_by_id', { accountId: accountId });
-
+    // console.log(scrollRef?.current?.getValues()?.top);
     
     useEffect(() => {
         if(!socket) {
@@ -39,7 +39,7 @@ function ChatScreen({ socket }) {
 
         const getCurrentChatMessages = (data) => {
             if(data) {
-                if(data?.length === 0) return data;
+                if(data?.length === 0) return setChat([]);
                 const filterdChats = data?.filter(chat => chat.chatType === "private" && chat.participants.find(p => p._id === accountId) && chat.participants.find(p => p._id === userSelector._id) );
                 return setChat(filterdChats.length === 0 ? [] : filterdChats[0].messages);
             }
@@ -55,18 +55,24 @@ function ChatScreen({ socket }) {
               console.log(error.message);   
             }    
         }
-
-        if(
-            scrollRef.current 
-            && userChats 
-            && stickToBottom 
-            &&  scrollRef?.current?.getValues()?.top !== 1
-        ) {
-            scrollRef.current.scrollToBottom();
-        }
         
+        // if(
+        //     scrollRef.current 
+        //     && userChats 
+        //     && stickToBottom 
+        //     &&  scrollRef?.current?.getValues()?.top < 0.95
+        // ) {
+        //     scrollRef.current.scrollToBottom();
+        // }
+        const scrollbar = document.getElementById("scroll-bar");
+        scrollbar.addEventListener("scroll", () => {
+            console.log('test');
+        })
         if(!userData) {
             socket?.on('get_account_by_id', getUserData);  
+            return () => {
+                socket?.off('get_account_by_id', getUserData);
+            }
         }
         
         if(userChats && chat.length === 0 && userData) {
@@ -77,10 +83,9 @@ function ChatScreen({ socket }) {
             socket?.emit("get_all_chats", { accountId: userSelector?._id });
         }
         
-
+        
         socket?.on("get_all_chats", handelReciveMessage);
         return () => {
-            socket?.off('get_account_by_id', getUserData);
             socket?.off("get_all_chats", handelReciveMessage);
         }
     },[
@@ -183,7 +188,7 @@ function ChatScreen({ socket }) {
                     }
                 </div>
                 {
-                    scrollRef?.current?.getValues()?.top !== 1 &&
+                    scrollRef?.current?.getValues()?.top < 0.95 &&
                     <div 
                         onClick={() => {
                             setStickToBottom(true);
@@ -217,14 +222,16 @@ function ChatScreen({ socket }) {
                     )
                     :
                     (
-                        <Scrollbars
-                            ref={scrollRef}
-                            onScrollStart={() => setStickToBottom(false)}
-                            onScroll={() => {
-                                if(scrollRef.current.getValues().top === 1) {
-                                    setStickToBottom(true);
-                                }
-                            }}
+                        <div
+                            className='scrollbar'
+                            id='scroll-bar'
+                            // ref={scrollRef}
+                            // onScrollStart={() => setStickToBottom(false)}
+                            // onScroll={() => {
+                            //     if(scrollRef.current.getValues().top === 1) {
+                            //         setStickToBottom(true);
+                            //     }
+                            // }}
                         >
                             <div className='messages-container'>
                                 {
@@ -357,7 +364,7 @@ function ChatScreen({ socket }) {
                                     )
                                 }
                             </div>
-                        </Scrollbars>
+                        </div>
                     )
                     
                     
