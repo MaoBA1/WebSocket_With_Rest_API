@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import '../utilities/chat.css';
 import Colors from '../utilities/Colors';
+import { BiMessageRoundedAdd } from 'react-icons/bi';
 
 function Chats({ account }) {
     const navigate = useNavigate();
@@ -43,6 +44,33 @@ function Chats({ account }) {
     }
     return ( 
         <div className='chat-tab-container'>
+            <div style={{
+                height:"30px",
+                width:"100%",
+                position:"absolute",
+                top:"13%",
+                display: "flex",
+                flexDirection:"column",
+                justifyContent:"center",
+                paddingLeft:"10px"
+            }}>
+                <button style={{
+                    backgroundColor: Colors.blueLight,
+                    border:"0px"
+                }} onClick={() => navigate(`/Home/creatNewChat`)}>
+                    <BiMessageRoundedAdd
+                        color='#FFFFFFFF'
+                        size={"20px"}
+                    />
+                    <label style={{
+                        fontFamily:"italic",
+                        fontSize:"15px",
+                        marginLeft:"5px"
+                    }}>
+                        New Chat
+                    </label>
+                </button>
+            </div>
             <div 
                 className='chat-tab-chats-container'
                 style={{

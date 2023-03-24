@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../utilities/otherAccount.css';
 import '../utilities/chat.css';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,11 +8,10 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { MdSend, MdKeyboardArrowDown } from 'react-icons/md';
 import Colors from '../utilities/Colors';
 import { isBrowser } from 'react-device-detect';
-import Scrollbars from 'react-custom-scrollbars-2';
+
 
 
 function ChatScreen({ socket }) {
-    const scrollRef = useRef(null);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { accountId } = useParams();
@@ -21,16 +20,17 @@ function ChatScreen({ socket }) {
     const userChats = useSelector(state => state.Reducer.Chats);
     const [ message, setMessage ] = useState("");
     const [ stickToBottom, setStickToBottom ] = useState(true);
+    const [ stickToBottomIconVisible, setStickToBottomIconVisible ] = useState(false);
     const [ chat, setChat ] = useState([]);
+    const scrollbar = document.getElementById("scroll-bar");
     
     socket?.emit('get_account_by_id', { accountId: accountId });
-    // console.log(scrollRef?.current?.getValues()?.top);
     
     useEffect(() => {
         if(!socket) {
             navigate("/Home")
         }
-
+        
         const getUserData = (data) => {
             if(data.status) {
                 setUserData(data.account);
@@ -55,19 +55,21 @@ function ChatScreen({ socket }) {
               console.log(error.message);   
             }    
         }
+        const scrollListener = () => {
+            if(scrollbar?.scrollTop < (scrollbar?.scrollHeight * 0.85)) {
+                setStickToBottomIconVisible(true);
+            } else {
+                setStickToBottomIconVisible(false);
+            }
+        }
+        scrollbar?.addEventListener("scroll", scrollListener);
         
-        // if(
-        //     scrollRef.current 
-        //     && userChats 
-        //     && stickToBottom 
-        //     &&  scrollRef?.current?.getValues()?.top < 0.95
-        // ) {
-        //     scrollRef.current.scrollToBottom();
-        // }
-        const scrollbar = document.getElementById("scroll-bar");
-        scrollbar.addEventListener("scroll", () => {
-            console.log('test');
-        })
+        if(stickToBottom && scrollbar) {
+            scrollbar.scrollTop = scrollbar?.scrollHeight;
+            setStickToBottom(false);
+            setStickToBottomIconVisible(false);
+        }
+        
         if(!userData) {
             socket?.on('get_account_by_id', getUserData);  
             return () => {
@@ -94,7 +96,7 @@ function ChatScreen({ socket }) {
         userSelector,
         navigate,
         accountId,
-        scrollRef,
+        scrollbar,
         userChats,
         stickToBottom,
         userData,
@@ -127,7 +129,7 @@ function ChatScreen({ socket }) {
                     gridTemplateRows: !isBrowser && "20% 70% 10%"
                 }}
             >
-                <div className='header'>
+                <div className='chat-header'>
                     <div className='x-icon-container' onClick={() => {navigate(-1)}}>
                         <AiOutlineClose
                             color='#FFFFFF'
@@ -188,7 +190,7 @@ function ChatScreen({ socket }) {
                     }
                 </div>
                 {
-                    scrollRef?.current?.getValues()?.top < 0.95 &&
+                    stickToBottomIconVisible &&
                     <div 
                         onClick={() => {
                             setStickToBottom(true);
@@ -216,24 +218,18 @@ function ChatScreen({ socket }) {
                     </div>
                 }
                 {
-                    !userChats ?
+                    !userChats && !scrollbar ?
                     (
                         <div className='messages-container-loading'/>
                     )
                     :
                     (
-                        <div
-                            className='scrollbar'
-                            id='scroll-bar'
-                            // ref={scrollRef}
-                            // onScrollStart={() => setStickToBottom(false)}
-                            // onScroll={() => {
-                            //     if(scrollRef.current.getValues().top === 1) {
-                            //         setStickToBottom(true);
-                            //     }
-                            // }}
-                        >
-                            <div className='messages-container'>
+                        <div className='messages-container'>
+                            <div 
+                                className='message-scrollbar-container'
+                                id='scroll-bar'
+                            >
+                                
                                 {
                                     chat?.map((item, index) => 
                                         <div key={item?._id} className='message-row'>
@@ -363,7 +359,7 @@ function ChatScreen({ socket }) {
                                         </div>
                                     )
                                 }
-                            </div>
+                        </div>
                         </div>
                     )
                     

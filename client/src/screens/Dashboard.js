@@ -43,14 +43,7 @@ function Dashboard( { socket, setupSocket } ) {
     const [ likersArray, setLikersArray ] = useState([]);
     const [ commentVisible, setCommentVisible ] = useState(false);
     const [ post, setPost ] = useState(null);
-    // const {
-    //     _id,
-    //     email,
-    //     fname,
-    //     lname,
-    //     posts,
-    //     profileImage
-    // } = userSelector;
+    
 
     const profileImage = userSelector?.profileImage;
     
@@ -126,7 +119,7 @@ function Dashboard( { socket, setupSocket } ) {
         userSelector
     ])
     
-    console.log('test');
+    
 
     return ( 
         <div className='screen-container'>
