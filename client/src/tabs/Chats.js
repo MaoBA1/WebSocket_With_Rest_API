@@ -16,7 +16,7 @@ function Chats({ account }) {
     const getChatDetails = (chat) => {
         if(chat?.chatType === "private") {
             let header = chat?.participants?.filter(p => p._id !== userSelector._id)[0];
-            let participantId = header._id;
+            let participantId = header?._id;
             let image = header?.profileImage;
             header = header?.fname + " " + header?.lname;
             let creatAdt = chat?.messages[chat?.messages?.length - 1]?.creatAdt; 
