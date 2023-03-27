@@ -21,22 +21,24 @@ function ChatScreen({ socket }) {
     const [ message, setMessage ] = useState("");
     const [ stickToBottom, setStickToBottom ] = useState(true);
     const [ stickToBottomIconVisible, setStickToBottomIconVisible ] = useState(false);
-    const [ chat, setChat ] = useState([]);
+    const [ chat, setChat ] = useState(null);
     const scrollbar = document.getElementById("scroll-bar");
     
     socket?.emit('get_account_by_id', { accountId: accountId });
+    
     
     useEffect(() => {
         if(!socket) {
             navigate("/Home")
         }
         
+        
         const getUserData = (data) => {
             if(data.status) {
                 setUserData(data.account);
             }
         }
-
+    
         const getCurrentChatMessages = (data) => {
             if(data) {
                 if(data?.length === 0) return setChat([]);
@@ -45,6 +47,7 @@ function ChatScreen({ socket }) {
             }
             return setChat([]);
         }
+        
 
         const handelReciveMessage = async(data) => {
             try {
@@ -72,15 +75,13 @@ function ChatScreen({ socket }) {
         
         if(!userData) {
             socket?.on('get_account_by_id', getUserData);  
-            return () => {
-                socket?.off('get_account_by_id', getUserData);
-            }
         }
         
-        if(userChats && chat.length === 0 && userData) {
+        if(userChats && userData && !chat) {
             socket?.emit("mark_all_chat_messages_as_readed", { firstAccount: userSelector, secondAccount: userData});
             getCurrentChatMessages(userChats);
         }
+
         if(!userChats) {
             socket?.emit("get_all_chats", { accountId: userSelector?._id });
         }
@@ -89,6 +90,7 @@ function ChatScreen({ socket }) {
         socket?.on("get_all_chats", handelReciveMessage);
         return () => {
             socket?.off("get_all_chats", handelReciveMessage);
+            socket?.off('get_account_by_id', getUserData);
         }
     },[
         socket,
