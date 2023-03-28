@@ -5,12 +5,6 @@ const http = require('http');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const path = require('path');
-
-app.use(express.static(path.join(__dirname, './client/build')));
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, './client/build'));
-});
 
 // Routers
 const userRouter = require('./routes/userRoutes');
