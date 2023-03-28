@@ -25,7 +25,7 @@ function App() {
   const setupSocket = () => {
     const token = localStorage.getItem("user_token");
     if (token && !socket) {
-      const newSocket = io(serverBaseUrl.localServerSocketUrl, {
+      const newSocket = io(serverBaseUrl.productionServerSocketUrl, {
         query: {
           token: token
         },
