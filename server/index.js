@@ -66,7 +66,7 @@ io.on("connection", async(socket) => {
 mongoose.connect(mongoUrl)
 .then((result) => {
     console.log(result);
-    server.listen(3002, () => {
+    server.listen(process.env.PORT || 3002, () => {
         console.log("SERVER RUNNIG");
     })
 })
