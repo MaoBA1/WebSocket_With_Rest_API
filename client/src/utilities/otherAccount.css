@@ -24,10 +24,7 @@
     position: absolute;
     inset: 0px;
     overflow: scroll;
-    /* margin-right: -17px; */
-    /* margin-bottom: -17px; */
     overflow-x: hidden;
-    /* overflow-y: hidden; */
 }
 
 .scrollbar::-webkit-scrollbar {
@@ -52,7 +49,6 @@
     align-items: center;
     padding: 20px;
     border-top-left-radius: 10px;
-    /* border-top-right-radius: 10px; */
 }
 
 .x-icon-container{

@@ -11,7 +11,7 @@ import { isBrowser } from 'react-device-detect';
 
 
 
-function ChatScreen({ socket }) {
+function PrivateChatScreen({ socket }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { accountId } = useParams();
@@ -59,16 +59,12 @@ function ChatScreen({ socket }) {
             }    
         }
         const scrollListener = () => {
-            if(scrollbar?.scrollTop < (scrollbar?.scrollHeight * 0.85)) {
-                setStickToBottomIconVisible(true);
-            } else {
-                setStickToBottomIconVisible(false);
-            }
+            setStickToBottomIconVisible(scrollbar?.scrollTop < scrollbar.scrollHeight - scrollbar.clientHeight);
         }
         scrollbar?.addEventListener("scroll", scrollListener);
         
         if(stickToBottom && scrollbar) {
-            scrollbar.scrollTop = scrollbar?.scrollHeight;
+            scrollbar.scrollTop = scrollbar.scrollHeight - scrollbar.clientHeight;
             setStickToBottom(false);
             setStickToBottomIconVisible(false);
         }
@@ -432,4 +428,4 @@ function ChatScreen({ socket }) {
     );
 }
 
-export default ChatScreen;
+export default PrivateChatScreen;
