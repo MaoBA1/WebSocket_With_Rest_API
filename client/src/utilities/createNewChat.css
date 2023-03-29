@@ -19,7 +19,7 @@
     flex-direction: row;
 }
 
-.search-line-container {
+.search-container {
     background-color: #FFFFFF;
     display: flex;
     flex-direction: column;

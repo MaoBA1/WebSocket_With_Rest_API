@@ -62,7 +62,7 @@ function CreatNewChat({ socket }) {
                     </div>
                 </div>
                 <div
-                    className='search-line-container'
+                    className='search-container'
                 >
                     <input
                         style={{
