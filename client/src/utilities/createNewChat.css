@@ -1,0 +1,28 @@
+.page-container {
+    width: 700px;
+    height: 700px;
+    background-color: #e0e1dd;
+    border-radius: 10px !important;
+    border-collapse: collapse;
+    position: relative;
+    display: grid;
+    grid-template-rows: 70px 50px;
+    grid-template-columns: 100%;
+    border-radius: 20px;
+}
+
+.header-option-container {
+    background-color: #0d1b2a;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.search-line-container {
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

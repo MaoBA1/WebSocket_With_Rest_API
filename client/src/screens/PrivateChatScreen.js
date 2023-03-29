@@ -122,9 +122,9 @@ function PrivateChatScreen({ socket }) {
             <div 
                 className='chat-container'
                 style={{ 
-                    width: !isBrowser && "80%",
+                    width: !isBrowser && "90%",
                     height: !isBrowser && "80%" ,
-                    gridTemplateRows: !isBrowser && "20% 70% 10%"
+                    gridTemplateRows: !isBrowser && "20% 65% 15%"
                 }}
             >
                 <div className='chat-header'>
@@ -198,7 +198,7 @@ function PrivateChatScreen({ socket }) {
                             height:"50px",
                             position:"absolute",
                             backgroundColor:"#FFFFFF",
-                            bottom: isBrowser ? "16%" : "12%",
+                            bottom: "16%",
                             left:"10px",
                             zIndex:2,
                             border:`2px solid ${Colors.blueLight}`,
@@ -385,8 +385,9 @@ function PrivateChatScreen({ socket }) {
                                 backgroundColor:"#FFFFFF",
                                 border:`2px solid ${Colors.blueLight}`,
                                 fontFamily:"italic",
-                                fontSize:"12px",
-                                color:Colors.blueLight
+                                fontSize:"16px",
+                                color:Colors.blueLight,
+                                height:"35px"
                             }}
                             value={message}
                             onChange={(event) => setMessage(event.target.value)}
