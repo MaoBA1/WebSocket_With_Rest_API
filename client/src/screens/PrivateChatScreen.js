@@ -14,6 +14,7 @@ import { isBrowser } from 'react-device-detect';
 function PrivateChatScreen({ socket }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [ chatId, setChatId ] = useState(null);
     const { accountId } = useParams();
     const [ userData, setUserData ] = useState(null);
     const userSelector = useSelector(state => state.Reducer.User);
@@ -43,6 +44,7 @@ function PrivateChatScreen({ socket }) {
             if(data) {
                 if(data?.length === 0) return setChat([]);
                 const filterdChats = data?.filter(chat => chat.chatType === "private" && chat.participants.find(p => p._id === accountId) && chat.participants.find(p => p._id === userSelector._id) );
+                setChatId(filterdChats.length === 0 ? null : filterdChats[0]._id);
                 return setChat(filterdChats.length === 0 ? [] : filterdChats[0].messages);
             }
             return setChat([]);
@@ -101,14 +103,15 @@ function PrivateChatScreen({ socket }) {
         chat
     ]);
     
-    
-    
-    
 
     const sendMessage = () => {
         if(message.length === 0) return;
         setStickToBottom(true);
-        socket?.emit("send_message", { sender: userSelector, reciver: userData, message });    
+        if(!chatId) {
+            socket?.emit("send_first_private_message", { accountId1: userSelector._id, accountId2: userData._id, message });
+        } else {
+            socket?.emit("send_private_message", { chatId, message, accountId1: userSelector._id, accountId2: userData._id });
+        }
         return setMessage("");
     }
 

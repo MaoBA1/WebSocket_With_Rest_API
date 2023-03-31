@@ -4,20 +4,47 @@ const Chat = require('../models/Chats');
 const { getUserSocketByAccountId } = require('./Account');
 
 const getAllChatsOfAccountByHisId = async(accountId) => {
-    const account = await Account.findById(accountId);
-    const accountChats = await Chat.find({ 
-        participants: { 
-            $in:  [
-                {
-                    _id: mongoose.Types.ObjectId(account?._id),
-                    fname: account?.fname,
-                    lname: account?.lname,
-                    profileImage: account?.profileImage
-                } 
-            ] 
-        }
+    return new Promise((resolve, reject) => {
+        Chat.find({"participants": accountId})
+          .populate("participants")
+          .populate({
+            path: "messages",
+            populate: {
+              path: "messageAuthor",
+              model: "Account"
+            }
+          })
+          .exec((err, chats) => {
+            if (err) {
+              reject(err);
+              return;
+            }
+    
+            resolve(chats);
+        });
     });
-    return accountChats;
+}
+
+const getChatById = async(chatId) => {
+    return new Promise((resolve, reject) => {
+        Chat.findById(chatId)
+          .populate("participants")
+          .populate({
+            path: "messages",
+            populate: {
+              path: "messageAuthor",
+              model: "Account"
+            }
+          })
+          .exec((err, chats) => {
+            if (err) {
+              reject(err);
+              return;
+            }
+    
+            resolve(chats);
+        });
+    });
 }
 
 
@@ -61,84 +88,51 @@ const chatEvents = (io, socket) => {
     })
 
     // private chate between two accounts
-
-    socket.on("send_message", async(data) => {
-        const {
-            sender,
-            reciver,
-            message
-        } = data;
-        const formattedSender = {
-            _id: mongoose.Types.ObjectId(sender._id),
-            fname: sender.fname,
-            lname: sender.lname,
-            profileImage: sender.profileImage
-        }
-        const formattedReciver = {
-            _id: mongoose.Types.ObjectId(reciver._id),
-            fname: reciver.fname,
-            lname: reciver.lname,
-            profileImage: reciver.profileImage
-        }
-        const option1 = await Chat.findOne({ participants: [ formattedSender, formattedReciver] });
-        const option2 = await Chat.findOne({ participants: [ formattedReciver, formattedSender] });
-        const chat = option1 || option2;
-        if(!chat) {
-            const newChat = new Chat({
+    socket.on("send_first_private_message", async(data) => {
+        const { accountId1, accountId2, message } = data;
+        const newChat = new Chat({
+            _id: mongoose.Types.ObjectId(),
+            chatType: "private",
+            participants: [ accountId1, accountId2 ],
+            messages: [{
                 _id: mongoose.Types.ObjectId(),
-                chatType: "private",
-                participants: [
-                    formattedSender,
-                    formattedReciver
-                ],
-                messages: [
-                    {
-                        _id: mongoose.Types.ObjectId(),
-                        messageAuthor: {
-                            _id: sender._id,
-                            fname: sender.fname,
-                            lname: sender.lname,
-                            profileImage: sender.profileImage
-                        },
-                        message: message
-                    }
-                ]
-            })
-            return newChat.save()
-            .then(async() => {
-                const senderChats = await getAllChatsOfAccountByHisId(sender._id);
-                const reciverChats = await getAllChatsOfAccountByHisId(reciver._id);
-                const reciverSocket = await getUserSocketByAccountId(io, reciver._id);
-                socket.emit("get_all_chats", { accountChats: senderChats });
-                socket.broadcast.to(reciverSocket).emit("get_all_chats", { accountChats: reciverChats });
-                
-            })
-        } else {
-            chat.messages.map(c => {
-                if(c?.messageAuthor?._id.toString() === reciver._id.toString()) {
-                    c.newMessage = false;
-                }
-                return c
-            })
-            chat.messages.push({
-                _id: mongoose.Types.ObjectId(),
-                messageAuthor: {
-                    _id: sender._id,
-                    fname: sender.fname,
-                    lname: sender.lname,
-                    profileImage: sender.profileImage
-                },
+                messageAuthor: accountId1,
                 message: message
-            })
-            return chat.save()
-            .then(async() => {
-                const senderChats = await getAllChatsOfAccountByHisId(sender._id);
-                const reciverChats = await getAllChatsOfAccountByHisId(reciver._id);
-                const reciverSocket = await getUserSocketByAccountId(io, reciver._id);
-                socket.emit("get_all_chats", { accountChats: senderChats });
-                socket.broadcast.to(reciverSocket).emit("get_all_chats", { accountChats: reciverChats });
-            })
-        }
+            }]
+        }) 
+        return newChat.save()
+        .then(async() => {
+            const account1Chats = await getAllChatsOfAccountByHisId(accountId1);
+            const account2Chats = await getAllChatsOfAccountByHisId(accountId2);
+            const account2Socket = await getUserSocketByAccountId(io, accountId2);
+            socket.emit("get_all_chats", { accountChats: account1Chats });
+            socket.broadcast.to(account2Socket).emit("get_all_chats", { accountChats: account2Chats });
+        })
+
+    })
+
+    socket.on("send_private_message", async(data) => {
+        const { chatId, message, accountId1, accountId2 } = data;
+        const chat = await getChatById(chatId);
+        chat.messages.map(c => {
+            if(c?.messageAuthor?._id.toString() === accountId2.toString()) {
+                c.newMessage = false;
+            }
+            return c
+        })
+        chat.messages.push({
+            _id: mongoose.Types.ObjectId(),
+            messageAuthor: accountId1,
+            message: message
+        })
+        return chat.save()
+        .then(async() => {
+            const account1Chats = await getAllChatsOfAccountByHisId(accountId1);
+            const account2Chats = await getAllChatsOfAccountByHisId(accountId2);
+            const account2Socket = await getUserSocketByAccountId(io, accountId2);
+            socket.emit("get_all_chats", { accountChats: account1Chats });
+            socket.broadcast.to(account2Socket).emit("get_all_chats", { accountChats: account2Chats });
+        })
     })
 
     socket?.on("mark_all_chat_messages_as_readed", (data) => {
@@ -156,7 +150,7 @@ const chatEvents = (io, socket) => {
     // group chat
 
     socket?.on("create_new_group_chat", (data) => {
-        const { participants, creator, firstMessage } = data;
+        const { participants, creatorId, firstMessage } = data;
 
         const newChat = new Chat({
             _id: mongoose.Types.ObjectId(),
@@ -165,12 +159,7 @@ const chatEvents = (io, socket) => {
             messages: [
                 {
                     _id: mongoose.Types.ObjectId(),
-                    messageAuthor: {
-                        _id: creator._id,
-                        fname: creator.fname,
-                        lname: creator.lname,
-                        profileImage: creator.profileImage
-                    },
+                    messageAuthor: creatorId,
                     message: firstMessage
                 }
             ]
@@ -179,15 +168,15 @@ const chatEvents = (io, socket) => {
         return newChat.save()
         .then(async() => {
             participants.forEach(p => {
-                getUserSocketByAccountId(p._id)
+                getUserSocketByAccountId(p)
                 .then(async currentUserSocket => {
                     if(currentUserSocket) {
-                        const currentUserChats = await getAllChatsOfAccountByHisId(p._id);
+                        const currentUserChats = await getAllChatsOfAccountByHisId(p);
                         socket.broadcast.to(currentUserSocket).emit("get_all_chats", { accountChats: currentUserChats });
                     }
                 })
             })
-            const currentUserChats = await getAllChatsOfAccountByHisId(creator._id);
+            const currentUserChats = await getAllChatsOfAccountByHisId(creatorId);
             socket.emit("get_all_chats", { accountChats: currentUserChats });
         })
     })

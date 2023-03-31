@@ -4,22 +4,16 @@ const Schema = mongoose.Schema;
 const chatSchema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
     chatType: String,
-    participants: [
-        {
-            _id: {type:mongoose.Schema.Types.ObjectId, ref:"Account"},
-            fname: String,
-            lname: String,
-            profileImage: String,
-        }
-    ],
+    participants: [{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Account"
+    }],
     messages: [
         {
             _id: mongoose.Schema.Types.ObjectId,
             messageAuthor:{
-                _id: {type:mongoose.Schema.Types.ObjectId, ref:"Account"},
-                fname: String,
-                lname: String,
-                profileImage: String,
+                type:mongoose.Schema.Types.ObjectId,
+                ref:"Account"
             },
             newMessage: { type: Boolean, default: true },
             message: String,

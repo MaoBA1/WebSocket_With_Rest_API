@@ -255,13 +255,8 @@ const accountEvents = (io, socket) => {
         })
         account2.save();
 
-        const sockets = await io.fetchSockets();
-        const account2Socket = sockets.filter(s => s.userId.toString() === account2._id.toString());
-        
-        if(account2Socket.length === 1) {
-            socket.broadcast.to(account2Socket[0].id).emit("account_changes", { account: account2 });
-        }
-        
+        const account2Socket = await getUserSocketByAccountId(io, account2._id);
+        socket.broadcast.to(account2Socket).emit("account_changes", { account: account2 });
         return socket.emit("account_changes", { account: account1 })
 
     })
@@ -278,14 +273,9 @@ const accountEvents = (io, socket) => {
         account1.save();
         account2.save();
 
-        const sockets = await io.fetchSockets();
-        const account2Socket = sockets.filter(s => s.userId.toString() === account2._id.toString());
-        
-        if(account2Socket.length === 1) {
-            socket.broadcast.to(account2Socket[0].id).emit("account_changes", { account: account2 });
-        }
-
-        return socket.emit("account_changes", { account: account1 });
+        const account2Socket = await getUserSocketByAccountId(io, account2._id);
+        socket.broadcast.to(account2Socket).emit("account_changes", { account: account2 });
+        return socket.emit("account_changes", { account: account1 })
     })
 
     socket.on("confirm_friendship", async(data) => {
@@ -309,16 +299,9 @@ const accountEvents = (io, socket) => {
                 new: true
             }
         );
-        
-        
-        const sockets = await io.fetchSockets();
-        const account2Socket = sockets.filter(s => s.userId.toString() === account2._id.toString());
-        
-        if(account2Socket.length === 1) {
-            socket.broadcast.to(account2Socket[0].id).emit("account_changes", { account: account2 });
-        }
-
-        return socket.emit("account_changes", { account: account1 });
+        const account2Socket = await getUserSocketByAccountId(io, account2._id);
+        socket.broadcast.to(account2Socket).emit("account_changes", { account: account2 });
+        return socket.emit("account_changes", { account: account1 })
     })
 
     socket.on("get_all_user_friend", async(data) => {
@@ -328,15 +311,17 @@ const accountEvents = (io, socket) => {
                 $in: friends?.map(f => mongoose.Types.ObjectId(f._id))
             }
         })
-        AllFriendsAccounts = AllFriendsAccounts.map((item, index) => item = {
-            _id: item._id,
-            email: item.email,
-            fname: item.fname,
-            lname: item.lname,
-            profileImage: item.profileImage,
-            friends: item.friends,
-            status: friends[index].status
-        });
+        AllFriendsAccounts = AllFriendsAccounts.map((item, index) => 
+            item = {
+                _id: item._id,
+                email: item.email,
+                fname: item.fname,
+                lname: item.lname,
+                profileImage: item.profileImage,
+                friends: item.friends,
+                status: friends.find(f => f._id.toString() === item._id.toString()).status
+            }
+        );
             
         return socket.emit("get_all_user_friend", { AllFriendsAccounts });
         

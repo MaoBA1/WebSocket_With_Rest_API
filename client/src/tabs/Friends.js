@@ -17,7 +17,6 @@ function Friends({ account, socket }) {
     const [ intialUserData, setIntialUserData ] = useState(userSelector);
     // eslint-disable-next-line
     const [ labelVisbilty, setLabelVisbilty ] = useState(isBrowser);
-
     useEffect(() => {
         if(allFriendsAcconts.length === 0 || userSelector !== intialUserData) {
             socket?.emit("get_all_user_friend", { friends });
@@ -63,7 +62,8 @@ function Friends({ account, socket }) {
                     <label style={{
                         fontFamily:"italic",
                         color: Colors.blueBold,
-                        fontSize:"18px"
+                        fontSize:"18px",
+                        marginLeft: isBrowser ? "55px" : "15px"
                     }}>
                         Friendship requests
                     </label>
@@ -191,7 +191,8 @@ function Friends({ account, socket }) {
                     <label style={{
                         fontFamily:"italic",
                         color: Colors.blueBold,
-                        fontSize:"18px"
+                        fontSize:"18px",
+                        marginLeft: isBrowser ? "55px" : "15px"
                     }}>
                         waiting for approve
                     </label>
@@ -293,7 +294,8 @@ function Friends({ account, socket }) {
                     <label style={{
                         fontFamily:"italic",
                         color: Colors.blueBold,
-                        fontSize:"18px"
+                        fontSize:"18px",
+                        marginLeft: isBrowser ? "55px" : "15px"
                     }}>
                         your friends
                     </label>
@@ -302,7 +304,7 @@ function Friends({ account, socket }) {
             <div 
                 className='friends-container'
                 style={{
-                    gridTemplateColumns: isBrowser? "repeat(4, 370px)" : "repeat(2, 180px)",
+                    gridTemplateColumns: isBrowser? "repeat(4, 380px)" : "repeat(2, 180px)",
                 }}
             >
                 {

@@ -16,7 +16,8 @@
     border:1px solid grey;
     border-radius: 20px;
     background-color: #FFFFFF;
-    padding: 10px;
+    padding-top: 25px;
+    padding-bottom: 25px;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -29,10 +30,11 @@
 }
 
 .friends-container{
-    padding: 15px;
     border-radius: 10px;
     display: grid;
-    justify-content: space-between;
+    justify-content: space-around;
+    padding-left: 25px;
+    padding-right: 25px;
 }
 
   .confirm-or-ignore-container-relative{
