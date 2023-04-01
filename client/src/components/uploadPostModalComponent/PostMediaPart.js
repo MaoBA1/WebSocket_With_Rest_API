@@ -95,6 +95,7 @@ const PostMediaPart = ({
                                 {
                                     item.mediaType === "image" &&
                                     <img
+                                        alt='postimage'
                                         src={item.downloadUrl}
                                         className="media-array-media"
                                     />

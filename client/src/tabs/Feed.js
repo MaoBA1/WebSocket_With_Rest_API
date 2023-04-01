@@ -18,19 +18,12 @@ function Feed({
     socket,
     setMediaToDisplay,
 }) {
-    // const {
-    //     _id,
-    //     email,
-    //     fname,
-    //     lname,
-    //     posts,
-    //     profileImage
-    // } = account;
+    
     const allPostSelector = useSelector(state => state.Reducer.Posts);
-    const profileImage = account?.profileImage;
+    // const profileImage = account?.profileImage;
     const fname = account?.fname;
-    const lname = account?.lname;
-    const email = account?.email;
+    // const lname = account?.lname;
+    // const email = account?.email;
 
     return ( 
         <Scrollbars className='feed-container'>

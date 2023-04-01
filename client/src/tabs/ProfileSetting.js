@@ -58,6 +58,7 @@ function ProfileSetting({ account, socket }) {
                     />
                 </div>
                 <img
+                    alt='profile'
                     src={profileImage}
                     style={{
                         width:"120px",

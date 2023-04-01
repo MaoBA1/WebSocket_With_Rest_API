@@ -31,6 +31,7 @@ function PostLikersModal({ account, likers, close }) {
                                 className="liker-row"
                             >
                                 <img
+                                    alt='profile'
                                     src={item.profileImage}
                                     style={{
                                         width:"40px",
