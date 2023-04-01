@@ -52,19 +52,17 @@ function CreatNewChat({ socket }) {
         return accountFriends?.filter(item => (item?.fname + item?.lname).toLowerCase()?.includes(searchText.toLowerCase()))
     }
 
-    const marker = (id) => {
+    const markOrRemove = (id) => {
         if(participants.includes(id)) {
-            return (
-                <div
-                    style={{
-                        backgroundColor: "#FFFFFFFF",
-                        width:"10px",
-                        height:"10px",
-                        borderRadius:"50%"
-                    }}
-                />
-            )
+            console.log("icluded now remove");
+            setParticipants(participants.filter(p => p !== id));
+        } else {
+            let newListOfPraticipants = participants;
+            newListOfPraticipants.push(id);
+            console.log(newListOfPraticipants);
+            setParticipants(newListOfPraticipants);
         }
+        
     }
 
     return (  
@@ -300,20 +298,19 @@ function CreatNewChat({ socket }) {
                                                                     alignItems:"center",
                                                                     justifyContent:"center"
                                                                 }}
-                                                                onClick={() => {
-                                                                    if(participants.includes(item._id)) {
-                                                                        console.log("icluded now remove");
-                                                                        setParticipants(participants.filter(p => p !== item._id));
-                                                                    } else {
-                                                                        console.log("not icluded now added");
-                                                                        let newListOfPraticipants = participants;
-                                                                        newListOfPraticipants.push(item._id);
-                                                                        setParticipants(newListOfPraticipants);
-                                                                    }
-                                                                    
-                                                                }}
+                                                                onClick={() => markOrRemove(item?._id)}
                                                             >
-                                                                {marker(item._id)}
+                                                                {
+                                                                    participants?.includes(item?.id) &&
+                                                                    <div
+                                                                        style={{
+                                                                            backgroundColor: "#FFFFFFFF",
+                                                                            width:"10px",
+                                                                            height:"10px",
+                                                                            borderRadius:"50%"
+                                                                        }}
+                                                                    />
+                                                                }
                                                             </div>
                                                         </div>
                                                     )
