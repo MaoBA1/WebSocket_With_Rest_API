@@ -52,19 +52,7 @@ function CreatNewChat({ socket }) {
         return accountFriends?.filter(item => (item?.fname + item?.lname).toLowerCase()?.includes(searchText.toLowerCase()))
     }
 
-    const markOrRemove = (id) => {
-        if(participants.includes(id)) {
-            console.log("icluded now remove");
-            setParticipants(participants.filter(p => p !== id));
-        } else {
-            let newListOfPraticipants = participants;
-            newListOfPraticipants.push(id);
-            console.log(newListOfPraticipants);
-            setParticipants(newListOfPraticipants);
-        }
-        
-    }
-
+    
     return (  
         <div className='account-main-container'>
             <div 
@@ -298,7 +286,11 @@ function CreatNewChat({ socket }) {
                                                                     alignItems:"center",
                                                                     justifyContent:"center"
                                                                 }}
-                                                                onClick={() => markOrRemove(item?._id)}
+                                                                onClick={
+                                                                    participants?.includes(item?.id) ? 
+                                                                    () => setParticipants(participants.filter(p => p !== item?.id))
+                                                                    :
+                                                                    () => setParticipants(participants => [...participants, item?.id])}
                                                             >
                                                                 {
                                                                     participants?.includes(item?.id) &&
