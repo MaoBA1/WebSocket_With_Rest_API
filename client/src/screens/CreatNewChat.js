@@ -6,6 +6,8 @@ import Colors from '../utilities/Colors';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineClose } from 'react-icons/ai';
+import { GiCheckMark } from 'react-icons/gi';
+
 
 function CreatNewChat({ socket }) {
     const navigate = useNavigate();
@@ -15,6 +17,7 @@ function CreatNewChat({ socket }) {
     const [ accountFriends, setAccountFriends ] = useState(null);
     const [ searchText, setSearchText ] = useState("");
     const [ participants, setParticipants ] = useState([]);
+    const [ message, setMessage ] = useState("");
 
     useEffect(() => {
         if(!socket) {
@@ -52,6 +55,11 @@ function CreatNewChat({ socket }) {
         return accountFriends?.filter(item => (item?.fname + item?.lname).toLowerCase()?.includes(searchText.toLowerCase()))
     }
 
+    const sendGroupMessage = () => {
+        if(message.length === 0) return;
+        socket?.emit("create_new_group_chat", { participants, creatorId: userSelector._id, firstMessage: message });
+        setMessage("");
+    }
     
     return (  
         <div className='account-main-container'>
@@ -60,7 +68,13 @@ function CreatNewChat({ socket }) {
                 style={{ 
                     width: !isBrowser && "90%",
                     height: !isBrowser && "80%" ,
-                    gridTemplateRows: !isBrowser && "15% 12%"
+                    gridTemplateRows: 
+                    isBrowser ?
+                    option === "group" && participants.length > 1 ? 
+                    "70px 50px 520px" : "70px 50px" 
+                    : 
+                    option === "group" && participants.length > 1 ?
+                    "15% 12% 60%" : "15% 12%"
                 }}
             >
                 <div 
@@ -244,70 +258,117 @@ function CreatNewChat({ socket }) {
                                     {
                                         accountFriends?.length > 0 ?
                                         (
-                                            <div>
+                                            <>
+                                                <div>
+                                                    {
+                                                        listOfContacts()?.map((item, index) => 
+                                                            <div key={item?._id} style={{
+                                                                borderBottom: "0.5px solid grey",
+                                                                height:"50px",
+                                                                display:"flex",
+                                                                flexDirection:"row",
+                                                                alignItems:"center",
+                                                                paddingLeft:"10px"
+                                                            }}>
+                                                                <img
+                                                                    alt='profile'
+                                                                    src={item?.profileImage}
+                                                                    style={{
+                                                                        width:"40px",
+                                                                        height:"40px",
+                                                                        borderRadius:"50%"
+                                                                    }}
+                                                                />
+                                                                <label style={{
+                                                                    marginLeft:"10px",
+                                                                    fontFamily:"italic",
+                                                                    color: Colors.blueLight
+                                                                }}>
+                                                                    {item?.fname + " " + item?.lname}
+                                                                </label>
+
+                                                                <div
+                                                                    style={{
+                                                                        backgroundColor: Colors.blueLight,
+                                                                        width:"25px",
+                                                                        height:"25px",
+                                                                        borderRadius:"5px",
+                                                                        position:"absolute",
+                                                                        right:10,
+                                                                        border:"1px solid #FFFFFF",
+                                                                        boxShadow:"5px 0px 15px",
+                                                                        display:"flex",
+                                                                        flexDirection:"column",
+                                                                        alignItems:"center",
+                                                                        justifyContent:"center"
+                                                                    }}
+                                                                    onClick={
+                                                                        participants?.includes(item?._id) ? 
+                                                                        () => setParticipants(participants.filter(p => p !== item?._id))
+                                                                        :
+                                                                        () => setParticipants(participants => [...participants, item?._id])
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        participants?.includes(item?._id) &&
+                                                                        <GiCheckMark
+                                                                            color='#FFFFFF'
+                                                                        />
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    }
+                                                </div>
                                                 {
-                                                    listOfContacts()?.map((item, index) => 
-                                                        <div key={item?._id} style={{
-                                                            borderBottom: "0.5px solid grey",
-                                                            height:"50px",
+                                                    participants.length > 1
+                                                    &&
+                                                    <div
+                                                        style={{
+                                                            backgroundColor: Colors.blueBold,
+                                                            borderBottomLeftRadius:"10px",
+                                                            borderBottomRightRadius:"10px",
                                                             display:"flex",
                                                             flexDirection:"row",
                                                             alignItems:"center",
-                                                            paddingLeft:"10px"
-                                                        }}>
-                                                            <img
-                                                                alt='profile'
-                                                                src={item?.profileImage}
-                                                                style={{
-                                                                    width:"40px",
-                                                                    height:"40px",
-                                                                    borderRadius:"50%"
-                                                                }}
-                                                            />
-                                                            <label style={{
-                                                                marginLeft:"10px",
+                                                            justifyContent:"space-around"
+                                                        }}
+                                                    >
+                                                        <input
+                                                            style={{
+                                                                width:"75%",
+                                                                backgroundColor:Colors.creamyWhite,
+                                                                height:"35px",
                                                                 fontFamily:"italic",
-                                                                color: Colors.blueLight
+                                                                color: Colors.blueLight,
+                                                                fontSize:"16px"
+                                                            }}
+                                                            placeholder="Send first message..."
+                                                            value={message}
+                                                            onChange={(event) => setMessage(event.target.value)}
+                                                            onKeyDown={(event) => event.key === "Enter" && sendGroupMessage()}
+                                                        />
+                                                        <button
+                                                            onClick={sendGroupMessage}
+                                                            style={{
+                                                                height:"35px",
+                                                                width:"17%",
+                                                                display:"flex",
+                                                                flexDirection:"column",
+                                                                alignItems:"center",
+                                                                justifyContent:"center"
+                                                            }}
+                                                        >
+                                                            <label style={{
+                                                                color: Colors.blueLight,
+                                                                fontFamily:"italic"
                                                             }}>
-                                                                {item?.fname + " " + item?.lname}
+                                                                Send
                                                             </label>
-
-                                                            <div
-                                                                style={{
-                                                                    backgroundColor: Colors.blueLight,
-                                                                    width:"30px",
-                                                                    height:"30px",
-                                                                    borderRadius:"50%",
-                                                                    position:"absolute",
-                                                                    right:10,
-                                                                    border: `1px solid ${Colors.blueBold}`,
-                                                                    display:"flex",
-                                                                    flexDirection:"column",
-                                                                    alignItems:"center",
-                                                                    justifyContent:"center"
-                                                                }}
-                                                                onClick={
-                                                                    participants?.includes(item?.id) ? 
-                                                                    () => setParticipants(participants.filter(p => p !== item?.id))
-                                                                    :
-                                                                    () => setParticipants(participants => [...participants, item?.id])}
-                                                            >
-                                                                {
-                                                                    participants?.includes(item?.id) &&
-                                                                    <div
-                                                                        style={{
-                                                                            backgroundColor: "#FFFFFFFF",
-                                                                            width:"10px",
-                                                                            height:"10px",
-                                                                            borderRadius:"50%"
-                                                                        }}
-                                                                    />
-                                                                }
-                                                            </div>
-                                                        </div>
-                                                    )
+                                                        </button>
+                                                    </div>
                                                 }
-                                            </div>
+                                            </>
                                         )
                                         :
                                         (

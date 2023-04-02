@@ -6,7 +6,6 @@
     border-collapse: collapse;
     position: relative;
     display: grid;
-    grid-template-rows: 70px 50px;
     grid-template-columns: 100%;
     border-radius: 20px;
 }

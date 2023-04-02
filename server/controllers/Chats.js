@@ -155,7 +155,7 @@ const chatEvents = (io, socket) => {
         const newChat = new Chat({
             _id: mongoose.Types.ObjectId(),
             chatType:"group",
-            participants: participants,
+            participants: [...participants, creatorId],
             messages: [
                 {
                     _id: mongoose.Types.ObjectId(),
@@ -168,7 +168,7 @@ const chatEvents = (io, socket) => {
         return newChat.save()
         .then(async() => {
             participants.forEach(p => {
-                getUserSocketByAccountId(p)
+                getUserSocketByAccountId(io, p)
                 .then(async currentUserSocket => {
                     if(currentUserSocket) {
                         const currentUserChats = await getAllChatsOfAccountByHisId(p);
