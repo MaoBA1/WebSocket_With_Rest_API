@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import '../utilities/chat.css';
 import Colors from '../utilities/Colors';
 import { BiMessageRoundedAdd } from 'react-icons/bi';
+import { IoIosChatbubbles } from 'react-icons/io';
 
 function Chats({ account }) {
     const navigate = useNavigate();
@@ -39,8 +40,25 @@ function Chats({ account }) {
                 notReaded,
                 participantId
             }
-        } return null;
-
+        } 
+        let header = chat?.participants?.map(p => p.fname).join(", ");
+        let creatAdt = chat?.messages[chat?.messages?.length - 1]?.creatAdt; 
+        let lastMessage = {
+            message: chat?.messages[chat?.messages?.length - 1]?.message,
+            creatAdt: 
+            new Date(creatAdt).getDay() === new Date().getDay() ?
+            new Date(creatAdt).toLocaleTimeString().split(":").slice(0,2).join(":")
+            :
+            new Date(creatAdt).toLocaleDateString()
+        }
+        let sender = chat?.messages[chat?.messages?.length - 1]?.messageAuthor?._id === userSelector?._id ? "You" : chat?.messages[chat?.messages?.length - 1]?.messageAuthor?.fname;
+        let notReaded = chat?.messages?.filter(chat => chat?.newMessage && chat?.messageAuthor._id !== userSelector._id)?.length;
+        return {
+            header,
+            lastMessage,
+            sender,
+            notReaded
+        }
     }
     return ( 
         <div 
@@ -103,16 +121,40 @@ function Chats({ account }) {
                                                 flexDirection:"row",
                                                 alignItems:"center"
                                             }}>
-                                                <img
-                                                    alt='header'
-                                                    src={chat?.image}
-                                                    style={{
-                                                        width:"40px",
-                                                        height:"40px",
-                                                        borderRadius:"50%",
-                                                        border:"1px solid grey"
-                                                    }}
-                                                />
+                                                {
+                                                    item?.chatType === "private" ?
+                                                    (
+                                                        <img
+                                                            alt='header'
+                                                            src={chat?.image}
+                                                            style={{
+                                                                width:"40px",
+                                                                height:"40px",
+                                                                borderRadius:"50%",
+                                                                border:"1px solid grey"
+                                                            }}
+                                                        />
+                                                    )
+                                                    :
+                                                    (
+                                                        <div style={{
+                                                            width:"40px",
+                                                            height:"40px",
+                                                            borderRadius:"50%",
+                                                            border:"1px solid grey",
+                                                            display:"flex",
+                                                            flexDirection:"column",
+                                                            alignItems:"center",
+                                                            justifyContent:"center",
+                                                            backgroundColor: Colors.blueBold
+                                                        }}>
+                                                            <IoIosChatbubbles
+                                                                color='#FFFFFF'
+                                                                size={"25px"}
+                                                            />
+                                                        </div>
+                                                    )
+                                                }
 
                                                 <div style={{
                                                     display:"flex",

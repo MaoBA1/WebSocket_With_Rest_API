@@ -76,8 +76,11 @@ function PrivateChatScreen({ socket }) {
         }
         
         if(userChats && userData && !chat) {
-            socket?.emit("mark_all_chat_messages_as_readed", { firstAccount: userSelector, secondAccount: userData});
-            getCurrentChatMessages(userChats);
+            
+            getCurrentChatMessages(userChats)
+            // ?.then(() => {
+            //     socket?.emit("mark_all_chat_messages_as_readed", { chatId: chat?._id, currentUserAccountId: userSelector?._id });
+            // })
         }
 
         if(!userChats) {

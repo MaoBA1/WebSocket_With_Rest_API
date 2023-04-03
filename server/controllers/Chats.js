@@ -48,39 +48,20 @@ const getChatById = async(chatId) => {
 }
 
 
-const mark_all_chat_messages_as_readed = async(firstAccount, secondAccount) => {
-        const formattedSender = {
-            _id: mongoose.Types.ObjectId(firstAccount._id),
-            fname: firstAccount.fname,
-            lname: firstAccount.lname,
-            profileImage: firstAccount.profileImage
+const mark_all_chat_messages_as_readed = async(chatId, currentUserAccountId) => {
+    const chat = await getChatById(chatId);
+    chat.messages.map(c => {
+        if(c?.messageAuthor?._id.toString() !== currentUserAccountId.toString()) {
+            c.newMessage = false;
         }
-        const formattedReciver = {
-            _id: mongoose.Types.ObjectId(secondAccount?._id),
-            fname: secondAccount.fname,
-            lname: secondAccount.lname,
-            profileImage: secondAccount.profileImage
-        }
-        const option1 = await Chat.findOne({ participants: [ formattedSender, formattedReciver] });
-        const option2 = await Chat.findOne({ participants: [ formattedReciver, formattedSender] });
-        const chat = option1 || option2;
-        if(chat) {
-            chat.messages.map(c => {
-                if(c?.messageAuthor?._id.toString() === secondAccount._id.toString()) {
-                    c.newMessage = false;
-                }
-                return c
-            })
-            return chat.save()
-            .then((chat) => { return chat; })
-        } return {};
-        
+        return c
+    })
+    return chat.save()
+    .then((chat) => { return chat; })
 }
 
 const chatEvents = (io, socket) => {
 
-    
-    
     socket.on("get_all_chats", async(data) => {
         const { accountId } = data;
         const chtas = await getAllChatsOfAccountByHisId(accountId);
@@ -135,20 +116,7 @@ const chatEvents = (io, socket) => {
         })
     })
 
-    socket?.on("mark_all_chat_messages_as_readed", (data) => {
-        const { firstAccount, secondAccount } = data;
-        mark_all_chat_messages_as_readed(firstAccount, secondAccount)
-        .then(async result => {
-            if(result) {
-                const firstAccountChats = await getAllChatsOfAccountByHisId(firstAccount._id);
-                return socket.emit("get_all_chats", { accountChats: firstAccountChats });
-            }
-        })
-    })
-
-
-    // group chat
-
+   // group chat
     socket?.on("create_new_group_chat", (data) => {
         const { participants, creatorId, firstMessage } = data;
 
@@ -181,6 +149,18 @@ const chatEvents = (io, socket) => {
         })
     })
     
+
+
+    socket?.on("mark_all_chat_messages_as_readed", (data) => {
+        const { chatId, currentUserAccountId } = data;
+        mark_all_chat_messages_as_readed(chatId, currentUserAccountId)
+        .then(async result => {
+            if(result) {
+                const firstAccountChats = await getAllChatsOfAccountByHisId(firstAccount._id);
+                return socket.emit("get_all_chats", { accountChats: firstAccountChats });
+            }
+        })
+    })
 }
 
 module.exports = chatEvents;
