@@ -50,14 +50,14 @@ const getChatById = async(chatId) => {
 
 const mark_all_chat_messages_as_readed = async(chatId, currentUserAccountId) => {
     const chat = await getChatById(chatId);
-    chat.messages.map(c => {
+    chat?.messages.map(c => {
         if(c?.messageAuthor?._id.toString() !== currentUserAccountId.toString()) {
             c.newMessage = false;
         }
         return c
     })
-    return chat.save()
-    .then((chat) => { return chat; })
+    return chat?.save()
+    ?.then((chat) => { return chat; })
 }
 
 const chatEvents = (io, socket) => {

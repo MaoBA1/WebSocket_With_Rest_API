@@ -43,8 +43,13 @@ function PrivateChatScreen({ socket }) {
         const getCurrentChatMessages = (data) => {
             if(data) {
                 if(data?.length === 0) return setChat([]);
-                const filterdChats = data?.filter(chat => chat.chatType === "private" && chat.participants.find(p => p._id === accountId) && chat.participants.find(p => p._id === userSelector._id) );
-                setChatId(filterdChats.length === 0 ? null : filterdChats[0]._id);
+                const filterdChats = data?.filter(chat => chat.chatType === "private" && chat.participants
+                .find(p => p._id === accountId) && chat.participants
+                .find(p => p._id === userSelector._id) );
+                if(!chatId) {
+                    setChatId(filterdChats.length === 0 ? null : filterdChats[0]._id);
+                    socket?.emit("mark_all_chat_messages_as_readed", { chatId: chat?._id, currentUserAccountId: userSelector?._id });
+                }
                 return setChat(filterdChats.length === 0 ? [] : filterdChats[0].messages);
             }
             return setChat([]);
@@ -76,11 +81,7 @@ function PrivateChatScreen({ socket }) {
         }
         
         if(userChats && userData && !chat) {
-            
-            getCurrentChatMessages(userChats)
-            // ?.then(() => {
-            //     socket?.emit("mark_all_chat_messages_as_readed", { chatId: chat?._id, currentUserAccountId: userSelector?._id });
-            // })
+            getCurrentChatMessages(userChats);
         }
 
         if(!userChats) {
@@ -103,7 +104,8 @@ function PrivateChatScreen({ socket }) {
         userChats,
         stickToBottom,
         userData,
-        chat
+        chat,
+        chatId
     ]);
     
 
