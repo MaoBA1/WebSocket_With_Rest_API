@@ -41,7 +41,9 @@ function Chats({ account }) {
                 participantId
             }
         } 
-        let header = chat?.participants?.map(p => p.fname).join(", ");
+        let header = chat?.participants?.length > 3 ?
+        chat?.participants?.map(p => p.fname + " " + p.lname).slice(0,3).join(", ") + "...."
+        : chat?.participants?.map(p => p.fname + " " + p.lname).slice(0,3).join(", ");
         let creatAdt = chat?.messages[chat?.messages?.length - 1]?.creatAdt; 
         let lastMessage = {
             message: chat?.messages[chat?.messages?.length - 1]?.message,
@@ -114,7 +116,12 @@ function Chats({ account }) {
                                                 borderTop: index === 0 ? "2px solid grey" : "0.5px solid grey",
                                                 borderBottom: index === userChats?.length - 1 ? "2px solid grey" : "0.5px solid grey"
                                             }}
-                                            onClick={() => navigate(`/Home/chatScreen/${chat?.participantId}`)}
+                                            onClick={
+                                                item?.chatType === "private" ?
+                                                () => navigate(`/Home/chatScreen/${chat?.participantId}`)
+                                                :
+                                                () => navigate(`/Home/GroupChatScreen/${item?._id}`)
+                                            }
                                         >
                                             <div style={{
                                                 display:"flex",

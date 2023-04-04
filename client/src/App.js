@@ -14,6 +14,7 @@ import Reducer from './store/reducers/index';
 import OtherAccount from './screens/OtherAccount';
 import PrivateChatScreen from './screens/PrivateChatScreen';
 import CreatNewChat from './screens/CreatNewChat';
+import GroupChatScreen from './screens/GroupChatScreen';
 
 const RootReducer = combineReducers({
       Reducer: Reducer
@@ -56,6 +57,7 @@ function App() {
           <Route path="/Home" element={<Dashboard socket={socket} setupSocket={setupSocket} />}/>
           <Route path="/Home/:accountId" element={<OtherAccount socket={socket}/>}/>
           <Route path="/Home/chatScreen/:accountId" element={<PrivateChatScreen socket={socket}/>}/>
+          <Route path="/Home/GroupChatScreen/:chatId" element={<GroupChatScreen socket={socket}/>}/>
           <Route path="/Home/creatNewChat" element={<CreatNewChat socket={socket}/>}/>
         </Routes>
       </Router>

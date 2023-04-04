@@ -156,7 +156,7 @@ const chatEvents = (io, socket) => {
         mark_all_chat_messages_as_readed(chatId, currentUserAccountId)
         .then(async result => {
             if(result) {
-                const firstAccountChats = await getAllChatsOfAccountByHisId(firstAccount._id);
+                const firstAccountChats = await getAllChatsOfAccountByHisId(currentUserAccountId);
                 return socket.emit("get_all_chats", { accountChats: firstAccountChats });
             }
         })
