@@ -134,7 +134,7 @@ const chatEvents = (io, socket) => {
         })
 
         return newChat.save()
-        .then(async() => {
+        .then(async(chat) => {
             participants.forEach(p => {
                 getUserSocketByAccountId(io, p)
                 .then(async currentUserSocket => {

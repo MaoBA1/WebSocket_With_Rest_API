@@ -40,6 +40,14 @@ function CreatNewChat({ socket }) {
             )
         });
 
+        const handelReciveMessage = async(data) => {
+            const newGroupChatId = data?.accountChats[data?.accountChats?.length - 1]?._id;
+            if(newGroupChatId) {
+                navigate(`/Home/GroupChatScreen/${newGroupChatId}`);
+            }
+        }
+
+        socket?.on("get_all_chats", handelReciveMessage);
         return () => {
             socket?.off("get_all_user_friend", setAccountFriends);
         }
