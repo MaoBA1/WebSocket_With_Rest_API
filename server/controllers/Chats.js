@@ -135,21 +135,49 @@ const chatEvents = (io, socket) => {
 
         return newChat.save()
         .then(async(chat) => {
-            participants.forEach(p => {
-                getUserSocketByAccountId(io, p)
-                .then(async currentUserSocket => {
-                    if(currentUserSocket) {
-                        const currentUserChats = await getAllChatsOfAccountByHisId(p);
-                        socket.broadcast.to(currentUserSocket).emit("get_all_chats", { accountChats: currentUserChats });
-                    }
-                })
+            participants.forEach(async p => {
+                if(p.toString() !== creatorId.toString()) {
+                    const participantSocket = await getUserSocketByAccountId(io, p);
+                    const currentUserChats = await getAllChatsOfAccountByHisId(p);
+                    console.log(participantSocket);
+                    socket.broadcast.to(participantSocket).emit("get_all_chats", { accountChats: currentUserChats });
+                }
             })
             const currentUserChats = await getAllChatsOfAccountByHisId(creatorId);
             socket.emit("get_all_chats", { accountChats: currentUserChats });
         })
     })
     
+    socket.on("send_group_message", async(data) => {
+        const { chatId, senderId, message } = data;
 
+        const chat = await getChatById(chatId);
+        chat.messages.map(c => {
+            if(c?.messageAuthor?._id.toString() !== senderId.toString()) {
+                c.newMessage = false;
+            }
+            return c
+        })
+        chat.messages.push({
+            _id: mongoose.Types.ObjectId(),
+            messageAuthor: senderId,
+            message: message
+        })
+        return chat.save()
+        .then(async(chat) => {
+            chat.participants.forEach(async p => {
+                if(p?._id.toString() !== senderId.toString()) {
+                    const participantSocket = await getUserSocketByAccountId(io, p._id)
+                    const currentUserChats = await getAllChatsOfAccountByHisId(p._id);
+                    console.log(participantSocket);
+                    socket.broadcast.to(participantSocket).emit("get_all_chats", { accountChats: currentUserChats });
+                }
+            })
+            const currentUserChats = await getAllChatsOfAccountByHisId(senderId);
+            socket.emit("get_all_chats", { accountChats: currentUserChats });
+        })
+        
+    })
 
     socket?.on("mark_all_chat_messages_as_readed", (data) => {
         const { chatId, currentUserAccountId } = data;

@@ -3,14 +3,16 @@ import '../utilities/chat.css';
 import '../utilities/createNewChat.css';
 import { isBrowser } from 'react-device-detect';
 import Colors from '../utilities/Colors';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineClose } from 'react-icons/ai';
 import { GiCheckMark } from 'react-icons/gi';
+import { setAllChats } from '../store/actions';
 
 
 function CreatNewChat({ socket }) {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [ option, setOption ] = useState("private");
     const userSelector = useSelector(state => state.Reducer.User);
     const friends = userSelector?.friends;
@@ -40,22 +42,32 @@ function CreatNewChat({ socket }) {
             )
         });
 
-        const handelReciveMessage = async(data) => {
-            const newGroupChatId = data?.accountChats[data?.accountChats?.length - 1]?._id;
-            if(newGroupChatId) {
-                navigate(`/Home/GroupChatScreen/${newGroupChatId}`);
+        const handelCreateNewGroupChat = async(data) => {
+            try{
+                dispatch(setAllChats(data?.accountChats));
+                const newGroupChatId = data?.accountChats[data?.accountChats?.length - 1]?._id;
+                if(newGroupChatId) {
+                    navigate(`/Home/GroupChatScreen/${newGroupChatId}`);
+                }
+            } catch(error) {
+                console.log(error.message);
             }
         }
 
-        socket?.on("get_all_chats", handelReciveMessage);
+        if(option === "group") {
+            socket?.on("get_all_chats", handelCreateNewGroupChat);
+        }
         return () => {
             socket?.off("get_all_user_friend", setAccountFriends);
+            socket?.off("get_all_chats", handelCreateNewGroupChat);
         }
     },[
         navigate,
+        dispatch,
         socket,
         accountFriends,
-        friends
+        friends,
+        option
     ])
 
     const listOfContacts = () => {

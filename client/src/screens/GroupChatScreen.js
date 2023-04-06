@@ -32,7 +32,7 @@ function GroupChatScreen({ socket }) {
         const getCurrentChatMessages = (data) => {
             if(data) {
                 if(data?.length === 0) return setChat([]);
-                const filterdChats = data?.filter(chat => chat._id === chatId)
+                const filterdChats = data?.filter(chat => chat._id === chatId);
                 // socket?.emit("mark_all_chat_messages_as_readed", { chatId: filterdChats[0]._id, currentUserAccountId: userSelector?._id });
                 if(!participants) {
                     setParticipants(
@@ -98,15 +98,16 @@ function GroupChatScreen({ socket }) {
 
 
     const sendMessage = () => {
-
+        if(message.length === 0) return;
+        setStickToBottom(true);
+        socket?.emit("send_group_message", { chatId, senderId: userSelector._id, message });
+        return setMessage("");
     }
 
     const islocalDateStringRequired = (item, index, list) => {
         if(index === 0) return true;
         return new Date(list[index]?.creatAdt).getDay() > new Date(list[index - 1]?.creatAdt).getDay();
     }
-
-    console.log(participants);
     
     return (  
         <div className='account-main-container'>
@@ -119,7 +120,7 @@ function GroupChatScreen({ socket }) {
                 }}
             >
                 <div className='chat-header'>
-                    <div className='x-icon-container' onClick={() => {navigate(-1)}}>
+                    <div className='x-icon-container' onClick={() => {navigate("/Home")}}>
                         <AiOutlineClose
                             color='#FFFFFF'
                         />
@@ -312,7 +313,15 @@ function GroupChatScreen({ socket }) {
                                                         <label style={{
                                                             fontFamily:"italic",
                                                             color:"#FFFFFF",
-                                                            fontSize:"15px"
+                                                            fontSize:"15px",
+                                                            borderBottom:"1px solid"
+                                                        }}>
+                                                            {item?.messageAuthor?.fname}
+                                                        </label>
+                                                        <label style={{
+                                                            fontFamily:"italic",
+                                                            color:"#FFFFFF",
+                                                            fontSize:"14px"
                                                         }}>
                                                             {item?.message}
                                                         </label>

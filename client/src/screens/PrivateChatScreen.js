@@ -48,7 +48,7 @@ function PrivateChatScreen({ socket }) {
                 .find(p => p._id === userSelector._id) );
                 if(!chatId) {
                     setChatId(filterdChats.length === 0 ? null : filterdChats[0]._id);
-                    socket?.emit("mark_all_chat_messages_as_readed", { chatId: filterdChats[0]._id, currentUserAccountId: userSelector?._id });
+                    socket?.emit("mark_all_chat_messages_as_readed", { chatId: filterdChats[0]?._id, currentUserAccountId: userSelector?._id });
                 }
                 return setChat(filterdChats.length === 0 ? [] : filterdChats[0].messages);
             }
@@ -82,6 +82,7 @@ function PrivateChatScreen({ socket }) {
         
         if(userChats && userData && !chat) {
             getCurrentChatMessages(userChats);
+            setStickToBottom(true);
         }
 
         if(!userChats) {
@@ -136,7 +137,7 @@ function PrivateChatScreen({ socket }) {
                 }}
             >
                 <div className='chat-header'>
-                    <div className='x-icon-container' onClick={() => {navigate(-1)}}>
+                    <div className='x-icon-container' onClick={() => {navigate("/Home")}}>
                         <AiOutlineClose
                             color='#FFFFFF'
                         />
