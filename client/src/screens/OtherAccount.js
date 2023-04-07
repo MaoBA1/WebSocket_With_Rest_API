@@ -426,43 +426,83 @@ function OtherAccount({ socket }) {
                             backgroundColor: Colors.blueBold,
                         }}
                     >
-                        <img
-                            alt='profile'
-                            src={userData?.profileImage}
-                            style={{
-                                width:"100px",
-                                height:"100px",
-                                borderRadius:"50%",
-                                border:`2px solid ${Colors.blueLight}`,
-                                boxShadow:"#000000 0px 5px 15px"
-                            }}
-                        />
-                        <div style={{
-                            display:"flex",
-                            flexDirection:"column",
-                            alignItems:"center",
-                            backgroundColor:"#FFFFFF",
-                            margin:"10px",
-                            borderRadius:"20px",
-                            boxShadow:"#000000 0px 5px 15px"
-                        }}>
-                            <label style={{
-                                fontFamily:"italic",
-                                color: Colors.blueLight,
-                                margin:"10px"
-                            }}>
-                                <span style={{ color:Colors.blueMedium }}>Email: </span>
-                                {userData?.email}
-                            </label>
-                            <label style={{
-                                fontFamily:"italic",
-                                color: Colors.blueLight,
-                                margin:"10px"
-                            }}>
-                                <span style={{ color:Colors.blueMedium }}>Name: </span>
-                                {userData?.fname + " " + userData?.lname}
-                            </label>
-                        </div>
+                        {
+                            !userData ?
+                            (
+                                <div
+                                    className='messages-container-loading'
+                                    style={{
+                                        width:"100px",
+                                        height:"100px",
+                                        borderRadius:"50%",
+                                        border:`2px solid ${Colors.blueLight}`,
+                                        boxShadow:"#000000 0px 5px 15px"
+                                    }}
+                                />
+                            )
+                            :
+                            (
+                                <img
+                                    alt='profile'
+                                    src={userData?.profileImage}
+                                    style={{
+                                        width:"100px",
+                                        height:"100px",
+                                        borderRadius:"50%",
+                                        border:`2px solid ${Colors.blueLight}`,
+                                        boxShadow:"#000000 0px 5px 15px"
+                                    }}
+                                />
+                            )
+                        }
+                        {
+                            !userData ? 
+                            (
+                                <div 
+                                    style={{
+                                        display:"flex",
+                                        flexDirection:"column",
+                                        alignItems:"center",
+                                        backgroundColor:"#FFFFFF",
+                                        margin:"10px",
+                                        borderRadius:"20px",
+                                        boxShadow:"#000000 0px 5px 15px",
+                                        width:"250px",
+                                        height:"80px"
+                                    }}
+                                    className="messages-container-loading"
+                                />
+                            )
+                            :
+                            (
+                                <div style={{
+                                    display:"flex",
+                                    flexDirection:"column",
+                                    alignItems:"center",
+                                    backgroundColor:"#FFFFFF",
+                                    margin:"10px",
+                                    borderRadius:"20px",
+                                    boxShadow:"#000000 0px 5px 15px"
+                                }}>
+                                    <label style={{
+                                        fontFamily:"italic",
+                                        color: Colors.blueLight,
+                                        margin:"10px"
+                                    }}>
+                                        <span style={{ color:Colors.blueMedium }}>Email: </span>
+                                        {userData?.email}
+                                    </label>
+                                    <label style={{
+                                        fontFamily:"italic",
+                                        color: Colors.blueLight,
+                                        margin:"10px"
+                                    }}>
+                                        <span style={{ color:Colors.blueMedium }}>Name: </span>
+                                        {userData?.fname + " " + userData?.lname}
+                                    </label>
+                                </div>
+                            )
+                        }
                     </div>
                     <div className='account-posts-part'>
                             {
@@ -481,6 +521,23 @@ function OtherAccount({ socket }) {
                                     />
                                 )
 
+                            }
+                            {
+                                userData && userData?.posts?.length === 0 &&
+                                <div style={{
+                                    position:"absolute",
+                                    top:"50%"
+                                }}>
+
+                                    <label style={{
+                                        fontFamily:"italic",
+                                        color: Colors.blueLight,
+                                        fontSize:"25px",
+                                        textAlign:"center"
+                                    }}>
+                                        This account have no posts yet...
+                                    </label>
+                                </div>
                             }
                     </div>
                 </div>

@@ -89,6 +89,7 @@
 }
 
 .indicator {
+    margin-top: 20px;
     width: 15px;
     height: 15px;
     background-color: grey;
@@ -97,6 +98,7 @@
 }
 
 .indicator-active {
+    margin-top: 20px;
     width: 15px;
     height: 15px;
     background-color: #000000;

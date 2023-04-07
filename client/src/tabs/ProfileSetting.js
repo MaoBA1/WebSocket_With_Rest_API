@@ -11,15 +11,7 @@ function ProfileSetting({ account, socket }) {
         changeProfilePictureModalVisible,
         setChangeProfileModalVisible
     ] = useState(false);
-    // const {
-    //     _id,
-    //     email,
-    //     fname,
-    //     lname,
-    //     posts,
-    //     profileImage
-    // } = account;
-
+    
     const profileImage = account?.profileImage;
     const fname = account?.fname;
     const lname = account?.lname;
@@ -61,6 +53,7 @@ function ProfileSetting({ account, socket }) {
                     alt='profile'
                     src={profileImage}
                     style={{
+                        objectFit:"cover",
                         width:"120px",
                         height:"120px",
                         border:`2px solid ${Colors.blueLight}`,
@@ -70,7 +63,7 @@ function ProfileSetting({ account, socket }) {
             </div>
 
             <form className='form' style={{
-                width: isBrowser ? "90%" : "max-content"
+                width: isBrowser ? "70%" : "max-content"
             }}>
                     <div className='form-div'>
                         <label className='form-label' style={{ fontFamily:"italic" }}>

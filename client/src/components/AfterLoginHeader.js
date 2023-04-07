@@ -5,13 +5,12 @@ import { BiMenu } from 'react-icons/bi';
 
 
 const AfterLoginHeader = ({ 
-    title,
     profileImage,
     menuCollapsed,
     setMenuCollapsed,
-    moveToCurrentUserProfile,
     currentTab,
-    notificationNumber
+    notificationNumber,
+    moveToProfileSettings
 }) => {
     return(
         <div className='header'
@@ -97,18 +96,27 @@ const AfterLoginHeader = ({
                                 alt='profileImage'
                                 src={profileImage}
                                 style={{
-                                    width:"40px",
-                                    height:"40px",
+                                    objectFit:"cover",
+                                    width:"50px",
+                                    height:"50px",
                                     borderRadius:"50%",
                                     border:`2px solid #FFFFFF`,
                                     boxShadow:"#000000 0px 5px 15px"
                                 }}
-                                onClick={moveToCurrentUserProfile}
+                                onClick={moveToProfileSettings}
                             />
                         )
                         :
                         (
-                            <div className='image-place-holder'/>
+                            <div
+                                style={{
+                                    width:"50px",
+                                    height:"50px",
+                                    borderRadius:"50%",
+                                    boxShadow:"#000000 0px 5px 15px"
+                                }} 
+                                className='messages-container-loading'
+                            />
                         )
                     }
                     

@@ -207,6 +207,7 @@ function Dashboard( { socket, setupSocket } ) {
                     menuCollapsed={menuCollapsed}
                     currentTab={currentTab}
                     notificationNumber={countOfUnreadedMessages + frienshipRequests?.length}
+                    moveToProfileSettings={() => setCurrentTab("Profile-Setting")}
                 />
                 { 
                     currentTab === "Feed" 

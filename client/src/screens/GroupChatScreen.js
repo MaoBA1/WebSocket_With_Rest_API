@@ -33,7 +33,9 @@ function GroupChatScreen({ socket }) {
             if(data) {
                 if(data?.length === 0) return setChat([]);
                 const filterdChats = data?.filter(chat => chat._id === chatId);
-                socket?.emit("mark_all_chat_messages_as_readed", { chatId: filterdChats[0]._id, currentUserAccountId: userSelector?._id });
+                if(!chat) {
+                    socket?.emit("mark_all_chat_messages_as_readed", { chatId: filterdChats[0]._id, currentUserAccountId: userSelector?._id });
+                }
                 if(!participants) {
                     setParticipants(
                         filterdChats.length === 0 ? null 
@@ -53,6 +55,7 @@ function GroupChatScreen({ socket }) {
             try {
                 getCurrentChatMessages(data.accountChats);
                 setStickToBottom(true);
+                console.log('test');
                 dispatch(setAllChats(data.accountChats));
             } catch(error) {
               console.log(error.message);   
@@ -75,6 +78,7 @@ function GroupChatScreen({ socket }) {
         }
 
         if(!userChats) {
+            console.log(userChats);
             socket?.emit("get_all_chats", { accountId: userSelector?._id });
         }
 

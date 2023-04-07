@@ -46,7 +46,6 @@ function PrivateChatScreen({ socket }) {
                 const filterdChats = data?.filter(chat => chat.chatType === "private" && chat.participants
                 .find(p => p._id === accountId) && chat.participants
                 .find(p => p._id === userSelector._id) );
-                console.log(filterdChats);
                 if(!chatId) {
                     setChatId(filterdChats.length === 0 ? null : filterdChats[0]._id);
                     socket?.emit("mark_all_chat_messages_as_readed", { chatId: filterdChats[0]?._id, currentUserAccountId: userSelector?._id });

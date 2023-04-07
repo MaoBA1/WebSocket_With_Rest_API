@@ -36,7 +36,7 @@ function SideBar({ flex, height, menuCollapsed, switchTab, currentTab, setMenuCo
             icon: <AiOutlineLogout/>
         }
     ]
-    console.log(chatNotifications);
+    
     return ( 
         <div className='side-bar-nav' style={{
             flex: flex,

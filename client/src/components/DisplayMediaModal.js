@@ -24,8 +24,8 @@ function DisplayMediaModal({ media, setMedia }) {
                         src={media.downloadUrl}
                         style={{
                             objectFit:"contain",
-                            // height:"50%",
-                            // width:"80%"
+                            height:"80%",
+                            width:"80%"
                         }}
                     />
                 )
@@ -35,7 +35,9 @@ function DisplayMediaModal({ media, setMedia }) {
                         alt="post-video"
                         src={media.downloadUrl}
                         style={{
-                            objectFit:"contain"
+                            objectFit:"contain",
+                            height:"80%",
+                            width:"80%"
                         }}
                         controls
                         
