@@ -12,15 +12,15 @@ import { cleanAllReducerStates } from '../store/actions/index';
 
 
 
-function SideBar({ flex, height, menuCollapsed, switchTab, currentTab, setMenuCollapsed, socket }) {
+function SideBar({ flex, height, menuCollapsed, switchTab, currentTab, setMenuCollapsed, socket, friendNotifications, chatNotifications }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const nav = [
         {item: "Feed", func: () => switchTab("Feed"), icon: <MdOutlineDynamicFeed/>},
         {item: "Profile-Setting", func: () => switchTab("Profile-Setting"), icon: <AiFillSetting/>},
         {item: "My-Posts", func: () => switchTab("My-Posts"), icon: <BsFileEarmarkPost/>},
-        {item: "Friends", func: () => switchTab("Friends"), icon: <FaUserFriends/>},
-        {item: "Chats", func: () => switchTab("Chats"), icon: <BsFillChatFill/>},
+        {item: "Friends", func: () => switchTab("Friends"), icon: <FaUserFriends/>, friendNotifications},
+        {item: "Chats", func: () => switchTab("Chats"), icon: <BsFillChatFill/>, chatNotifications},
         {
             item: "Sign-Out", 
             func: () => { 
@@ -36,6 +36,7 @@ function SideBar({ flex, height, menuCollapsed, switchTab, currentTab, setMenuCo
             icon: <AiOutlineLogout/>
         }
     ]
+    console.log(chatNotifications);
     return ( 
         <div className='side-bar-nav' style={{
             flex: flex,
@@ -63,6 +64,56 @@ function SideBar({ flex, height, menuCollapsed, switchTab, currentTab, setMenuCo
                                 }}>
                                     {item.item}
                                 </label>
+
+                                {
+                                    item.item === "Chats" && chatNotifications > 0 &&
+                                    <div style={{
+                                        width:"20px",
+                                        height:"20px",
+                                        backgroundColor:"red",
+                                        borderRadius:"50%",
+                                        position:"absolute",
+                                        right:10,
+                                        border:"1px solid #FFFFFFFF",
+                                        display:"flex",
+                                        flexDirection:"column",
+                                        alignItems:"center",
+                                        justifyContent:"center"
+                                    }}>
+                                        <label style={{
+                                            fontFamily:"italic",
+                                            fontSize:"14px",
+                                            color:"#FFFFFF"
+                                        }}>
+                                            {chatNotifications}
+                                        </label>
+                                    </div>
+                                }
+
+                                {
+                                    item.item === "Friends" && friendNotifications > 0 &&
+                                    <div style={{
+                                        width:"20px",
+                                        height:"20px",
+                                        backgroundColor:"red",
+                                        borderRadius:"50%",
+                                        position:"absolute",
+                                        right:10,
+                                        border:"1px solid #FFFFFFFF",
+                                        display:"flex",
+                                        flexDirection:"column",
+                                        alignItems:"center",
+                                        justifyContent:"center"
+                                    }}>
+                                        <label style={{
+                                            fontFamily:"italic",
+                                            fontSize:"14px",
+                                            color:"#FFFFFF"
+                                        }}>
+                                            {friendNotifications}
+                                        </label>
+                                    </div>
+                                }
                             </button>
                         )
                     }

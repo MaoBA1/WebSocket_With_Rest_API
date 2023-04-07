@@ -43,7 +43,10 @@ function Dashboard( { socket, setupSocket } ) {
     const [ likersArray, setLikersArray ] = useState([]);
     const [ commentVisible, setCommentVisible ] = useState(false);
     const [ post, setPost ] = useState(null);
-    
+    const friends = userSelector?.friends;
+    const [ frienshipRequests, setFriendshipRequests ] = useState(null);
+    const [ countOfUnreadedMessages, setCountOfUnreadedMessages ] = useState(null);
+    const [ intialUserData, setIntialUserData ] = useState(userSelector);
 
     const profileImage = userSelector?.profileImage;
     
@@ -85,30 +88,42 @@ function Dashboard( { socket, setupSocket } ) {
 
         const handelReciveMessage = async(data) => {
             try {
+                setCountOfUnreadedMessages(
+                    data.accountChats?.map(chat => chat?.messages?.filter(m => m?.newMessage && m?.messageAuthor?._id !== userSelector?._id).length)?.length > 0 ?
+                    data.accountChats?.map(chat => chat?.messages?.filter(m => m?.newMessage && m?.messageAuthor?._id !== userSelector?._id).length)?.reduce((a,b) => a + b)
+                    :
+                    []
+                );
                 await dispatch(setAllChats(data.accountChats));
             } catch(error) {
               console.log(error.message);   
             }    
         }
 
+        if(!frienshipRequests || userSelector !== intialUserData) {
+            socket?.emit("get_all_user_friend", { friends });
+            setIntialUserData(userSelector);
+        }
         
 
         if(!userChats && userSelector) {
             socket?.emit("get_all_chats", { accountId: userSelector?._id });
         } 
-
         
         socket?.on("recive_all_post", (response) => setAllPosts(response, dispatch));
         socket?.on("get_updated_post", (response) => setPost(response.updated_post));
         socket?.on("auth_user", (response) => isAuthUser(response, dispatch));
         socket?.on("account_changes", handelUserChanges);
         socket?.on("get_all_chats", handelReciveMessage);
+        socket?.on("get_all_user_friend", ({ AllFriendsAccounts }) => {setFriendshipRequests(AllFriendsAccounts?.filter(f => f.status === "wait"))});
+        
         return () => {
             socket?.off("recive_all_post", setAllPosts);
             socket?.off("get_updated_post", setPost);
             socket?.off("auth_user", isAuthUser);
             socket?.off("account_changes", handelUserChanges);
             socket?.off("get_all_chats", handelReciveMessage);
+            socket?.off("get_all_user_friend", setFriendshipRequests);
         }
     },[
         dispatch,
@@ -116,11 +131,14 @@ function Dashboard( { socket, setupSocket } ) {
         socket,
         setupSocket,
         userChats,
-        userSelector
+        userSelector,
+        frienshipRequests,
+        friends,
+        countOfUnreadedMessages,
+        intialUserData
     ])
     
     
-
     return ( 
         <div className='screen-container'>
             {
@@ -139,6 +157,8 @@ function Dashboard( { socket, setupSocket } ) {
                 switchTab={setCurrentTab}
                 setMenuCollapsed={setMenuCollapsed}
                 socket={socket}
+                chatNotifications={countOfUnreadedMessages}
+                friendNotifications={frienshipRequests?.length}
             />
             {
                 UploadPostModalVisible 
@@ -186,6 +206,7 @@ function Dashboard( { socket, setupSocket } ) {
                     setMenuCollapsed={setMenuCollapsed}
                     menuCollapsed={menuCollapsed}
                     currentTab={currentTab}
+                    notificationNumber={countOfUnreadedMessages + frienshipRequests?.length}
                 />
                 { 
                     currentTab === "Feed" 

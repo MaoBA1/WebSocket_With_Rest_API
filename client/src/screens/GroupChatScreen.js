@@ -33,7 +33,7 @@ function GroupChatScreen({ socket }) {
             if(data) {
                 if(data?.length === 0) return setChat([]);
                 const filterdChats = data?.filter(chat => chat._id === chatId);
-                // socket?.emit("mark_all_chat_messages_as_readed", { chatId: filterdChats[0]._id, currentUserAccountId: userSelector?._id });
+                socket?.emit("mark_all_chat_messages_as_readed", { chatId: filterdChats[0]._id, currentUserAccountId: userSelector?._id });
                 if(!participants) {
                     setParticipants(
                         filterdChats.length === 0 ? null 

@@ -10,7 +10,8 @@ const AfterLoginHeader = ({
     menuCollapsed,
     setMenuCollapsed,
     moveToCurrentUserProfile,
-    currentTab
+    currentTab,
+    notificationNumber
 }) => {
     return(
         <div className='header'
@@ -36,8 +37,36 @@ const AfterLoginHeader = ({
                 <div style={{
                     border:"0.5px solid grey",
                     boxShadow:"#000000 0px 5px 15px",
-                    borderRadius:"5px"
+                    borderRadius:"5px",
+                    position:"relative"
                 }}>
+                    {
+                        notificationNumber > 0 &&
+                        <div style={{
+                            width:"18px",
+                            height:"18px",
+                            borderRadius:"50%",
+                            backgroundColor: "red",
+                            border:"1px solid #FFFFFFFF",
+                            position:"absolute",
+                            right: -10,
+                            top: -10,
+                            display:"flex",
+                            flexDirection:"column",
+                            alignItems:"center",
+                            justifyContent:"center"
+                        }}>
+                            <label
+                                style={{
+                                    fontFamily:"italic",
+                                    color:"#FFFFFF",
+                                    fontSize:"14px"
+                                }}
+                            >
+                                {notificationNumber}
+                            </label>
+                        </div>
+                    }
                     <BiMenu
                         color='#FFFFFF'
                         size={"30px"}
