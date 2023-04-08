@@ -50,7 +50,7 @@ io.use(async (socket, next) => {
 });
 
 io.on("connection", async(socket) => {
-    console.log(`User connected: ${socket.userId}`);
+    console.log(`User connected: ${socket.id}`);
     
     recive_all_post(socket);
     postEvents(io, socket);
