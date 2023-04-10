@@ -90,6 +90,7 @@ function ChangeProfilePictureModal({ profileImage, setIsVisible, account, socket
                     </div>
                 }
                 <img
+                    alt="profile"
                     src={profileImage}
                     style={{
                         width:"120px",

@@ -6,7 +6,6 @@ import Colors from '../../utilities/Colors';
 
 function PostComments({ account, post, setPost, close, socket }) {
     const postId = post?._id;
-    const postAuthorId = post?.postAuthor?._id;
     const postAuthorFname = post?.postAuthor?.fname;
     const postAuthorLname = post?.postAuthor?.lname;
     const postAuthorProfileImage = post?.postAuthor?.profileImage;
@@ -43,6 +42,7 @@ function PostComments({ account, post, setPost, close, socket }) {
                 >
                     <div className='post-author-part-container'>
                         <img
+                            alt='profile'
                             src={postAuthorProfileImage}
                             style={{
                                 width:"50px",
@@ -138,6 +138,7 @@ function PostComments({ account, post, setPost, close, socket }) {
                                                 }}>
                                                     <div>
                                                         <img
+                                                            alt='profile'
                                                             src={item.commentAuthor.profileImage}
                                                             style={{
                                                                 width:"30px",
