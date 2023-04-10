@@ -36,10 +36,10 @@ function App() {
         console.log("success", "Socket Connected!");
       });
 
-      newSocket.on("disconnect", () => {
+      newSocket.on("disconnect", (reason) => {
         setSocket(null);
         setTimeout(setupSocket, 3000);
-        console.log("error", "Socket Disconnected!");
+        console.log("error", "Socket Disconnected due to: " + reason);
       });
       
       setSocket(newSocket);
