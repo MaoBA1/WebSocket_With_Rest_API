@@ -106,7 +106,9 @@ function Chats({ account }) {
                             }}
                         >
                             {
-                                userChats?.map((item, index) => {
+                                userChats?.sort(
+                                (a,b) => (new Date(b?.messages[b?.messages?.length -1]?.creatAdt) - new Date(a?.messages[a?.messages?.length -1]?.creatAdt)))?.map
+                                ((item, index) => {
                                     const chat = getChatDetails(item);
                                     return (
                                         <div 

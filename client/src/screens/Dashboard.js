@@ -188,6 +188,7 @@ function Dashboard( { socket, setupSocket } ) {
                     socket={socket}
                 />
             }
+            
             <div className='main' 
                 onClick={() => {
                     if(!menuCollapsed) {
