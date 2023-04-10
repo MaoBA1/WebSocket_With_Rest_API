@@ -62,11 +62,21 @@ function Dashboard( { socket, setupSocket } ) {
         const get_user = async () => {
             try {
                 await dispatch(getUser(localStorage.getItem("user_token")));
+                console.log("debug - called getUser");   
+               // console.log("debug - userSelector=",userSelector);   
+
             } catch(error) {
               console.log(error.message);   
             }
         }
-        if(!userSelector) get_user();
+        //console.log("debug - userSelector 2=",userSelector);   
+
+        if(!userSelector) {
+            get_user();
+            console.log("userSelector=False");
+        } //else {
+            //console.log("debug - userSelector 2=",userSelector);   
+        //}
 
         if(!localStorage.getItem("user_token")) {
             try {

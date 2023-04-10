@@ -16,6 +16,7 @@ const intialState = {
 export default (state = intialState, action) => {
     switch(action.type) {
         case SET_CURRENT_USER:
+            console.log("SET_CURRENT_USER");
             return {
                 ...state,
                 User: action.user
