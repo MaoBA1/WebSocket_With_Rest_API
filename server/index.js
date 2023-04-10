@@ -5,9 +5,15 @@ const http = require('http');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const compression = require('compression');
 
 // Routers
 const userRouter = require('./routes/userRoutes');
+
+app.use(compression());
+
+
+app.use(express.static('public'));
 
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
