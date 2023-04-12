@@ -74,9 +74,13 @@ function Login({ setupSocket }) {
         const token = localStorage.getItem("user_token");
         if(token) {
             try {
-                await dispatch(getUser(token));
-                setupSocket()
-                navigate('/Home');
+                dispatch(getUser(token))
+                .then(() => {
+                    console.log("login => getUSer");
+                    setupSocket()
+                    navigate('/Home');
+                })
+                
             } catch(error) {
                 console.log(error.message);
             }

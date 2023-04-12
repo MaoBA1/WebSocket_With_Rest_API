@@ -1,11 +1,15 @@
 const express = require('express');
 const app = express();
+
 const bodyParser = require('body-parser');
 const http = require('http');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const compression = require('compression');
+
+
+
 
 // Routers
 const userRouter = require('./routes/userRoutes');
@@ -55,19 +59,23 @@ io.use(async (socket, next) => {
     }
 });
 
-io.on("connection", async(socket) => {
+io.on("connection", socket => {
     console.log(`User connected: ${socket.id}`);
     
-    recive_all_post(socket);
-    postEvents(io, socket);
-    accountEvents(io, socket);
-    chatEvents(io, socket);
+    if(socket.userId) {
+        recive_all_post(socket);
+        postEvents(io, socket);
+        accountEvents(io, socket);
+        chatEvents(io, socket);
+    }
 
 
-    socket.on("disconnect", () => {
-        console.log(`User disconnected: ${socket.id}`);
+    socket.on("disconnect", (reason) => {
+        console.log(`User disconnected: ${socket.id} because ${reason}`);
     });
 })
+
+
 
 mongoose.connect(mongoUrl)
 .then((result) => {
@@ -76,4 +84,9 @@ mongoose.connect(mongoUrl)
         console.log("SERVER RUNNIG");
     })
 })
+
+
+
+// app.use(require('express-status-monitor')());
+
 

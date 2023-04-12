@@ -169,7 +169,6 @@ const chatEvents = (io, socket) => {
                 if(p?._id.toString() !== senderId.toString()) {
                     const participantSocket = await getUserSocketByAccountId(io, p._id)
                     const currentUserChats = await getAllChatsOfAccountByHisId(p._id);
-                    console.log(participantSocket);
                     socket.broadcast.to(participantSocket).emit("get_all_chats", { accountChats: currentUserChats });
                 }
             })

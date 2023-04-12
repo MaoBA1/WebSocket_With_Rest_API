@@ -47,6 +47,7 @@ function Dashboard( { socket, setupSocket } ) {
     const [ frienshipRequests, setFriendshipRequests ] = useState(null);
     const [ countOfUnreadedMessages, setCountOfUnreadedMessages ] = useState(null);
     const [ intialUserData, setIntialUserData ] = useState(userSelector);
+    const [ isLoading, setIsloading ] = useState(false);
 
     const profileImage = userSelector?.profileImage;
     
@@ -59,32 +60,13 @@ function Dashboard( { socket, setupSocket } ) {
             });
         }
         window.addEventListener('resize', handelResize);
+        
         const get_user = async () => {
             try {
                 await dispatch(getUser(localStorage.getItem("user_token")));
-                console.log("debug - called getUser");   
-               // console.log("debug - userSelector=",userSelector);   
-
+                setIsloading(false) 
             } catch(error) {
               console.log(error.message);   
-            }
-        }
-        //console.log("debug - userSelector 2=",userSelector);   
-
-        if(!userSelector) {
-            get_user();
-            console.log("userSelector=False");
-        } //else {
-            //console.log("debug - userSelector 2=",userSelector);   
-        //}
-
-        if(!localStorage.getItem("user_token")) {
-            try {
-                
-                dispatch(cleanAllReducerStates())
-                navigate("/");
-            } catch(error) {
-                console.log(error.message);
             }
         }
 
@@ -110,22 +92,45 @@ function Dashboard( { socket, setupSocket } ) {
             }    
         }
 
-        if(!frienshipRequests || userSelector !== intialUserData) {
-            socket?.emit("get_all_user_friend", { friends });
-            setIntialUserData(userSelector);
+        const handelFriendshipRequests = (response) => {
+            const { AllFriendsAccounts } = response;
+            setFriendshipRequests(AllFriendsAccounts?.filter(f => f.status === "wait"));
         }
-        
 
-        if(!userChats && userSelector) {
-            socket?.emit("get_all_chats", { accountId: userSelector?._id });
-        } 
+        if(!localStorage.getItem("user_token")) {
+            try {
+                dispatch(cleanAllReducerStates())
+                navigate("/");
+            } catch(error) {
+                console.log(error.message);
+            }
+        } else {
+            if(userSelector) {
+                if(!isLoading) {
+                    if(!frienshipRequests || userSelector !== intialUserData) {
+                        setIsloading(true);
+                        socket?.emit("get_all_user_friend", { friends });
+                        setIntialUserData(userSelector);
+                    }
         
+                    if(!userChats) {
+                        setIsloading(true);
+                        socket?.emit("get_all_chats", { accountId: userSelector?._id });
+                    } 
+                }
+            } else {
+                if(!isLoading) {
+                    get_user();
+                    setIsloading(true);
+                }
+            } 
+        }
         socket?.on("recive_all_post", (response) => setAllPosts(response, dispatch));
         socket?.on("get_updated_post", (response) => setPost(response.updated_post));
         socket?.on("auth_user", (response) => isAuthUser(response, dispatch));
         socket?.on("account_changes", handelUserChanges);
         socket?.on("get_all_chats", handelReciveMessage);
-        socket?.on("get_all_user_friend", ({ AllFriendsAccounts }) => {setFriendshipRequests(AllFriendsAccounts?.filter(f => f.status === "wait"))});
+        socket?.on("get_all_user_friend", handelFriendshipRequests);
         
         return () => {
             socket?.off("recive_all_post", setAllPosts);
@@ -133,7 +138,7 @@ function Dashboard( { socket, setupSocket } ) {
             socket?.off("auth_user", isAuthUser);
             socket?.off("account_changes", handelUserChanges);
             socket?.off("get_all_chats", handelReciveMessage);
-            socket?.off("get_all_user_friend", setFriendshipRequests);
+            socket?.off("get_all_user_friend", handelFriendshipRequests);
         }
     },[
         dispatch,
@@ -145,7 +150,8 @@ function Dashboard( { socket, setupSocket } ) {
         frienshipRequests,
         friends,
         countOfUnreadedMessages,
-        intialUserData
+        intialUserData,
+        isLoading
     ])
     
     
